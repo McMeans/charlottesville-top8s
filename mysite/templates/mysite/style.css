@@ -1,0 +1,21 @@
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.grid-item {
+    flex-basis: calc(33.33% - 20px);
+    border: 1px solid #030303;
+    padding: 10px;
+}
+
+h4 {
+    color: red;
+    font-weight: 400;
+}
+
+body {
+    background-color: black;
+    color: blue;
+}
