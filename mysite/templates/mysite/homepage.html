@@ -1,6 +1,9 @@
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
 <h1>Charlottesville Graphic Maker</h1>
+<text>Created by Luke McMeans</text>
 <form action="{% url 'submit' %}" method="post">
     <fieldset>
         <label>What event is this for?</label>
@@ -25,27 +28,27 @@
             <label for="uva_spring">Spring</label>
         </div>
         <label>What # Smash@UVA is this (for the semester)?</label><br>
-        <input type="number" name="uva_number" label="CUT Number" id="uva_number" required>
+        <input type="number" name="event_number" label="Event Number" id="event_number" required>
         <br>
         <label>Event Date:</label><br>
         <input type="date" name="event_date" id="event_date" required>
     </fieldset>
 
     <div class="grid-container">
-        <fieldset>
+        <fieldset class="grid-item">
             <h2>Player 1</h2>
             <div>
                 <label>Player Name (with tag(s))</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
-                <input type="text" name="player1_name" maxlength="50" label="Name" required="True" id="player1_name">
+                <input type="text" name="player1_name" maxlength="40" label="Player1 Name" required="True" id="player1_name">
             </div>
             <div>
                 <label>X/Twitter Handle (without @)</label><br>
-                <input type="text" name="player1_handle" maxlength="50" label="Name" id="player1_handle">
+                <input type="text" name="player1_handle" minlength="4" maxlength="15" label="Player1 Handle" id="player1_handle">
             </div>
             <div>
                 <label>Primary Character</label><br>
-                <select name="player1_primary" label="Primary" required id="player1_primary" onchange="updateAlts('player1_primary', 'player1_alt')">
+                <select name="player1_primary" label="Player1 Primary" required id="player1_primary" onchange="updateAlts('player1_primary', 'player1_alt')">
                     <option value="Random">Random</option>
                     <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
                     <option value="Bayonetta">Bayonetta</option>
@@ -137,15 +140,16 @@
             </div>
             <div>
                 <label>Character Alt/Color</label><br>
-                <select name="player1_alt" label="Primary Alt" required id="player1_alt"></select><br>
+                <select name="player1_alt" label="Player1 Alt" required id="player1_alt"></select><br>
             </div>
             <div>
                 <label>Custom Character Image (optional)</label><br>
-                <input type="file" name="player1_custom" label="Custom Image" id="player1_custom" accept="image/png, image/jpg, image/jpeg">
+                <input type="file" name="player1_custom" label="Player1 Custom Image" id="player1_custom"
+                    accept="image/png, image/jpg, image/jpeg">
             </div>
             <div>
                 <label>Secondary Character (optional)</label><br>
-                <select name="player1_secondary" label="Secondary" id="player1_secondary">
+                <select name="player1_secondary" label="Player1 Secondary" id="player1_secondary">
                     <option value="None">None</option>
                     <option value="Random">Random</option>
                     <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
@@ -238,7 +242,7 @@
             </div>
             <div>
                 <label>Tertiary Character (optional)</label><br>
-                <select name="player1_tertiary" label="Tertiary" id="player1_tertiary">
+                <select name="player1_tertiary" label="Player1 Tertiary" id="player1_tertiary">
                     <option value="None">None</option>
                     <option value="Random">Random</option>
                     <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
@@ -331,6 +335,2099 @@
             </div>
         </fieldset>
         <!--TODO: REPEAT FOR PLAYERS 2-8-->
+        <fieldset class="grid-item">
+            <h2>Player 2</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player2_name" maxlength="40" label="Player2 Name" required="True" id="player2_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player2_handle" minlength="4" maxlength="15" label="Player2 Handle" id="player2_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player2_primary" label="Player2 Primary" required id="player2_primary" onchange="updateAlts('player2_primary', 'player2_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player2_alt" label="Player2 Alt" required id="player2_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player2_custom" label="Player2 Custom Image" id="player2_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player2_secondary" label="Player2 Secondary" id="player2_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player2_tertiary" label="Player2 Tertiary" id="player2_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 3</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player3_name" maxlength="40" label="Player3 Name" required="True" id="player3_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player3_handle" minlength="4" maxlength="15" label="Player3 Handle" id="player3_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player3_primary" label="Player3 Primary" required id="player3_primary" onchange="updateAlts('player3_primary', 'player3_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player3_alt" label="Player3 Alt" required id="player3_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player3_custom" label="Player3 Custom Image" id="player3_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player3_secondary" label="Player3 Secondary" id="player3_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player3_tertiary" label="Player3 Tertiary" id="player3_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 4</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player4_name" maxlength="40" label="Player4 Name" required="True" id="player4_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player4_handle" minlength="4" maxlength="15" label="Player4 Handle" id="player4_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player4_primary" label="Player4 Primary" required id="player4_primary" onchange="updateAlts('player4_primary', 'player4_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player4_alt" label="Player4 Alt" required id="player4_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player4_custom" label="Player4 Custom Image" id="player4_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player4_secondary" label="Player4 Secondary" id="player4_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player4_tertiary" label="Player4 Tertiary" id="player4_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 5</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player5_name" maxlength="40" label="Player5 Name" required="True" id="player5_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player5_handle" minlength="4" maxlength="15" label="Player5 Handle" id="player5_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player5_primary" label="Player5 Primary" required id="player5_primary" onchange="updateAlts('player5_primary', 'player5_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player5_alt" label="Player5 Alt" required id="player5_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player5_custom" label="Player5 Custom Image" id="player5_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player5_secondary" label="Player5 Secondary" id="player5_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player5_tertiary" label="Player5 Tertiary" id="player5_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 6</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player6_name" maxlength="40" label="Player6 Name" required="True" id="player6_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player6_handle" minlength="4" maxlength="15" label="Player6 Handle" id="player6_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player6_primary" label="Player6 Primary" required id="player6_primary" onchange="updateAlts('player6_primary', 'player6_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player6_alt" label="Player6 Alt" required id="player6_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player6_custom" label="Player6 Custom Image" id="player6_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player6_secondary" label="Player6 Secondary" id="player6_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player6_tertiary" label="Player6 Tertiary" id="player6_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 7</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player7_name" maxlength="40" label="Player7 Name" required="True" id="player7_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player7_handle" minlength="4" maxlength="15" label="Player7 Handle" id="player7_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player7_primary" label="Player7 Primary" required id="player7_primary" onchange="updateAlts('player7_primary', 'player7_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player7_alt" label="Player7 Alt" required id="player7_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player7_custom" label="Player7 Custom Image" id="player7_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player7_secondary" label="Player7 Secondary" id="player7_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player7_tertiary" label="Player7 Tertiary" id="player7_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="grid-item">
+            <h2>Player 8</h2>
+            <div>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
+                <input type="text" name="player8_name" maxlength="40" label="Player8 Name" required="True" id="player8_name">
+            </div>
+            <div>
+                <label>X/Twitter Handle (without @)</label><br>
+                <input type="text" name="player8_handle" minlength="4" maxlength="15" label="Player8 Handle" id="player8_handle">
+            </div>
+            <div>
+                <label>Primary Character</label><br>
+                <select name="player8_primary" label="Player8 Primary" required id="player8_primary" onchange="updateAlts('player8_primary', 'player8_alt')">
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Character Alt/Color</label><br>
+                <select name="player8_alt" label="Player8 Alt" required id="player8_alt"></select><br>
+            </div>
+            <div>
+                <label>Custom Character Image (optional)</label><br>
+                <input type="file" name="player8_custom" label="Player8 Custom Image" id="player8_custom"
+                    accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div>
+                <label>Secondary Character (optional)</label><br>
+                <select name="player8_secondary" label="Player8 Secondary" id="player8_secondary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select><br>
+            </div>
+            <div>
+                <label>Tertiary Character (optional)</label><br>
+                <select name="player8_tertiary" label="Player8 Tertiary" id="player8_tertiary">
+                    <option value="None">None</option>
+                    <option value="Random">Random</option>
+                    <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                    <option value="Bayonetta">Bayonetta</option>
+                    <option value="Bowser">Bowser</option>
+                    <option value="Bowser Jr">Bowser Jr</option>
+                    <option value="Byleth">Byleth</option>
+                    <option value="Captain Falcon">Captain Falcon</option>
+                    <option value="Chrom">Chrom</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Corrin">Corrin</option>
+                    <option value="Daisy">Daisy</option>
+                    <option value="Dark Pit">Dark Pit</option>
+                    <option value="Dark Samus">Dark Samus</option>
+                    <option value="Diddy Kong">Diddy Kong</option>
+                    <option value="Donkey Kong">Donkey Kong</option>
+                    <option value="Dr Mario">Dr Mario</option>
+                    <option value="Duck Hunt">Duck Hunt</option>
+                    <option value="Falco">Falco</option>
+                    <option value="Fox">Fox</option>
+                    <option value="Ganondorf">Ganondorf</option>
+                    <option value="Greninja">Greninja</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Ice Climbers">Ice Climbers</option>
+                    <option value="Ike">Ike</option>
+                    <option value="Incineroar">Incineroar</option>
+                    <option value="Inkling">Inkling</option>
+                    <option value="Isabelle">Isabelle</option>
+                    <option value="Jigglypuff">Jigglypuff</option>
+                    <option value="Joker">Joker</option>
+                    <option value="Kazuya">Kazuya</option>
+                    <option value="Ken">Ken</option>
+                    <option value="King Dedede">King Dedede</option>
+                    <option value="King K Rool">King K Rool</option>
+                    <option value="Kirby">Kirby</option>
+                    <option value="Link">Link</option>
+                    <option value="Little Mac">Little Mac</option>
+                    <option value="Lucario">Lucario</option>
+                    <option value="Lucas">Lucas</option>
+                    <option value="Lucina">Lucina</option>
+                    <option value="Luigi">Luigi</option>
+                    <option value="Mario">Mario</option>
+                    <option value="Marth">Marth</option>
+                    <option value="Mega Man">Mega Man</option>
+                    <option value="Meta Knight">Meta Knight</option>
+                    <option value="Mewtwo">Mewtwo</option>
+                    <option value="Mii Brawler">Mii Brawler</option>
+                    <option value="Mii Gunner">Mii Gunner</option>
+                    <option value="Mii Swordfighter">Mii Swordfighter</option>
+                    <option value="Min Min">Min Min</option>
+                    <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                    <option value="Ness">Ness</option>
+                    <option value="Olimar">Olimar</option>
+                    <option value="Pac-Man">Pac-Man</option>
+                    <option value="Palutena">Palutena</option>
+                    <option value="Peach">Peach</option>
+                    <option value="Pichu">Pichu</option>
+                    <option value="Pikachu">Pikachu</option>
+                    <option value="Piranha Plant">Piranha Plant</option>
+                    <option value="Pit">Pit</option>
+                    <option value="Pokemon Trainer">Pokemon Trainer</option>
+                    <option value="Pyra and Mythra">Pyra and Mythra</option>
+                    <option value="Richter">Richter</option>
+                    <option value="Ridley">Ridley</option>
+                    <option value="ROB">ROB</option>
+                    <option value="Robin">Robin</option>
+                    <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                    <option value="Roy">Roy</option>
+                    <option value="Ryu">Ryu</option>
+                    <option value="Samus">Samus</option>
+                    <option value="Sephiroth">Sephiroth</option>
+                    <option value="Sheik">Sheik</option>
+                    <option value="Shulk">Shulk</option>
+                    <option value="Simon">Simon</option>
+                    <option value="Snake">Snake</option>
+                    <option value="Sonic">Sonic</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Steve">Steve</option>
+                    <option value="Terry">Terry</option>
+                    <option value="Toon Link">Toon Link</option>
+                    <option value="Villager">Villager</option>
+                    <option value="Wario">Wario</option>
+                    <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                    <option value="Wolf">Wolf</option>
+                    <option value="Yoshi">Yoshi</option>
+                    <option value="Young Link">Young Link</option>
+                    <option value="Zelda">Zelda</option>
+                    <option value="Zero Suit Samus">Zero Suit Samus</option>
+                </select>
+            </div>
+        </fieldset>
     </div>
 
     <fieldset>
@@ -340,7 +2437,7 @@
             <label for="double_elim">Double Elimination</label>
         </div>
         <div>
-            <input type="radio" id="single_elim" name="elim_type" value="single_elim" >
+            <input type="radio" id="single_elim" name="elim_type" value="single_elim">
             <label for="single_elim">Single Elimination</label>
         </div>
     </fieldset>
@@ -358,279 +2455,271 @@
         const alts = getAlts(character);
 
         const index = 0;
-        for(i=0;i<alts.length;i++){
+        for (i = 0; i < alts.length; i++) {
             const option = document.createElement('option');
             option.text = i + " - " + alts[i];
             altSelect.add(option);
         }
     }
     function getAlts(character) {
-        if(character === 'Banjo & Kazooie'){
-            return ['Default','Pink','Black','Red','White','Yellow','Blue','Green'];
+        if (character === 'Banjo & Kazooie') {
+            return ['Default', 'Pink', 'Black', 'Red', 'White', 'Yellow', 'Blue', 'Green'];
         }
-        else if(character === 'Bayonetta'){
-            return ['Default','Original','Yellow','Green','Red','Pink','White','Blue'];
+        else if (character === 'Bayonetta') {
+            return ['Default', 'Original', 'Yellow', 'Green', 'Red', 'Pink', 'White', 'Blue'];
         }
-        else if(character === 'Bowser'){
-            return ['Default','Black','Yellow','Green','Grey','Orange','Red','Blue'];
+        else if (character === 'Bowser') {
+            return ['Default', 'Black', 'Yellow', 'Green', 'Grey', 'Orange', 'Red', 'Blue'];
         }
-        else if(character === 'Bowser Jr'){
-            return ['Junior','Larry','Roy','Wendy','Iggy','Morton','Lemmy','Ludwig'];
+        else if (character === 'Bowser Jr') {
+            return ['Junior', 'Larry', 'Roy', 'Wendy', 'Iggy', 'Morton', 'Lemmy', 'Ludwig'];
         }
-        else if(character === 'Byleth'){
-            return ['Male','Female','Blue','Red','Yellow','Green','Black','Grey'];
+        else if (character === 'Byleth') {
+            return ['Male', 'Female', 'Blue', 'Red', 'Yellow', 'Green', 'Black', 'Grey'];
         }
-        else if(character === 'Captain Falcon'){
-            return ['Default','Black','Red','Green','Blue','White','Yellow','Cyan'];
+        else if (character === 'Captain Falcon') {
+            return ['Default', 'Black', 'Red', 'Green', 'Blue', 'White', 'Yellow', 'Cyan'];
         }
-        else if(character === 'Chrom'){
-            return ['Default','Red','Green','Yellow','Black','Purple','White','Cyan'];
+        else if (character === 'Chrom') {
+            return ['Default', 'Red', 'Green', 'Yellow', 'Black', 'Purple', 'White', 'Cyan'];
         }
-        else if(character === 'Cloud'){
-            return ['Default','Advent','Blue','Advent-Blue','Red','Advent-Black','Brown','Advent-Purple'];
+        else if (character === 'Cloud') {
+            return ['Default', 'Advent', 'Blue', 'Advent Blue', 'Red', 'Advent Black', 'Brown', 'Advent Purple'];
         }
-        else if(character === 'Corrin'){
-            return ['Male','Female','Red','Orange','Blue','Pink','Green','Black'];
+        else if (character === 'Corrin') {
+            return ['Male', 'Female', 'Red', 'Orange', 'Blue', 'Pink', 'Green', 'Black'];
         }
-        else if(character === 'Daisy'){
-            return ['Default','Green','Pink','Blue','Red','Purple','White','Black'];
+        else if (character === 'Daisy') {
+            return ['Default', 'Green', 'Pink', 'Blue', 'Red', 'Purple', 'White', 'Black'];
         }
-        else if(character === 'Dark Pit'){
-            return ['Default','Green','Brown','Yellow','Red','Blue','White','Purple'];
+        else if (character === 'Dark Pit') {
+            return ['Default', 'Green', 'Brown', 'Yellow', 'Red', 'Blue', 'White', 'Purple'];
         }
-        else if(character === 'Dark Samus'){
-            return ['Default','Green','Purple','Red','Yellow','Grey','Black','Pink'];
+        else if (character === 'Dark Samus') {
+            return ['Default', 'Green', 'Purple', 'Red', 'Yellow', 'Grey', 'Black', 'Pink'];
         }
-        else if(character === 'Diddy Kong'){
-            return ['Default','White','Pink','Purple','Green','Blue','Yellow','Cyan'];
+        else if (character === 'Diddy Kong') {
+            return ['Default', 'White', 'Pink', 'Purple', 'Green', 'Blue', 'Yellow', 'Cyan'];
         }
-        else if(character === 'Donkey Kong'){
-            return ['Default','Black','Red','Blue','Green','White','Yellow','Pink'];
+        else if (character === 'Donkey Kong') {
+            return ['Default', 'Black', 'Red', 'Blue', 'Green', 'White', 'Yellow', 'Pink'];
         }
-        else if(character === 'Dr Mario'){
-            return ['Default','Red','Blue','Green','Black','Yellow','Purple','Pink'];
+        else if (character === 'Dr Mario') {
+            return ['Default', 'Red', 'Blue', 'Green', 'Black', 'Yellow', 'Purple', 'Pink'];
         }
-        else if(character === 'Duck Hunt'){
-            return ['Default','Black','Blue','Brown','White','Tan','Yellow','Red'];
+        else if (character === 'Duck Hunt') {
+            return ['Default', 'Black', 'Blue', 'Brown', 'White', 'Tan', 'Yellow', 'Red'];
         }
-        else if(character === 'Falco'){
-            return ['Default','Orange','Blue','Red','Green','Black','White','Pink'];
+        else if (character === 'Falco') {
+            return ['Default', 'Orange', 'Blue', 'Red', 'Green', 'Black', 'White', 'Pink'];
         }
-        else if(character === 'Fox'){
-            return ['Default','Black','Red','Green','Orange','White','Yellow','Purple'];
+        else if (character === 'Fox') {
+            return ['Default', 'Black', 'Red', 'Green', 'Orange', 'White', 'Yellow', 'Purple'];
         }
-        else if(character === 'Ganondorf'){
-            return ['Default','Violet','Blue','Green','Purple','Brown','White','Grey'];
+        else if (character === 'Ganondorf') {
+            return ['Default', 'Violet', 'Blue', 'Green', 'Purple', 'Brown', 'White', 'Grey'];
         }
-        else if(character === 'Greninja'){
-            return ['Default','Red','Pink','Black','Violet','Green','Grey','Purple'];
+        else if (character === 'Greninja') {
+            return ['Default', 'Red', 'Pink', 'Black', 'Violet', 'Green', 'Grey', 'Purple'];
         }
-        else if(character === 'Hero'){
-            return ['Luminary','Erdrick','Solo','Eight','Luminary-Red','Erdrick-White','Solo-Orange','Eight-Blue'];
+        else if (character === 'Hero') {
+            return ['Luminary', 'Erdrick', 'Solo', 'Eight', 'Luminary Red', 'Erdrick White', 'Solo Orange', 'Eight Blue'];
         }
-        else if(character === 'Ice Climbers'){
-            return ['Default','Blue','Green','Indigo','Red','Brown','White','Orange'];
+        else if (character === 'Ice Climbers') {
+            return ['Default', 'Blue', 'Green', 'Indigo', 'Red', 'Brown', 'White', 'Orange'];
         }
-        else if(character === 'Ike'){
-            return ['Default','Brown','Purple','Red','Yellow','Green','Blue','Black'];
+        else if (character === 'Ike') {
+            return ['Default', 'Brown', 'Purple', 'Red', 'Yellow', 'Green', 'Blue', 'Black'];
         }
-        else if(character === 'Incineroar'){
-            return ['Default','Green','Black','Blue','Orange','Purple','Grey','White'];
+        else if (character === 'Incineroar') {
+            return ['Default', 'Green', 'Black', 'Blue', 'Orange', 'Purple', 'Grey', 'White'];
         }
-        else if(character === 'Inkling'){
-            return ['Orange','Blue','Yellow','Green','Pink','Cyan','Purple','Indigo'];
+        else if (character === 'Inkling') {
+            return ['Orange', 'Blue', 'Yellow', 'Green', 'Pink', 'Cyan', 'Purple', 'Indigo'];
         }
-        else if(character === 'Isabelle'){
-            return ['Default','Yellow','Pink','Red','Purple','Teal','Grey','Blue'];
+        else if (character === 'Isabelle') {
+            return ['Default', 'Yellow', 'Pink', 'Red', 'Purple', 'Teal', 'Grey', 'Blue'];
         }
-        else if(character === 'Jigglypuff'){
-            return ['Default','Red','White','Blue','Green','Pink','Nurse','Glasses'];
+        else if (character === 'Jigglypuff') {
+            return ['Default', 'Red', 'White', 'Blue', 'Green', 'Pink', 'Nurse', 'Glasses'];
         }
-        else if(character === 'Joker'){
-            return ['Default','Purple','Blue','Yellow','Red','White','School','School-White'];
+        else if (character === 'Joker') {
+            return ['Default', 'Purple', 'Blue', 'Yellow', 'Red', 'White', 'School', 'School White'];
         }
-        else if(character === 'Kazuya'){
-            return ['Default','Suit','Red','White','Blue','Purple','Black','Yellow'];
+        else if (character === 'Kazuya') {
+            return ['Default', 'Suit', 'Red', 'White', 'Blue', 'Purple', 'Black', 'Yellow'];
         }
-        else if(character === 'Ken'){
-            return ['Default','Grey','Blue','White','Green','Yellow','Cyan','Black'];
+        else if (character === 'Ken') {
+            return ['Default', 'Grey', 'Blue', 'White', 'Green', 'Yellow', 'Cyan', 'Black'];
         }
-        else if(character === 'King Dedede'){
-            return ['Default','Pink','Green','Purple','Cyan','Grey','Blue','Black'];
+        else if (character === 'King Dedede') {
+            return ['Default', 'Pink', 'Green', 'Purple', 'Cyan', 'Grey', 'Blue', 'Black'];
         }
-        else if(character === 'King K Rool'){
-            return ['Default','Orange','Blue','Yellow','Pink','Black','Brown','White'];
+        else if (character === 'King K Rool') {
+            return ['Default', 'Orange', 'Blue', 'Yellow', 'Pink', 'Black', 'Brown', 'White'];
         }
-        else if(character === 'Kirby'){
-            return ['Default','Yellow','Blue','Red','Green','White','Orange','Purple'];
+        else if (character === 'Kirby') {
+            return ['Default', 'Yellow', 'Blue', 'Red', 'Green', 'White', 'Orange', 'Purple'];
         }
-        else if(character === 'Link'){
-            return ['Blue','Green','Red','Fierce-Deity','Indigo','Teal','White','Black'];
+        else if (character === 'Link') {
+            return ['Blue', 'Green', 'Red', 'Fierce Deity', 'Indigo', 'Teal', 'White', 'Black'];
         }
-        else if(character === 'Little Mac'){
-            return ['Default','Yellow','White','Blue','Black','Pink','Wire','Green'];
+        else if (character === 'Little Mac') {
+            return ['Default', 'Yellow', 'White', 'Blue', 'Black', 'Pink', 'Wire', 'Green'];
         }
-        else if(character === 'Lucario'){
-            return ['Default','Purple','White','Grey','Teal','Navy','Green','Pink'];
+        else if (character === 'Lucario') {
+            return ['Default', 'Purple', 'White', 'Grey', 'Teal', 'Navy', 'Green', 'Pink'];
         }
-        else if(character === 'Lucas'){
-            return ['Default','Orange','Blue','Red','Grey','Cyan','Green','Purple'];
+        else if (character === 'Lucas') {
+            return ['Default', 'Orange', 'Blue', 'Red', 'Grey', 'Cyan', 'Green', 'Purple'];
         }
-        else if(character === 'Lucina'){
-            return ['Default','Green','Black','White','Red','Yellow','Navy','Purple'];
+        else if (character === 'Lucina') {
+            return ['Default', 'Green', 'Black', 'White', 'Red', 'Yellow', 'Navy', 'Purple'];
         }
-        else if(character === 'Luigi'){
-            return ['Default','Orange','Pink','Cyan','White','Purple','Blue','Yellow'];
+        else if (character === 'Luigi') {
+            return ['Default', 'Orange', 'Pink', 'Cyan', 'White', 'Purple', 'Blue', 'Yellow'];
         }
-        else if(character === 'Mario'){
-            return ['Default','Striped','Blue','Black','Green','Purple','Builder','Wedding'];
+        else if (character === 'Mario') {
+            return ['Default', 'Striped', 'Blue', 'Black', 'Green', 'Purple', 'Builder', 'Wedding'];
         }
-        else if(character === 'Marth'){
-            return ['Default','Red','Green','Black','White','Blue','Yellow','Purple'];
+        else if (character === 'Marth') {
+            return ['Default', 'Red', 'Green', 'Black', 'White', 'Blue', 'Yellow', 'Purple'];
         }
-        else if(character === 'Mega Man'){
-            return ['Default','Red','Green','Brown','Cyan','Chartreuse','Orange','Grey'];
+        else if (character === 'Mega Man') {
+            return ['Default', 'Red', 'Green', 'Brown', 'Cyan', 'Chartreuse', 'Orange', 'Grey'];
         }
-        else if(character === 'Meta Knight'){
-            return ['Default','White','Red','Green','Navy','Pink','Galacta','Dark'];
+        else if (character === 'Meta Knight') {
+            return ['Default', 'White', 'Red', 'Green', 'Navy', 'Pink', 'Galacta', 'Dark'];
         }
-        else if(character === 'Mewtwo'){
-            return ['Default','Orange','Blue','Brown','Pink','Yellow','Cyan','Purple'];
+        else if (character === 'Mewtwo') {
+            return ['Default', 'Orange', 'Blue', 'Brown', 'Pink', 'Yellow', 'Cyan', 'Purple'];
         }
-        else if(character === 'Min Min'){
-            return ['Default','Cyan','Red','Yellow','Blue','Green','Pink','Black'];
+        else if (character === 'Min Min') {
+            return ['Default', 'Cyan', 'Red', 'Yellow', 'Blue', 'Green', 'Pink', 'Black'];
         }
-        else if(character === 'Mr Game & Watch'){
-            return ['Default','Red','Yellow','Blue','Teal','Cyan','Green','White'];
+        else if (character === 'Mr Game & Watch') {
+            return ['Default', 'Red', 'Yellow', 'Blue', 'Teal', 'Cyan', 'Green', 'White'];
         }
-        else if(character === 'Ness'){
-            return ['Default','White','Yellow','Green','Blue','Black','Cyan','Purple'];
+        else if (character === 'Ness') {
+            return ['Default', 'White', 'Yellow', 'Green', 'Blue', 'Black', 'Cyan', 'Purple'];
         }
-        else if(character === 'Olimar'){
-            return ['Tan','Red','Green','Blue','Alph','Alph-Green','Alph-Pink','Alph-Red'];
+        else if (character === 'Olimar') {
+            return ['Tan', 'Red', 'Green', 'Blue', 'Alph', 'Alph Green', 'Alph Pink', 'Alph Red'];
         }
-        else if(character === 'Pac-Man'){
-            return ['Default','Blue','Yellow','Black','Purple','White','Red','Plaid'];
+        else if (character === 'Pac-Man') {
+            return ['Default', 'Blue', 'Yellow', 'Black', 'Purple', 'White', 'Red', 'Plaid'];
         }
-        else if(character === 'Palutena'){
-            return ['Default','Pink','Cyan','Green','Blue','Red','Black','Purple'];
+        else if (character === 'Palutena') {
+            return ['Default', 'Pink', 'Cyan', 'Green', 'Blue', 'Red', 'Black', 'Purple'];
         }
-        else if(character === 'Peach'){
-            return ['Default','Yellow','Red','Blue','Green','White','Fire','Black'];
+        else if (character === 'Peach') {
+            return ['Default', 'Yellow', 'Red', 'Blue', 'Green', 'White', 'Fire', 'Black'];
         }
-        else if(character === 'Pichu'){
-            return ['Default','Goggles','Red','Grey','Blue','Spiky','White','Band'];
+        else if (character === 'Pichu') {
+            return ['Default', 'Goggles', 'Red', 'Grey', 'Blue', 'Spiky', 'White', 'Band'];
         }
-        else if(character === 'Pikachu'){
-            return ['Default','Red','Green','Yellow','Blue','Glasses','Female','Libre'];
+        else if (character === 'Pikachu') {
+            return ['Default', 'Red', 'Green', 'Yellow', 'Blue', 'Glasses', 'Female', 'Libre'];
         }
-        else if(character === 'Piranha Plant'){
-            return ['Default','Green','Yellow','Pink','Black','White','Purple','Blue'];
+        else if (character === 'Piranha Plant') {
+            return ['Default', 'Green', 'Yellow', 'Pink', 'Black', 'White', 'Purple', 'Blue'];
         }
-        else if(character === 'Pit'){
-            return ['Default','Yellow','Red','Green','Blue','Black','White','Pink'];
+        else if (character === 'Pit') {
+            return ['Default', 'Yellow', 'Red', 'Green', 'Blue', 'Black', 'White', 'Pink'];
         }
-        else if(character === 'Pokemon Trainer'){
-            return ['Default','Red','Green','Pink','Yellow','White','Blue','Purple'];
+        else if (character === 'Pokemon Trainer') {
+            return ['Default', 'Red', 'Green', 'Pink', 'Yellow', 'White', 'Blue', 'Purple'];
         }
-        else if(character === 'Pyra and Mythra'){
-            return ['Default','Green','Swapped','Gormotti','Black','Blue','Saturated','Metal'];
+        else if (character === 'Pyra and Mythra') {
+            return ['Default', 'Green', 'Swapped', 'Gormotti', 'Black', 'Blue', 'Saturated', 'Metal'];
         }
-        else if(character === 'Richter'){
-            return ['Default','Red','Purple','Green','Yellow','Blue','Black','White'];
+        else if (character === 'Richter') {
+            return ['Default', 'Red', 'Purple', 'Green', 'Yellow', 'Blue', 'Black', 'White'];
         }
-        else if(character === 'Ridley'){
-            return ['Default','Meta','Red','Blue','Green','Purple','Yellow','Grey'];
+        else if (character === 'Ridley') {
+            return ['Default', 'Meta', 'Red', 'Blue', 'Green', 'Purple', 'Yellow', 'Grey'];
         }
-        else if(character === 'ROB'){
-            return ['Default','Grey','Yellow','Purple','Blue','Green','Cyan','Red'];
+        else if (character === 'ROB') {
+            return ['Default', 'Grey', 'Yellow', 'Purple', 'Blue', 'Green', 'Cyan', 'Red'];
         }
-        else if(character === 'Robin'){
-            return ['Male','Female','Green','Red','Blue','Yellow','White','Pink'];
+        else if (character === 'Robin') {
+            return ['Male', 'Female', 'Green', 'Red', 'Blue', 'Yellow', 'White', 'Pink'];
         }
-        else if(character === 'Rosalina & Luma'){
-            return ['Default','Pink','Yellow','Green','Red','Purple','Black','White'];
+        else if (character === 'Rosalina & Luma') {
+            return ['Default', 'Pink', 'Yellow', 'Green', 'Red', 'Purple', 'Black', 'White'];
         }
-        else if(character === 'Roy'){
-            return ['Default','Red','Green','Violet','Cyan','Purple','Pink','Yellow'];
+        else if (character === 'Roy') {
+            return ['Default', 'Red', 'Green', 'Violet', 'Cyan', 'Purple', 'Pink', 'Yellow'];
         }
-        else if(character === 'Ryu'){
-            return ['Default','Grey','White','Black','Orange','Blue','Green','Purple'];
+        else if (character === 'Ryu') {
+            return ['Default', 'Grey', 'White', 'Black', 'Orange', 'Blue', 'Green', 'Purple'];
         }
-        else if(character === 'Samus'){
-            return ['Default','Blue','Pink','Brown','Purple','Green','White','Black'];
+        else if (character === 'Samus') {
+            return ['Default', 'Blue', 'Pink', 'Brown', 'Purple', 'Green', 'White', 'Black'];
         }
-        else if(character === 'Sephiroth'){
-            return ['Default','Purple','Green','Red','White','Blue','Coatless','Coatless-Violet'];
+        else if (character === 'Sephiroth') {
+            return ['Default', 'Purple', 'Green', 'Red', 'White', 'Blue', 'Coatless', 'Coatless Violet'];
         }
-        else if(character === 'Sheik'){
-            return ['Default','Red','Indigo','Purple','Green','Black','Yellow','White'];
+        else if (character === 'Sheik') {
+            return ['Default', 'Red', 'Indigo', 'Purple', 'Green', 'Black', 'Yellow', 'White'];
         }
-        else if(character === 'Shulk'){
-            return ['Default','White','Black','Orange','Blue','Lavender','Yellow','Trunks'];
+        else if (character === 'Shulk') {
+            return ['Default', 'White', 'Black', 'Orange', 'Blue', 'Lavender', 'Yellow', 'Trunks'];
         }
-        else if(character === 'Simon'){
-            return ['Default','Red','Yellow','Black','Blue','Purple','Orange','Indigo'];
+        else if (character === 'Simon') {
+            return ['Default', 'Red', 'Yellow', 'Black', 'Blue', 'Purple', 'Orange', 'Indigo'];
         }
-        else if(character === 'Snake'){
-            return ['Grey','Black','Red','Blue','Green','White','Chartreuse','Brown'];
+        else if (character === 'Snake') {
+            return ['Grey', 'Black', 'Red', 'Blue', 'Green', 'White', 'Chartreuse', 'Brown'];
         }
-        else if(character === 'Sonic'){
-            return ['Default','Purple','Cyan','White','Black','Yellow','Orange','Green'];
+        else if (character === 'Sonic') {
+            return ['Default', 'Purple', 'Cyan', 'White', 'Black', 'Yellow', 'Orange', 'Green'];
         }
-        else if(character === 'Sora'){
-            return ['Default','Two','Dream','Three','Grey','Red','Blue','White'];
+        else if (character === 'Sora') {
+            return ['Default', 'Two', 'Dream', 'Three', 'Grey', 'Red', 'Blue', 'White'];
         }
-        else if(character === 'Steve'){
-            return ['Steve','Alex','Steve-White','Alex-White','Steve-Black','Alex-Blue','Zombie','Enderman'];
+        else if (character === 'Steve') {
+            return ['Steve', 'Alex', 'Steve White', 'Alex White', 'Steve Black', 'Alex Blue', 'Zombie', 'Enderman'];
         }
-        else if(character === 'Terry'){
-            return ['Default','Blue','Brown','Green','Orange','Grey','Black','Yellow'];
+        else if (character === 'Terry') {
+            return ['Default', 'Blue', 'Brown', 'Green', 'Orange', 'Grey', 'Black', 'Yellow'];
         }
-        else if(character === 'Toon Link'){
-            return ['Default','Red','Blue','Purple','Brown','Black','Grey','Dark-Green'];
+        else if (character === 'Toon Link') {
+            return ['Default', 'Red', 'Blue', 'Purple', 'Brown', 'Black', 'Grey', 'Dark Green'];
         }
-        else if(character === 'Villager'){
-            return ['Default','Pink','Yellow','Green','Cyan','Blue','Purple','Chartreuse'];
+        else if (character === 'Villager') {
+            return ['Default', 'Pink', 'Yellow', 'Green', 'Cyan', 'Blue', 'Purple', 'Chartreuse'];
         }
-        else if(character === 'Wario'){
-            return ['Default','Classic','Red','Classic-Red','Yellow','Classic-Cyan','Green','Classic-Green'];
+        else if (character === 'Wario') {
+            return ['Default', 'Classic', 'Red', 'Classic Red', 'Yellow', 'Classic Cyan', 'Green', 'Classic Green'];
         }
-        else if(character === 'Wii Fit Trainer'){
-            return ['Female','Male','Green','Male-Green','Red','Male-Red','Yellow','Male-Yellow'];
+        else if (character === 'Wii Fit Trainer') {
+            return ['Female', 'Male', 'Green', 'Male Green', 'Red', 'Male Red', 'Yellow', 'Male Yellow'];
         }
-        else if(character === 'Wolf'){
-            return ['Default','Brown','Red','Blue','Green','Orange','Black','Pink'];
+        else if (character === 'Wolf') {
+            return ['Default', 'Brown', 'Red', 'Blue', 'Green', 'Orange', 'Black', 'Pink'];
         }
-        else if(character === 'Yoshi'){
-            return ['Default','Red','Blue','Yellow','Pink','Cyan','Purple','Crafted'];
+        else if (character === 'Yoshi') {
+            return ['Default', 'Red', 'Blue', 'Yellow', 'Pink', 'Cyan', 'Purple', 'Crafted'];
         }
-        else if(character === 'Young Link'){
-            return ['Default','Red','Blue','White','Pink','Cyan','Orange','Dark'];
+        else if (character === 'Young Link') {
+            return ['Default', 'Red', 'Blue', 'White', 'Pink', 'Cyan', 'Orange', 'Dark'];
         }
-        else if(character === 'Zelda'){
-            return ['Default','Red','Blue','Violet','Green','Black','Purple','White'];
+        else if (character === 'Zelda') {
+            return ['Default', 'Red', 'Blue', 'Violet', 'Green', 'Black', 'Purple', 'White'];
         }
-        else if(character === 'Zero Suit Samus'){
-            return ['Default','Blue','Red','Black','Green','White','Shorts-Orange','Short-Blue'];
+        else if (character === 'Zero Suit Samus') {
+            return ['Default', 'Blue', 'Red', 'Black', 'Green', 'White', 'Shorts Orange', 'Short Blue'];
         }
         else {
             return ['Default'];
         }
     }
-    updateAlts("player1_primary", "player1_alt");
-    updateAlts("player2_primary", "player2_alt");
-    updateAlts("player3_primary", "player3_alt");
-    updateAlts("player4_primary", "player4_alt");
-    updateAlts("player5_primary", "player5_alt");
-    updateAlts("player6_primary", "player6_alt");
-    updateAlts("player7_primary", "player7_alt");
-    updateAlts("player8_primary", "player8_alt");
-
+    
     function changeEvent() {
         const eventRadios = document.querySelectorAll('input[name="event_type"]');
         const dynamicFieldset = document.getElementById('dynamic_fieldset');
-        
+
         eventRadios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.value === 'smashatuva') {
@@ -645,15 +2734,14 @@
                             <label for="uva_spring">Spring</label>
                         </div>
                         <label>What # Smash@UVA is this (for the semester)?</label><br>
-                        <input type="number" name="uva_number" label="CUT Number" id="uva_number" required>
                     `;
                 } else if (radio.value === 'thecut') {
                     dynamicFieldset.innerHTML = `
                         <label>Which # CUT is this?</label><br>  
-                        <input type="number" name="cut_number" label="CUT Number" id="cut_number" required>
                     `;
                 }
                 dynamicFieldset.innerHTML += `
+                    <input type="number" name="event_number" label="Event Number" id="event_number" required>
                     <br>
                     <label>Event Date:</label><br>
                     <input type="date" name="event_date" id="event_date" required>
@@ -661,4 +2749,14 @@
             });
         });
     }
+
+    updateAlts("player1_primary", "player1_alt");
+    updateAlts("player2_primary", "player2_alt");
+    updateAlts("player3_primary", "player3_alt");
+    updateAlts("player4_primary", "player4_alt");
+    updateAlts("player5_primary", "player5_alt");
+    updateAlts("player6_primary", "player6_alt");
+    updateAlts("player7_primary", "player7_alt");
+    updateAlts("player8_primary", "player8_alt");
+    changeEvent();
 </script>
