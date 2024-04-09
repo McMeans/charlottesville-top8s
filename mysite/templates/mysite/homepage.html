@@ -1,8 +1,3 @@
-{% load bootstrap5 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
-
 {% load static %}
 
 <h1>Charlottesville Graphic Maker</h1>
@@ -10,33 +5,29 @@
     <fieldset>
         <label>What event is this for?</label>
         <div>
-            <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked>
+            <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked onclick="changeEvent()">
             <label for="smashatuva">Smash @ UVA</label>
         </div>
         <div>
-            <input type="radio" id="thecut" name="event_type" value="thecut" >
+            <input type="radio" id="thecut" name="event_type" value="thecut" onclick="changeEvent()">
             <label for="smashatuva">The CUT</label>
         </div>
     </fieldset>
 
-    <fieldset>
-        {% if request.POST.event_type == 'smashatuva' %}
+    <fieldset id="dynamic_fieldset">
         <label>Semester:</label>
         <div>
             <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
             <label for="uva_fall">Fall</label>
         </div>
         <div>
-            <input type="radio" id="uva_spring" name="semester" value="uva_spring" >
+            <input type="radio" id="uva_spring" name="semester" value="uva_spring">
             <label for="uva_spring">Spring</label>
         </div>
         <label>What # Smash@UVA is this (for the semester)?</label><br>
         <input type="number" name="uva_number" label="CUT Number" id="uva_number" required>
-        {% else %}
-        <label>Which # CUT is this?</label><br>  
-        <input type="number" name="cut_number" label="CUT Number" id="cut_number" required>
-        {% endif %}
-        <label>Event Date:</label>
+        <br>
+        <label>Event Date:</label><br>
         <input type="date" name="event_date" id="event_date" required>
     </fieldset>
 
@@ -44,12 +35,12 @@
         <fieldset>
             <h2>Player 1</h2>
             <div>
-                <label>Player Name (with tag(s))</label>
-                <sub>Ex: BN/UVA|John Lion</sub><br>
+                <label>Player Name (with tag(s))</label><br>
+                <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player1_name" maxlength="50" label="Name" required="True" id="player1_name">
             </div>
             <div>
-                <label>X/Twitter Handle</label><br>
+                <label>X/Twitter Handle (without @)</label><br>
                 <input type="text" name="player1_handle" maxlength="50" label="Name" id="player1_handle">
             </div>
             <div>
@@ -149,7 +140,7 @@
                 <select name="player1_alt" label="Primary Alt" required id="player1_alt"></select><br>
             </div>
             <div>
-                <label>Custom Character Image (optional)</label>
+                <label>Custom Character Image (optional)</label><br>
                 <input type="file" name="player1_custom" label="Custom Image" id="player1_custom" accept="image/png, image/jpg, image/jpeg">
             </div>
             <div>
@@ -353,6 +344,7 @@
             <label for="single_elim">Single Elimination</label>
         </div>
     </fieldset>
+    <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
     <input type="submit" value="SUBMIT">
 </form>
 
@@ -634,4 +626,39 @@
     updateAlts("player6_primary", "player6_alt");
     updateAlts("player7_primary", "player7_alt");
     updateAlts("player8_primary", "player8_alt");
+
+    function changeEvent() {
+        const eventRadios = document.querySelectorAll('input[name="event_type"]');
+        const dynamicFieldset = document.getElementById('dynamic_fieldset');
+        
+        eventRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'smashatuva') {
+                    dynamicFieldset.innerHTML = `
+                        <label>Semester:</label>
+                        <div>
+                            <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
+                            <label for="uva_fall">Fall</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="uva_spring" name="semester" value="uva_spring">
+                            <label for="uva_spring">Spring</label>
+                        </div>
+                        <label>What # Smash@UVA is this (for the semester)?</label><br>
+                        <input type="number" name="uva_number" label="CUT Number" id="uva_number" required>
+                    `;
+                } else if (radio.value === 'thecut') {
+                    dynamicFieldset.innerHTML = `
+                        <label>Which # CUT is this?</label><br>  
+                        <input type="number" name="cut_number" label="CUT Number" id="cut_number" required>
+                    `;
+                }
+                dynamicFieldset.innerHTML += `
+                    <br>
+                    <label>Event Date:</label><br>
+                    <input type="date" name="event_date" id="event_date" required>
+                `;
+            });
+        });
+    }
 </script>
