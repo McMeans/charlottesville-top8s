@@ -1,6 +1,6 @@
 from django.db import models
 
-'''
+
 class Player(models.Model):
     player_tag = models.CharField()
     player_name = models.CharField()
@@ -11,5 +11,5 @@ class Player(models.Model):
     
     def __str__(self):
         return self.player_name
-'''
+
     

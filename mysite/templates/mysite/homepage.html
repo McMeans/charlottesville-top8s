@@ -27,14 +27,16 @@
         <input type="number" name="event_number" label="Event Number" id="event_number" required>
         <br>
         <label>Event Date:</label><br>
-        <input type="date" name="event_date" id="event_date" required>
+        <input type="date" name="event_date" id="event_date" required><br>
+        <label>Number of Participants:</label><br>
+        <input type="number" name="participants" id="participants" required>
     </fieldset>
 
     <div class="grid-container">
         <fieldset class="grid-item">
             <h2>Player 1</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player1_name" maxlength="40" label="Player1 Name" required="True" id="player1_name">
             </div>
@@ -333,7 +335,7 @@
         <fieldset class="grid-item">
             <h2>Player 2</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player2_name" maxlength="40" label="Player2 Name" required="True" id="player2_name">
             </div>
@@ -632,7 +634,7 @@
         <fieldset class="grid-item">
             <h2>Player 3</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player3_name" maxlength="40" label="Player3 Name" required="True" id="player3_name">
             </div>
@@ -931,7 +933,7 @@
         <fieldset class="grid-item">
             <h2>Player 4</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player4_name" maxlength="40" label="Player4 Name" required="True" id="player4_name">
             </div>
@@ -1230,7 +1232,7 @@
         <fieldset class="grid-item">
             <h2>Player 5</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player5_name" maxlength="40" label="Player5 Name" required="True" id="player5_name">
             </div>
@@ -1529,7 +1531,7 @@
         <fieldset class="grid-item">
             <h2>Player 6</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player6_name" maxlength="40" label="Player6 Name" required="True" id="player6_name">
             </div>
@@ -1828,7 +1830,7 @@
         <fieldset class="grid-item">
             <h2>Player 7</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player7_name" maxlength="40" label="Player7 Name" required="True" id="player7_name">
             </div>
@@ -2127,7 +2129,7 @@
         <fieldset class="grid-item">
             <h2>Player 8</h2>
             <div>
-                <label>Player Name (with tag(s))</label><br>
+                <label>Player Name (with tags)</label><br>
                 <sub>Ex: BN/KML|John Lion</sub><br>
                 <input type="text" name="player8_name" maxlength="40" label="Player8 Name" required="True" id="player8_name">
             </div>
@@ -2436,6 +2438,18 @@
             <label for="single_elim">Single Elimination</label>
         </div>
     </fieldset>
+    
+    <fieldset>
+        <input type="checkbox" name="redemption_check" id="redemption_check" onclick="addRedemption()">
+        <label for="redemption_check">Report Redemption Winner</label>
+        <div id="redemption_bracket"></div>
+    </fieldset>
+    <fieldset>
+        <input type="checkbox" name="side_check" id="side_check" onclick="addSideEvent()">
+        <label for="side_check">Report Side Event Winner</label>
+        <div id="side_bracket"></div>
+    </fieldset>
+
     <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
     <input type="submit" value="SUBMIT">
 </form>
@@ -2804,10 +2818,148 @@
                     <input type="number" name="event_number" label="Event Number" id="event_number" required>
                     <br>
                     <label>Event Date:</label><br>
-                    <input type="date" name="event_date" id="event_date" required>
+                    <input type="date" name="event_date" id="event_date" required><br>
+                    <label>Number of Participants:</label><br>
+                    <input type="number" name="participants" id="participants" required>
                 `;
             });
         });
+    }
+
+    function addRedemption(){
+        const checkbox = document.getElementById('redemption_check');
+        const redemptionDiv = document.getElementById('redemption_bracket');
+
+        if(checkbox.checked){
+            redemptionDiv.innerHTML = `
+                    <h2>Redemption Winnner</h2>
+                    <div>
+                        <label>Player Name (with tags)</label><br>
+                        <sub>Ex: BN/KML|John Lion</sub><br>
+                        <input type="text" name="redemption_name" maxlength="40" label="Redemption Name" required="True" id="redemption_name">
+                    </div>
+                    <div>
+                        <label>Primary Character</label><br>
+                        <select name="redemption_primary" label="Redemption Primary" required id="redemption_primary" onchange="updateAlts('redemption_primary', 'redemption_alt')">
+                            <option value="Random">Random</option>
+                            <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
+                            <option value="Bayonetta">Bayonetta</option>
+                            <option value="Bowser">Bowser</option>
+                            <option value="Bowser Jr">Bowser Jr</option>
+                            <option value="Byleth">Byleth</option>
+                            <option value="Captain Falcon">Captain Falcon</option>
+                            <option value="Chrom">Chrom</option>
+                            <option value="Cloud">Cloud</option>
+                            <option value="Corrin">Corrin</option>
+                            <option value="Daisy">Daisy</option>
+                            <option value="Dark Pit">Dark Pit</option>
+                            <option value="Dark Samus">Dark Samus</option>
+                            <option value="Diddy Kong">Diddy Kong</option>
+                            <option value="Donkey Kong">Donkey Kong</option>
+                            <option value="Dr Mario">Dr Mario</option>
+                            <option value="Duck Hunt">Duck Hunt</option>
+                            <option value="Falco">Falco</option>
+                            <option value="Fox">Fox</option>
+                            <option value="Ganondorf">Ganondorf</option>
+                            <option value="Greninja">Greninja</option>
+                            <option value="Hero">Hero</option>
+                            <option value="Ice Climbers">Ice Climbers</option>
+                            <option value="Ike">Ike</option>
+                            <option value="Incineroar">Incineroar</option>
+                            <option value="Inkling">Inkling</option>
+                            <option value="Isabelle">Isabelle</option>
+                            <option value="Jigglypuff">Jigglypuff</option>
+                            <option value="Joker">Joker</option>
+                            <option value="Kazuya">Kazuya</option>
+                            <option value="Ken">Ken</option>
+                            <option value="King Dedede">King Dedede</option>
+                            <option value="King K Rool">King K Rool</option>
+                            <option value="Kirby">Kirby</option>
+                            <option value="Link">Link</option>
+                            <option value="Little Mac">Little Mac</option>
+                            <option value="Lucario">Lucario</option>
+                            <option value="Lucas">Lucas</option>
+                            <option value="Lucina">Lucina</option>
+                            <option value="Luigi">Luigi</option>
+                            <option value="Mario">Mario</option>
+                            <option value="Marth">Marth</option>
+                            <option value="Mega Man">Mega Man</option>
+                            <option value="Meta Knight">Meta Knight</option>
+                            <option value="Mewtwo">Mewtwo</option>
+                            <option value="Mii Brawler">Mii Brawler</option>
+                            <option value="Mii Gunner">Mii Gunner</option>
+                            <option value="Mii Swordfighter">Mii Swordfighter</option>
+                            <option value="Min Min">Min Min</option>
+                            <option value="Mr Game &amp; Watch">Mr Game &amp; Watch</option>
+                            <option value="Ness">Ness</option>
+                            <option value="Olimar">Olimar</option>
+                            <option value="Pac-Man">Pac-Man</option>
+                            <option value="Palutena">Palutena</option>
+                            <option value="Peach">Peach</option>
+                            <option value="Pichu">Pichu</option>
+                            <option value="Pikachu">Pikachu</option>
+                            <option value="Piranha Plant">Piranha Plant</option>
+                            <option value="Pit">Pit</option>
+                            <option value="Pokemon Trainer">Pokemon Trainer</option>
+                            <option value="Pyra and Mythra">Pyra and Mythra</option>
+                            <option value="Richter">Richter</option>
+                            <option value="Ridley">Ridley</option>
+                            <option value="ROB">ROB</option>
+                            <option value="Robin">Robin</option>
+                            <option value="Rosalina &amp; Luma">Rosalina &amp; Luma</option>
+                            <option value="Roy">Roy</option>
+                            <option value="Ryu">Ryu</option>
+                            <option value="Samus">Samus</option>
+                            <option value="Sephiroth">Sephiroth</option>
+                            <option value="Sheik">Sheik</option>
+                            <option value="Shulk">Shulk</option>
+                            <option value="Simon">Simon</option>
+                            <option value="Snake">Snake</option>
+                            <option value="Sonic">Sonic</option>
+                            <option value="Sora">Sora</option>
+                            <option value="Steve">Steve</option>
+                            <option value="Terry">Terry</option>
+                            <option value="Toon Link">Toon Link</option>
+                            <option value="Villager">Villager</option>
+                            <option value="Wario">Wario</option>
+                            <option value="Wii Fit Trainer">Wii Fit Trainer</option>
+                            <option value="Wolf">Wolf</option>
+                            <option value="Yoshi">Yoshi</option>
+                            <option value="Young Link">Young Link</option>
+                            <option value="Zelda">Zelda</option>
+                            <option value="Zero Suit Samus">Zero Suit Samus</option>
+                        </select><br>
+                    </div>
+                    <div>
+                        <label>Character Alt/Color</label><br>
+                        <select name="redemption_alt" label="Redemption Alt" required id="redemption_alt"></select><br>
+                    </div>
+            `;
+            updateAlts("redemption_primary", "redemption_alt");
+        } else {
+            redemptionDiv.innerHTML = ``;
+        }
+    }
+    function addSideEvent(){
+        const checkbox = document.getElementById('side_check');
+        const sideDiv = document.getElementById('side_bracket');
+
+        if(checkbox.checked){
+            sideDiv.innerHTML = `
+                    <h2>Side Bracket Winnner</h2>
+                    <div>
+                        <label>Side Event Name:</label><br>
+                        <input type="text" name="side_event" label="SideEvent Name" required="True" id="side_event">
+                    </div>
+                    <div>
+                        <label>Player Name(s) (with tags)</label><br>
+                        <sub>Ex: BN/KML|John Lion & JL|Mr. Cville</sub><br>
+                        <input type="text" name="side_name" maxlength="80" label="SideEvent Name" required="True" id="side_name">
+                    </div>
+            `;
+        } else {
+            sideDiv.innerHTML = ``;
+        }
     }
 
     updateAlts("player1_primary", "player1_alt");
