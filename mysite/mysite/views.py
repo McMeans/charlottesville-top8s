@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.template.loader import get_template
-from .models import Player
+from .models import Player, Event
+from datetime import datetime
 
 def homepage_view(request):
     return render(request, 'mysite/homepage.html')
@@ -40,6 +41,17 @@ def submit(request):
             if not terChar == 'None':
                 tertiary = f"static/images/icons/{terChar}_icon.png"
         top_players[index] = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
-        
-    #TODO: Retrieve event type and it's information; Add function to create image
+    date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
+    if request.POST.get('event_type') == 'smashatuva':
+        title = "Smash @ UVA " + request.POST.get('semester')[0:1] + date[-2:] + " #"
+    else:
+        title = "The CUT "
+    title += request.POST.get('event_number')
+    participants = request.POST.get('participants')
+    event = Event.objects.create(event_title=title, event_participants=participants, event_date=date)
+    #TODO: ADD REDEMPTION AND SIDE BRACKET PLAYERS
+    return constructGraphic(top_players, event) #ADD CORRECT PARAMETERS
+
+def constructGraphic(top_players, event, redemption, sidebracket):
+    #TODO: Actually implement this
     return None
