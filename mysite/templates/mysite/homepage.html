@@ -1,6 +1,7 @@
-<h1>Charlottesville Graphic Maker</h1>
+<h1>Charlottesville Top8 Graphic Maker</h1>
 <text>Created by Luke McMeans</text>
 <form action="{% url 'submit' %}" method="post">
+    {% csrf_token %}
     <fieldset>
         <label>What event is this for?</label>
         <div>
@@ -41,7 +42,7 @@
                 <input type="text" name="player1_name" maxlength="40" label="Player1 Name" required="True" id="player1_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player1_handle" minlength="4" maxlength="15" label="Player1 Handle" id="player1_handle">
             </div>
             <div>
@@ -340,7 +341,7 @@
                 <input type="text" name="player2_name" maxlength="40" label="Player2 Name" required="True" id="player2_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player2_handle" minlength="4" maxlength="15" label="Player2 Handle" id="player2_handle">
             </div>
             <div>
@@ -639,7 +640,7 @@
                 <input type="text" name="player3_name" maxlength="40" label="Player3 Name" required="True" id="player3_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player3_handle" minlength="4" maxlength="15" label="Player3 Handle" id="player3_handle">
             </div>
             <div>
@@ -938,7 +939,7 @@
                 <input type="text" name="player4_name" maxlength="40" label="Player4 Name" required="True" id="player4_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player4_handle" minlength="4" maxlength="15" label="Player4 Handle" id="player4_handle">
             </div>
             <div>
@@ -1237,7 +1238,7 @@
                 <input type="text" name="player5_name" maxlength="40" label="Player5 Name" required="True" id="player5_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player5_handle" minlength="4" maxlength="15" label="Player5 Handle" id="player5_handle">
             </div>
             <div>
@@ -1536,7 +1537,7 @@
                 <input type="text" name="player6_name" maxlength="40" label="Player6 Name" required="True" id="player6_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player6_handle" minlength="4" maxlength="15" label="Player6 Handle" id="player6_handle">
             </div>
             <div>
@@ -1835,7 +1836,7 @@
                 <input type="text" name="player7_name" maxlength="40" label="Player7 Name" required="True" id="player7_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player7_handle" minlength="4" maxlength="15" label="Player7 Handle" id="player7_handle">
             </div>
             <div>
@@ -2134,7 +2135,7 @@
                 <input type="text" name="player8_name" maxlength="40" label="Player8 Name" required="True" id="player8_name">
             </div>
             <div>
-                <label>X/Twitter Handle (without @) (optional)</label><br>
+                <label>X/Twitter Handle (optional)</label><br>
                 <input type="text" name="player8_handle" minlength="4" maxlength="15" label="Player8 Handle" id="player8_handle">
             </div>
             <div>
@@ -2438,7 +2439,7 @@
             <label for="single_elim">Single Elimination</label>
         </div>
     </fieldset>
-    
+
     <fieldset>
         <input type="checkbox" name="redemption_check" id="redemption_check" onclick="addRedemption()">
         <label for="redemption_check">Report Redemption Winner</label>
@@ -2495,7 +2496,7 @@
         font-weight: 600;
     }
 
-    input {
+    input:not(type="file") {
         background-color: rgba(35, 45, 75, 0.9);
         font-family: 'Zilla Slab', sans-serif;
         color: white;

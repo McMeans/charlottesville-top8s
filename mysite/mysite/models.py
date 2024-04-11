@@ -2,12 +2,12 @@ from django.db import models
 
 
 class Player(models.Model):
-    player_tag = models.CharField()
     player_name = models.CharField()
-    primary_character = models.CharField()
-    character_alt = models.IntegerField()
-    secondary_character = models.CharField()
-    tertiary_character = models.CharField()
+    player_handle = models.CharField()
+    player_placement = models.IntegerField()
+    primary_character = models.ImageField()
+    secondary_character = models.ImageField()
+    tertiary_character = models.ImageField()
     
     def __str__(self):
         return self.player_name
