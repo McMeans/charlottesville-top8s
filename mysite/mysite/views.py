@@ -34,10 +34,15 @@ def submit(request):
         primary = f"static/images/renders/{primChar}_{primAlt}.png"
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
+        terChar = request.POST.get(f"player{number}_tertiary")
+        tertiary = None
+        customImage = request.POST.get(f"player{number}_custom")
+        if not customImage == None:
+            primary = customImage
+            terChar = secChar
+            secChar = primChar
         if not secChar == 'None':
             secondary = f"static/images/icons/{secChar}_icon.png"
-            terChar = request.POST.get(f"player{number}_tertiary")
-            tertiary = None
             if not terChar == 'None':
                 tertiary = f"static/images/icons/{terChar}_icon.png"
         top_players[index] = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
@@ -48,10 +53,17 @@ def submit(request):
         title = "The CUT "
     title += request.POST.get('event_number')
     participants = request.POST.get('participants')
-    event = Event.objects.create(event_title=title, event_participants=participants, event_date=date)
-    #TODO: ADD REDEMPTION AND SIDE BRACKET PLAYERS
-    return constructGraphic(top_players, event) #ADD CORRECT PARAMETERS
+    if request.POST.get('redemption_check'):
+        redempWinner = request.POST.get('redemption_name').strip()
+        redempChar = request.POST.get('redemption_primary')
+        redempAlt = request.POST.get('redemption_alt')[0:1]
+        redempRender = f"static/images/renders/{redempChar}_{redempAlt}_redemption.png"
+    if request.POST.get('side_check'):
+        sideTitle = request.POST.get('side_event').strip()
+        sideWinner = request.POST.get('side_name').strip()
+    event = Event.objects.create(event_title=title, event_participants=participants, event_date=date, side_title=sideTitle, side_winner=sideWinner, redemption_winner=redempWinner, redemption_redner=redempRender)
+    return constructGraphic(top_players, event)
 
-def constructGraphic(top_players, event, redemption, sidebracket):
+def constructGraphic(top_players, event):
     #TODO: Actually implement this
     return None

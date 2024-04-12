@@ -2950,11 +2950,12 @@
                     <h2>Side Bracket Winnner</h2>
                     <div>
                         <label>Side Event Name:</label><br>
-                        <input type="text" name="side_event" label="SideEvent Name" required="True" id="side_event">
+                        <input type="text" name="side_event" label="SideEvent Name" required="True" id="side_event" max="30">
                     </div>
                     <div>
-                        <label>Player Name(s) (with tags)</label><br>
-                        <sub>Ex: BN/KML|John Lion & JL|Mr. Cville</sub><br>
+                        <label>Player Name(s) (no tags if multiple winners)</label><br>
+                        <sub>Ex: BN/KML|John Lion</sub><br>
+                        <sub>Ex: John Lion & Mr. Cville</sub><br>
                         <input type="text" name="side_name" maxlength="80" label="SideEvent Name" required="True" id="side_name">
                     </div>
             `;

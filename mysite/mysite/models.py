@@ -19,7 +19,11 @@ class Player(models.Model):
 class Event(models.Model):
     event_title = models.CharField(max_length=20)
     event_participants = models.IntegerField()
-    event_date = models.CharField()
+    event_date = models.CharField(max_length=10)
+    side_title = models.CharField(max_length=30)
+    side_winner = models.CharField(max_length=80)
+    redemption_winner = models.CharField(max_length=40)
+    redemption_render = models.ImageField()
 
     class Meta:
         app_label = 'mysite'
