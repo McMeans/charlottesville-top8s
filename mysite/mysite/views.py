@@ -9,7 +9,7 @@ def homepage_view(request):
 def submit(request):
     top_players = [None] * 8
     elimination_style = request.POST.get('elim_type')
-    for index in enumerate(top_players):
+    for index, player in enumerate(top_players):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
         handle = request.POST.get(f"player{number}_handle").strip()
@@ -31,7 +31,7 @@ def submit(request):
                 placement = 5
         primChar = request.POST.get(f"player{number}_primary")
         primAlt = (request.POST.get(f"player{number}_alt"))[0:1]
-        primary = f"static/images/renders/{primChar}_{primAlt}.png"
+        primary = f"static/images/renders/{primChar}/{primChar}_{primAlt}.png"
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
@@ -45,7 +45,7 @@ def submit(request):
             secondary = f"static/images/icons/{secChar}_icon.png"
             if not terChar == 'None':
                 tertiary = f"static/images/icons/{terChar}_icon.png"
-        top_players[index] = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
+        player = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
     date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
     if request.POST.get('event_type') == 'smashatuva':
         title = "Smash @ UVA " + request.POST.get('semester')[0:1] + date[-2:] + " #"

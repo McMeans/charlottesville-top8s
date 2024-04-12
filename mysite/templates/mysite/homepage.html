@@ -2496,7 +2496,7 @@
         font-weight: 600;
     }
 
-    input:not(type="file") {
+    input {
         background-color: rgba(35, 45, 75, 0.9);
         font-family: 'Zilla Slab', sans-serif;
         color: white;
@@ -2521,273 +2521,113 @@
 </style>
 
 <script>
+    //import jsonData from 'static/alts.json'
     function updateAlts(characterID, selectID) {
         const characterSelect = document.getElementById(characterID);
         const altSelect = document.getElementById(selectID);
 
+        //TODO: GET RID OF THIS
+        const jsonData = [
+            {
+                "Banjo & Kazooie" : ["Default", "Pink", "Black", "Red", "White", "Yellow", "Blue", "Green"],
+                "Bayonetta": ["Default", "Original", "Yellow", "Green", "Red", "Pink", "White", "Blue"],
+                "Bowser": ["Default", "Black", "Yellow", "Green", "Grey", "Orange", "Red", "Blue"],
+                "Bowser Jr": ["Junior", "Larry", "Roy", "Wendy", "Iggy", "Morton", "Lemmy", "Ludwig"],
+                "Byleth": ["Male", "Female", "Blue", "Red", "Yellow", "Green", "Black", "Grey"],
+                "Captain Falcon": ["Default", "Black", "Red", "Green", "Blue", "White", "Yellow", "Cyan"],
+                "Chrom": ["Default", "Red", "Green", "Yellow", "Black", "Purple", "White", "Cyan"],
+                "Cloud": ["Default", "Advent", "Blue", "Advent Blue", "Red", "Advent Black", "Brown", "Advent Purple"],
+                "Corrin": ["Male", "Female", "Red", "Orange", "Blue", "Pink", "Green", "Black"],
+                "Daisy": ["Default", "Green", "Pink", "Blue", "Red", "Purple", "White", "Black"],
+                "Dark Pit": ["Default", "Green", "Brown", "Yellow", "Red", "Blue", "White", "Purple"],
+                "Dark Samus": ["Default", "Green", "Purple", "Red", "Yellow", "Grey", "Black", "Pink"],
+                "Diddy Kong": ["Default", "White", "Pink", "Purple", "Green", "Blue", "Yellow", "Cyan"],
+                "Donkey Kong": ["Default", "Black", "Red", "Blue", "Green", "White", "Yellow", "Pink"],
+                "Dr Mario": ["Default", "Red", "Blue", "Green", "Black", "Yellow", "Purple", "Pink"],
+                "Duck Hunt": ["Default", "Black", "Blue", "Brown", "White", "Tan", "Yellow", "Red"],
+                "Falco": ["Default", "Orange", "Blue", "Red", "Green", "Black", "White", "Pink"],
+                "Fox": ["Default", "Black", "Red", "Green", "Orange", "White", "Yellow", "Purple"],
+                "Ganondorf": ["Default", "Violet", "Blue", "Green", "Purple", "Brown", "White", "Grey"],
+                "Greninja": ["Default", "Red", "Pink", "Black", "Violet", "Green", "Grey", "Purple"],
+                "Hero": ["Luminary", "Erdrick", "Solo", "Eight", "Luminary Red", "Erdrick White", "Solo Orange", "Eight Blue"],
+                "Ice Climbers": ["Default", "Blue", "Green", "Indigo", "Red", "Brown", "White", "Orange"],
+                "Ike": ["Default", "Brown", "Purple", "Red", "Yellow", "Green", "Blue", "Black"],
+                "Incineroar": ["Default", "Green", "Black", "Blue", "Orange", "Purple", "Grey", "White"],
+                "Inkling": ["Orange", "Blue", "Yellow", "Green", "Pink", "Cyan", "Purple", "Indigo"],
+                "Isabelle": ["Default", "Yellow", "Pink", "Red", "Purple", "Teal", "Grey", "Blue"],
+                "Jigglypuff": ["Default", "Red", "White", "Blue", "Green", "Pink", "Nurse", "Glasses"],
+                "Joker": ["Default", "Purple", "Blue", "Yellow", "Red", "White", "School", "School White"],
+                "Kazuya": ["Default", "Suit", "Red", "White", "Blue", "Purple", "Black", "Yellow"],
+                "Ken": ["Default", "Grey", "Blue", "White", "Green", "Yellow", "Cyan", "Black"],
+                "King Dedede": ["Default", "Pink", "Green", "Purple", "Cyan", "Grey", "Blue", "Black"],
+                "King K Rool": ["Default", "Orange", "Blue", "Yellow", "Pink", "Black", "Brown", "White"],
+                "Kirby": ["Default", "Yellow", "Blue", "Red", "Green", "White", "Orange", "Purple"],
+                "Link": ["Blue", "Green", "Red", "Fierce Deity", "Indigo", "Teal", "White", "Black"],
+                "Little Mac": ["Default", "Yellow", "White", "Blue", "Black", "Pink", "Wire", "Green"],
+                "Lucario": ["Default", "Purple", "White", "Grey", "Teal", "Navy", "Green", "Pink"],
+                "Lucas": ["Default", "Orange", "Blue", "Red", "Grey", "Cyan", "Green", "Purple"],
+                "Lucina": ["Default", "Green", "Black", "White", "Red", "Yellow", "Navy", "Purple"],
+                "Luigi": ["Default", "Orange", "Pink", "Cyan", "White", "Purple", "Blue", "Yellow"],
+                "Mario": ["Default", "Striped", "Blue", "Black", "Green", "Purple", "Builder", "Wedding"],
+                "Marth": ["Default", "Red", "Green", "Black", "White", "Blue", "Yellow", "Purple"],
+                "Mega Man": ["Default", "Red", "Green", "Brown", "Cyan", "Chartreuse", "Orange", "Grey"],
+                "Meta Knight": ["Default", "White", "Red", "Green", "Navy", "Pink", "Galacta", "Dark"],
+                "Mewtwo": ["Default", "Orange", "Blue", "Brown", "Pink", "Yellow", "Cyan", "Purple"],
+                "Min Min": ["Default", "Cyan", "Red", "Yellow", "Blue", "Green", "Pink", "Black"],
+                "Mr Game & Watch": ["Default", "Red", "Yellow", "Blue", "Teal", "Cyan", "Green", "White"],
+                "Ness": ["Default", "White", "Yellow", "Green", "Blue", "Black", "Cyan", "Purple"],
+                "Olimar": ["Tan", "Red", "Green", "Blue", "Alph", "Alph Green", "Alph Pink", "Alph Red"],
+                "Pac-Man": ["Default", "Blue", "Yellow", "Black", "Purple", "White", "Red", "Plaid"],
+                "Palutena": ["Default", "Pink", "Cyan", "Green", "Blue", "Red", "Black", "Purple"],
+                "Peach": ["Default", "Yellow", "Red", "Blue", "Green", "White", "Fire", "Black"],
+                "Pichu": ["Default", "Goggles", "Red", "Grey", "Blue", "Spiky", "White", "Band"],
+                "Pikachu": ["Default", "Red", "Green", "Yellow", "Blue", "Glasses", "Female", "Libre"],
+                "Piranha Plant": ["Default", "Green", "Yellow", "Pink", "Black", "White", "Purple", "Blue"],
+                "Pit": ["Default", "Yellow", "Red", "Green", "Blue", "Black", "White", "Pink"],
+                "Pokemon Trainer": ["Default", "Red", "Green", "Pink", "Yellow", "White", "Blue", "Purple"],
+                "Pyra and Mythra": ["Default", "Green", "Swapped", "Gormotti", "Black", "Blue", "Saturated", "Metal"],
+                "Richter": ["Default", "Red", "Purple", "Green", "Yellow", "Blue", "Black", "White"],
+                "Ridley": ["Default", "Meta", "Red", "Blue", "Green", "Purple", "Yellow", "Grey"],
+                "ROB": ["Default", "Grey", "Yellow", "Purple", "Blue", "Green", "Cyan", "Red"],
+                "Robin": ["Male", "Female", "Green", "Red", "Blue", "Yellow", "White", "Pink"],
+                "Rosalina & Luma": ["Default", "Pink", "Yellow", "Green", "Red", "Purple", "Black", "White"],
+                "Roy": ["Default", "Red", "Green", "Violet", "Cyan", "Purple", "Pink", "Yellow"],
+                "Ryu": ["Default", "Grey", "White", "Black", "Orange", "Blue", "Green", "Purple"],
+                "Samus": ["Default", "Blue", "Pink", "Brown", "Purple", "Green", "White", "Black"],
+                "Sephiroth": ["Default", "Purple", "Green", "Red", "White", "Blue", "Coatless", "Coatless Violet"],
+                "Sheik": ["Default", "Red", "Indigo", "Purple", "Green", "Black", "Yellow", "White"],
+                "Shulk": ["Default", "White", "Black", "Orange", "Blue", "Lavender", "Yellow", "Trunks"],
+                "Simon": ["Default", "Red", "Yellow", "Black", "Blue", "Purple", "Orange", "Indigo"],
+                "Snake": ["Grey", "Black", "Red", "Blue", "Green", "White", "Chartreuse", "Brown"],
+                "Sonic": ["Default", "Purple", "Cyan", "White", "Black", "Yellow", "Orange", "Green"],
+                "Sora": ["Default", "Two", "Dream", "Three", "Grey", "Red", "Blue", "White"],
+                "Steve": ["Steve", "Alex", "Steve White", "Alex White", "Steve Black", "Alex Blue", "Zombie", "Enderman"],
+                "Terry": ["Default", "Blue", "Brown", "Green", "Orange", "Grey", "Black", "Yellow"],
+                "Toon Link": ["Default", "Red", "Blue", "Purple", "Brown", "Black", "Grey", "Dark Green"],
+                "Villager": ["Default", "Pink", "Yellow", "Green", "Cyan", "Blue", "Purple", "Chartreuse"],
+                "Wario": ["Default", "Classic", "Red", "Classic Red", "Yellow", "Classic Cyan", "Green", "Classic Green"],
+                "Wii Fit Trainer": ["Female", "Male", "Green", "Male Green", "Red", "Male Red", "Yellow", "Male Yellow"],
+                "Wolf": ["Default", "Brown", "Red", "Blue", "Green", "Orange", "Black", "Pink"],
+                "Yoshi": ["Default", "Red", "Blue", "Yellow", "Pink", "Cyan", "Purple", "Crafted"],
+                "Young Link": ["Default", "Red", "Blue", "White", "Pink", "Cyan", "Orange", "Dark"],
+                "Zelda": ["Default", "Red", "Blue", "Violet", "Green", "Black", "Purple", "White"],
+                "Zero Suit Samus": ["Default", "Blue", "Red", "Black", "Green", "White", "Shorts Orange", "Short Blue"],
+                "Mii Brawler": ["Default"],
+                "Mii Swordfighter": ["Default"],
+                "Mii Gunner": ["Default"],
+                "Random": ["Default"]
+            }
+        ];
+
         altSelect.innerHTML = '';
         const character = characterSelect.value;
-        const alts = getAlts(character);
+        const alts = jsonData.find(item => item.hasOwnProperty(character))[character];
 
         const index = 0;
         for (i = 0; i < alts.length; i++) {
             const option = document.createElement('option');
             option.text = i + " - " + alts[i];
             altSelect.add(option);
-        }
-    }
-    function getAlts(character) {
-        if (character === 'Banjo & Kazooie') {
-            return ['Default', 'Pink', 'Black', 'Red', 'White', 'Yellow', 'Blue', 'Green'];
-        }
-        else if (character === 'Bayonetta') {
-            return ['Default', 'Original', 'Yellow', 'Green', 'Red', 'Pink', 'White', 'Blue'];
-        }
-        else if (character === 'Bowser') {
-            return ['Default', 'Black', 'Yellow', 'Green', 'Grey', 'Orange', 'Red', 'Blue'];
-        }
-        else if (character === 'Bowser Jr') {
-            return ['Junior', 'Larry', 'Roy', 'Wendy', 'Iggy', 'Morton', 'Lemmy', 'Ludwig'];
-        }
-        else if (character === 'Byleth') {
-            return ['Male', 'Female', 'Blue', 'Red', 'Yellow', 'Green', 'Black', 'Grey'];
-        }
-        else if (character === 'Captain Falcon') {
-            return ['Default', 'Black', 'Red', 'Green', 'Blue', 'White', 'Yellow', 'Cyan'];
-        }
-        else if (character === 'Chrom') {
-            return ['Default', 'Red', 'Green', 'Yellow', 'Black', 'Purple', 'White', 'Cyan'];
-        }
-        else if (character === 'Cloud') {
-            return ['Default', 'Advent', 'Blue', 'Advent Blue', 'Red', 'Advent Black', 'Brown', 'Advent Purple'];
-        }
-        else if (character === 'Corrin') {
-            return ['Male', 'Female', 'Red', 'Orange', 'Blue', 'Pink', 'Green', 'Black'];
-        }
-        else if (character === 'Daisy') {
-            return ['Default', 'Green', 'Pink', 'Blue', 'Red', 'Purple', 'White', 'Black'];
-        }
-        else if (character === 'Dark Pit') {
-            return ['Default', 'Green', 'Brown', 'Yellow', 'Red', 'Blue', 'White', 'Purple'];
-        }
-        else if (character === 'Dark Samus') {
-            return ['Default', 'Green', 'Purple', 'Red', 'Yellow', 'Grey', 'Black', 'Pink'];
-        }
-        else if (character === 'Diddy Kong') {
-            return ['Default', 'White', 'Pink', 'Purple', 'Green', 'Blue', 'Yellow', 'Cyan'];
-        }
-        else if (character === 'Donkey Kong') {
-            return ['Default', 'Black', 'Red', 'Blue', 'Green', 'White', 'Yellow', 'Pink'];
-        }
-        else if (character === 'Dr Mario') {
-            return ['Default', 'Red', 'Blue', 'Green', 'Black', 'Yellow', 'Purple', 'Pink'];
-        }
-        else if (character === 'Duck Hunt') {
-            return ['Default', 'Black', 'Blue', 'Brown', 'White', 'Tan', 'Yellow', 'Red'];
-        }
-        else if (character === 'Falco') {
-            return ['Default', 'Orange', 'Blue', 'Red', 'Green', 'Black', 'White', 'Pink'];
-        }
-        else if (character === 'Fox') {
-            return ['Default', 'Black', 'Red', 'Green', 'Orange', 'White', 'Yellow', 'Purple'];
-        }
-        else if (character === 'Ganondorf') {
-            return ['Default', 'Violet', 'Blue', 'Green', 'Purple', 'Brown', 'White', 'Grey'];
-        }
-        else if (character === 'Greninja') {
-            return ['Default', 'Red', 'Pink', 'Black', 'Violet', 'Green', 'Grey', 'Purple'];
-        }
-        else if (character === 'Hero') {
-            return ['Luminary', 'Erdrick', 'Solo', 'Eight', 'Luminary Red', 'Erdrick White', 'Solo Orange', 'Eight Blue'];
-        }
-        else if (character === 'Ice Climbers') {
-            return ['Default', 'Blue', 'Green', 'Indigo', 'Red', 'Brown', 'White', 'Orange'];
-        }
-        else if (character === 'Ike') {
-            return ['Default', 'Brown', 'Purple', 'Red', 'Yellow', 'Green', 'Blue', 'Black'];
-        }
-        else if (character === 'Incineroar') {
-            return ['Default', 'Green', 'Black', 'Blue', 'Orange', 'Purple', 'Grey', 'White'];
-        }
-        else if (character === 'Inkling') {
-            return ['Orange', 'Blue', 'Yellow', 'Green', 'Pink', 'Cyan', 'Purple', 'Indigo'];
-        }
-        else if (character === 'Isabelle') {
-            return ['Default', 'Yellow', 'Pink', 'Red', 'Purple', 'Teal', 'Grey', 'Blue'];
-        }
-        else if (character === 'Jigglypuff') {
-            return ['Default', 'Red', 'White', 'Blue', 'Green', 'Pink', 'Nurse', 'Glasses'];
-        }
-        else if (character === 'Joker') {
-            return ['Default', 'Purple', 'Blue', 'Yellow', 'Red', 'White', 'School', 'School White'];
-        }
-        else if (character === 'Kazuya') {
-            return ['Default', 'Suit', 'Red', 'White', 'Blue', 'Purple', 'Black', 'Yellow'];
-        }
-        else if (character === 'Ken') {
-            return ['Default', 'Grey', 'Blue', 'White', 'Green', 'Yellow', 'Cyan', 'Black'];
-        }
-        else if (character === 'King Dedede') {
-            return ['Default', 'Pink', 'Green', 'Purple', 'Cyan', 'Grey', 'Blue', 'Black'];
-        }
-        else if (character === 'King K Rool') {
-            return ['Default', 'Orange', 'Blue', 'Yellow', 'Pink', 'Black', 'Brown', 'White'];
-        }
-        else if (character === 'Kirby') {
-            return ['Default', 'Yellow', 'Blue', 'Red', 'Green', 'White', 'Orange', 'Purple'];
-        }
-        else if (character === 'Link') {
-            return ['Blue', 'Green', 'Red', 'Fierce Deity', 'Indigo', 'Teal', 'White', 'Black'];
-        }
-        else if (character === 'Little Mac') {
-            return ['Default', 'Yellow', 'White', 'Blue', 'Black', 'Pink', 'Wire', 'Green'];
-        }
-        else if (character === 'Lucario') {
-            return ['Default', 'Purple', 'White', 'Grey', 'Teal', 'Navy', 'Green', 'Pink'];
-        }
-        else if (character === 'Lucas') {
-            return ['Default', 'Orange', 'Blue', 'Red', 'Grey', 'Cyan', 'Green', 'Purple'];
-        }
-        else if (character === 'Lucina') {
-            return ['Default', 'Green', 'Black', 'White', 'Red', 'Yellow', 'Navy', 'Purple'];
-        }
-        else if (character === 'Luigi') {
-            return ['Default', 'Orange', 'Pink', 'Cyan', 'White', 'Purple', 'Blue', 'Yellow'];
-        }
-        else if (character === 'Mario') {
-            return ['Default', 'Striped', 'Blue', 'Black', 'Green', 'Purple', 'Builder', 'Wedding'];
-        }
-        else if (character === 'Marth') {
-            return ['Default', 'Red', 'Green', 'Black', 'White', 'Blue', 'Yellow', 'Purple'];
-        }
-        else if (character === 'Mega Man') {
-            return ['Default', 'Red', 'Green', 'Brown', 'Cyan', 'Chartreuse', 'Orange', 'Grey'];
-        }
-        else if (character === 'Meta Knight') {
-            return ['Default', 'White', 'Red', 'Green', 'Navy', 'Pink', 'Galacta', 'Dark'];
-        }
-        else if (character === 'Mewtwo') {
-            return ['Default', 'Orange', 'Blue', 'Brown', 'Pink', 'Yellow', 'Cyan', 'Purple'];
-        }
-        else if (character === 'Min Min') {
-            return ['Default', 'Cyan', 'Red', 'Yellow', 'Blue', 'Green', 'Pink', 'Black'];
-        }
-        else if (character === 'Mr Game & Watch') {
-            return ['Default', 'Red', 'Yellow', 'Blue', 'Teal', 'Cyan', 'Green', 'White'];
-        }
-        else if (character === 'Ness') {
-            return ['Default', 'White', 'Yellow', 'Green', 'Blue', 'Black', 'Cyan', 'Purple'];
-        }
-        else if (character === 'Olimar') {
-            return ['Tan', 'Red', 'Green', 'Blue', 'Alph', 'Alph Green', 'Alph Pink', 'Alph Red'];
-        }
-        else if (character === 'Pac-Man') {
-            return ['Default', 'Blue', 'Yellow', 'Black', 'Purple', 'White', 'Red', 'Plaid'];
-        }
-        else if (character === 'Palutena') {
-            return ['Default', 'Pink', 'Cyan', 'Green', 'Blue', 'Red', 'Black', 'Purple'];
-        }
-        else if (character === 'Peach') {
-            return ['Default', 'Yellow', 'Red', 'Blue', 'Green', 'White', 'Fire', 'Black'];
-        }
-        else if (character === 'Pichu') {
-            return ['Default', 'Goggles', 'Red', 'Grey', 'Blue', 'Spiky', 'White', 'Band'];
-        }
-        else if (character === 'Pikachu') {
-            return ['Default', 'Red', 'Green', 'Yellow', 'Blue', 'Glasses', 'Female', 'Libre'];
-        }
-        else if (character === 'Piranha Plant') {
-            return ['Default', 'Green', 'Yellow', 'Pink', 'Black', 'White', 'Purple', 'Blue'];
-        }
-        else if (character === 'Pit') {
-            return ['Default', 'Yellow', 'Red', 'Green', 'Blue', 'Black', 'White', 'Pink'];
-        }
-        else if (character === 'Pokemon Trainer') {
-            return ['Default', 'Red', 'Green', 'Pink', 'Yellow', 'White', 'Blue', 'Purple'];
-        }
-        else if (character === 'Pyra and Mythra') {
-            return ['Default', 'Green', 'Swapped', 'Gormotti', 'Black', 'Blue', 'Saturated', 'Metal'];
-        }
-        else if (character === 'Richter') {
-            return ['Default', 'Red', 'Purple', 'Green', 'Yellow', 'Blue', 'Black', 'White'];
-        }
-        else if (character === 'Ridley') {
-            return ['Default', 'Meta', 'Red', 'Blue', 'Green', 'Purple', 'Yellow', 'Grey'];
-        }
-        else if (character === 'ROB') {
-            return ['Default', 'Grey', 'Yellow', 'Purple', 'Blue', 'Green', 'Cyan', 'Red'];
-        }
-        else if (character === 'Robin') {
-            return ['Male', 'Female', 'Green', 'Red', 'Blue', 'Yellow', 'White', 'Pink'];
-        }
-        else if (character === 'Rosalina & Luma') {
-            return ['Default', 'Pink', 'Yellow', 'Green', 'Red', 'Purple', 'Black', 'White'];
-        }
-        else if (character === 'Roy') {
-            return ['Default', 'Red', 'Green', 'Violet', 'Cyan', 'Purple', 'Pink', 'Yellow'];
-        }
-        else if (character === 'Ryu') {
-            return ['Default', 'Grey', 'White', 'Black', 'Orange', 'Blue', 'Green', 'Purple'];
-        }
-        else if (character === 'Samus') {
-            return ['Default', 'Blue', 'Pink', 'Brown', 'Purple', 'Green', 'White', 'Black'];
-        }
-        else if (character === 'Sephiroth') {
-            return ['Default', 'Purple', 'Green', 'Red', 'White', 'Blue', 'Coatless', 'Coatless Violet'];
-        }
-        else if (character === 'Sheik') {
-            return ['Default', 'Red', 'Indigo', 'Purple', 'Green', 'Black', 'Yellow', 'White'];
-        }
-        else if (character === 'Shulk') {
-            return ['Default', 'White', 'Black', 'Orange', 'Blue', 'Lavender', 'Yellow', 'Trunks'];
-        }
-        else if (character === 'Simon') {
-            return ['Default', 'Red', 'Yellow', 'Black', 'Blue', 'Purple', 'Orange', 'Indigo'];
-        }
-        else if (character === 'Snake') {
-            return ['Grey', 'Black', 'Red', 'Blue', 'Green', 'White', 'Chartreuse', 'Brown'];
-        }
-        else if (character === 'Sonic') {
-            return ['Default', 'Purple', 'Cyan', 'White', 'Black', 'Yellow', 'Orange', 'Green'];
-        }
-        else if (character === 'Sora') {
-            return ['Default', 'Two', 'Dream', 'Three', 'Grey', 'Red', 'Blue', 'White'];
-        }
-        else if (character === 'Steve') {
-            return ['Steve', 'Alex', 'Steve White', 'Alex White', 'Steve Black', 'Alex Blue', 'Zombie', 'Enderman'];
-        }
-        else if (character === 'Terry') {
-            return ['Default', 'Blue', 'Brown', 'Green', 'Orange', 'Grey', 'Black', 'Yellow'];
-        }
-        else if (character === 'Toon Link') {
-            return ['Default', 'Red', 'Blue', 'Purple', 'Brown', 'Black', 'Grey', 'Dark Green'];
-        }
-        else if (character === 'Villager') {
-            return ['Default', 'Pink', 'Yellow', 'Green', 'Cyan', 'Blue', 'Purple', 'Chartreuse'];
-        }
-        else if (character === 'Wario') {
-            return ['Default', 'Classic', 'Red', 'Classic Red', 'Yellow', 'Classic Cyan', 'Green', 'Classic Green'];
-        }
-        else if (character === 'Wii Fit Trainer') {
-            return ['Female', 'Male', 'Green', 'Male Green', 'Red', 'Male Red', 'Yellow', 'Male Yellow'];
-        }
-        else if (character === 'Wolf') {
-            return ['Default', 'Brown', 'Red', 'Blue', 'Green', 'Orange', 'Black', 'Pink'];
-        }
-        else if (character === 'Yoshi') {
-            return ['Default', 'Red', 'Blue', 'Yellow', 'Pink', 'Cyan', 'Purple', 'Crafted'];
-        }
-        else if (character === 'Young Link') {
-            return ['Default', 'Red', 'Blue', 'White', 'Pink', 'Cyan', 'Orange', 'Dark'];
-        }
-        else if (character === 'Zelda') {
-            return ['Default', 'Red', 'Blue', 'Violet', 'Green', 'Black', 'Purple', 'White'];
-        }
-        else if (character === 'Zero Suit Samus') {
-            return ['Default', 'Blue', 'Red', 'Black', 'Green', 'White', 'Shorts Orange', 'Short Blue'];
-        }
-        else {
-            return ['Default'];
         }
     }
     
