@@ -1,3 +1,5 @@
+{% load static %}
+
 <h1>Charlottesville Top8 Graphic Maker</h1>
 <text>Created by Luke McMeans</text>
 <form action="{% url 'submit' %}" method="post">
@@ -2454,6 +2456,16 @@
     <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
     <input type="submit" value="SUBMIT">
 </form>
+
+<div class="row" style="width: 80%; margin-left: 10%">
+    {% if graphic %}
+        <h2>Result</h2>
+        <img style="width: 100%; height: auto;" src="/static/graphic.png">    
+    {% else %}
+        <h2>Example</h2>
+        <img style="width: 100%; height: auto;" src="/static/sample.png">
+    {% endif %}
+</div>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');

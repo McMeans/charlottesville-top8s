@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.template.loader import get_template
 from .models import Player, Event
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
@@ -65,43 +64,102 @@ def submit(request):
         sideWinner = request.POST.get('side_name').strip()
     event = Event.objects.create(event_title=title, event_participants=participants, event_date=date, side_title=sideTitle, side_winner=sideWinner, redemption_winner=redempWinner, redemption_redner=redempRender)
     if title.startswith("Smash"):
-        return constructSmashAtUVA(top_players, event)
+        constructSmashAtUVA(top_players, event)
     else:
-        return constructCUT(top_players, event)
+        constructCUT(top_players, event)
+    return None #TODO: DELETE THIS LINE WHEN FINISHED
+    return render(request, 'homepage.html', {
+        "graphic": "success"
+    })
 
 def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGB", (1920,1080))
     start_color = (35, 45, 75)
     end_color = (18, 24, 40) 
-    gradient = [(int(start_color[0] + (end_color[0] - start_color[0]) * i / 1080),
-                int(start_color[1] + (end_color[1] - start_color[1]) * i / 1080),
-                int(start_color[2] + (end_color[2] - start_color[2]) * i / 1080)) for i in range(1080)]
-    graphic.put(gradient * 1920)
+    for y in range(1080):
+        color = (
+            int(start_color[0] + (end_color[0] - start_color[0]) * y / 1080),
+            int(start_color[1] + (end_color[1] - start_color[1]) * y / 1080),
+            int(start_color[2] + (end_color[2] - start_color[2]) * y / 1080)
+        )
+        for x in range(1920):
+            graphic.putpixel((x, y), color)
+    draw = ImageDraw.Draw(graphic)
     font = None #TODO: ADD THIS
     
     #TODO: ADD BACKGROUND IMAGE
 
     #TODO: ADD TITLE
 
-    graphic = addPlayers(top_players, event, graphic, font)
-
-    #TODO: Implement the rest
-    return None
+    graphic = addPlayers(top_players, event, graphic, draw, font)
+    addSideBrackets(event, graphic, draw, font)
+    return None #TODO: DELETE THIS LINE WHEN DONE
+    graphic.save("graphic.png")
 
 def constructCUT(top_players, event):
     graphic = Image.new("RGB", (1920,1080))
+    draw = ImageDraw.Draw(graphic)
     font = None #TODO: ADD THIS
 
     #TODO: ADD BACKGROUND IMAGE
 
     #TODO: ADD TITLE
     
-    graphic = addPlayers(top_players, event, graphic, font)
+    addPlayers(top_players, event, graphic, draw, font)
+    addSideBrackets(event, graphic, draw, font)
+    return None #TODO: DELETE THIS LINE WHEN DONE
+    graphic.save("graphic.png")
 
-    #TODO: Implement the rest
-    return None
 
+def addPlayers(top_players, event, graphic, draw, font):
+    for index, player in enumerate(top_players):
+        #TODO: Add Player Images
+        return None
 
-def addPlayers(top_players, event, graphic, font):
-    #TODO: Actually implement this
-    return None
+    rectCoords = [[35, 770, 632, 937],
+          [683, 564, 1050, 666],
+          [1100, 564, 1467, 666],
+          [1517, 564, 1884, 666],
+          [683, 862, 959, 937],
+          [997, 862, 1272, 937],
+          [1302, 862, 1578, 937],
+          [1609, 862, 1884, 937]]
+    for index, coord in enumerate(rectCoords):
+        border_color = (255, 255, 255)
+        x1, y1 = rectCoords[0], rectCoords[1]
+        x2, y2 = rectCoords[2], rectCoords[3]
+        if event.event_title.startswith("Smash"):
+            start_color = (229, 114, 0)
+            end_color = (217, 69, 31)
+        elif index == 0 or index == 1 or index == 4:
+            start_color = (255, 255, 255)
+            end_color = (217, 217, 217)
+            border_color = (0, 0, 0)
+        else:
+            start_color = (24, 24, 24)
+            end_color = (0, 0, 0)
+        gradient = [
+            (
+                int(start_color[0] + (end_color[0] - start_color[0]) * (i - y1) / (y2 - y1)),
+                int(start_color[1] + (end_color[1] - start_color[1]) * (i - y1) / (y2 - y1)),
+                int(start_color[2] + (end_color[2] - start_color[2]) * (i - y1) / (y2 - y1))
+            ) for i in range(y1, y2)
+        ]
+        for y in range(y1, y2):
+            draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
+        draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
+
+    #TODO: Add Player names and Handles
+    
+    return None #TODO: DELETE WHEN DONE
+
+def addSideBrackets(event, graphic, draw, font):
+    if not event.side_title == None and not event.redemption_winner == None:
+        #TODO: Implement
+        return None
+    elif not event.side_title == None:
+        #TODO: Implement
+        return None
+    elif not event.redemption_winner == None:
+        #TODO: Implement
+        return None
