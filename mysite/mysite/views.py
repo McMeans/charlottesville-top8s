@@ -91,8 +91,8 @@ def constructSmashAtUVA(top_players, event):
 
     #TODO: ADD TITLE
 
-    graphic = addPlayers(top_players, event, graphic, draw, font)
-    addSideBrackets(event, graphic, draw, font)
+    graphic = addPlayers(top_players, event, graphic, draw)
+    addSideBrackets(event, graphic, draw)
     return None #TODO: DELETE THIS LINE WHEN DONE
     graphic.save("graphic.png")
 
@@ -105,13 +105,13 @@ def constructCUT(top_players, event):
 
     #TODO: ADD TITLE
     
-    addPlayers(top_players, event, graphic, draw, font)
-    addSideBrackets(event, graphic, draw, font)
+    addPlayers(top_players, event, graphic, draw)
+    addSideBrackets(event, graphic, draw)
     return None #TODO: DELETE THIS LINE WHEN DONE
     graphic.save("graphic.png")
 
 
-def addPlayers(top_players, event, graphic, draw, font):
+def addPlayers(top_players, event, graphic, draw):
     for index, player in enumerate(top_players):
         #TODO: Add Player Images
         return None
@@ -153,7 +153,7 @@ def addPlayers(top_players, event, graphic, draw, font):
     
     return None #TODO: DELETE WHEN DONE
 
-def addSideBrackets(event, graphic, draw, font):
+def addSideBrackets(event, graphic, draw):
     if not event.side_title == None and not event.redemption_winner == None:
         #TODO: Implement
         return None

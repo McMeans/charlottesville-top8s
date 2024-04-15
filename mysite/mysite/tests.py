@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 graphic = Image.new("RGB", (1920,1080))
 start_color = (35, 45, 75)
@@ -11,6 +11,12 @@ for y in range(1080):
     )
     for x in range(1920):
         graphic.putpixel((x, y), color)
+
+background_image = Image.open('mysite/mysite/uva_sunrise_aerial.jpg')
+background_opacity = background_image.convert("RGBA")
+opacity_layer = Image.new("RGBA", background_opacity.size, (255, 255, 255, int(255 * 0.9)))
+background_opacity = Image.alpha_composite(background_opacity, opacity_layer)
+graphic.paste(background_opacity, (0,0), background_opacity)
 
 draw = ImageDraw.Draw(graphic)
 border_color = (256, 256, 256)
@@ -41,5 +47,13 @@ for index, coord in enumerate(coords):
         draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
     draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
+text = "Smash @ UVA S24 #12"
+font_name = "Arial Bold Italic"
+font_size = 96
+text_color = (255, 255, 255)
+shadow_color = (0, 0, 0, 20)
+font = ImageFont.truetype(font_name + ".ttf", font_size)
+draw.text((40,25), text, font=font, fill=shadow_color)
+draw.text((35,20), text, font=font, fill=text_color)
 # Display the image
 graphic.show()
