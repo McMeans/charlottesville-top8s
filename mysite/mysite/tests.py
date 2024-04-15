@@ -8,14 +8,14 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
-coords = [[35, 770, 632, 937],
-          [683, 564, 1050, 666],
-          [1100, 564, 1467, 666],
-          [1517, 564, 1884, 666],
-          [683, 862, 959, 937],
-          [997, 862, 1272, 937],
-          [1302, 862, 1578, 937],
-          [1609, 862, 1884, 937]]
+coords = [[34, 769, 633, 938],
+          [682, 563, 1051, 667],
+          [1099, 563, 1468, 667],
+          [1516, 563, 1885, 667],
+          [684, 860, 960, 938],
+          [996, 860, 1273, 938],
+          [1301, 860, 1579, 938],
+          [1608, 860, 1885, 938]]
 for index, coord in enumerate(coords):
     x1, y1 = coord[0], coord[1]
     x2, y2 = coord[2], coord[3]
@@ -36,16 +36,27 @@ for index, coord in enumerate(coords):
 
 text = "Smash @ UVA S24 #12"
 font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
-font_size = 96
+font_size = 124
 text_color = (255, 255, 255)
 shadow_color = (0, 0, 0, 255)
 font = ImageFont.truetype(font_path, font_size)
-draw.text((48,23), text, font=font, fill=shadow_color)
-draw.text((45,20), text, font=font, fill=text_color)
+draw.text((63,30), text, font=font, fill=shadow_color)
+draw.text((60,25), text, font=font, fill=text_color)
 
-font = ImageFont.truetype(font_path, 48)
+font = ImageFont.truetype(font_path, 64)
 text = 'Top 8 - 04/12/24'
-draw.text((48,138), text, font=font, fill=shadow_color)
-draw.text((45,135), text, font=font, fill=text_color)
+draw.text((63,168), text, font=font, fill=shadow_color)
+draw.text((60,165), text, font=font, fill=text_color)
+
+font = ImageFont.truetype(font_path, 40)
+text = '12 Participants'
+draw.text((63,978), text, font=font, fill=shadow_color)
+draw.text((60,975), text, font=font, fill=text_color)
+
+text = 'Charlottesville, VA'
+draw.text((1543,978), text, font=font, fill=shadow_color)
+draw.text((1540,975), text, font=font, fill=text_color)
+
+
 # Display the image
 graphic.show()
