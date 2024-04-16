@@ -3,7 +3,6 @@ from io import BytesIO
 import requests
 
 characters = [
-    ["Kirby", "kirby"],
     ["Mr Game & Watch", "mr_game_and_watch"],
     ["Sora", "sora"]
 ]
