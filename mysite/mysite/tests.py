@@ -8,7 +8,7 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
-char = 'Cloud'
+char = 'Dark Samus'
 mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((599),(599))
 mario0 = mario0.resize(size)
