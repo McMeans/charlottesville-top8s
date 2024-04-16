@@ -112,9 +112,19 @@ def constructCUT(top_players, event):
 
 
 def addPlayers(top_players, event, graphic, draw):
+    imageData = [
+        [(599, 599), (34,271)],
+        [(369, 369), (682,246)],
+        [(369, 369), (1099,246)],
+        [(369, 369), (1516,271)],
+        [(276, 276), (684,667)],
+        [(276, 276), (996,667)],
+        [(276, 276), (1301,667)],
+        [(276, 276), (1608,667)]
+    ]
     for index, player in enumerate(top_players):
-        #TODO: Add Player Images
-        return None
+        image = Image.open(player.primary_character).resize(imageData[index][1])
+        graphic.alpha_composite(image, imageData[index][2])
 
     rectCoords = [[35, 770, 632, 937],
           [683, 564, 1050, 666],
