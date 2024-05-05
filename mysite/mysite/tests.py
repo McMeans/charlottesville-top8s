@@ -8,16 +8,16 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
-char = 'Dark Samus'
+char = 'Sora'
 mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((599),(599))
 mario0 = mario0.resize(size)
-graphic.alpha_composite(mario0, (34,271))
+graphic.alpha_composite(mario0, (34-0,271-0))
 
 mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png')
 size = ((369),(369))
 mario1 = mario1.resize(size)
-graphic.alpha_composite(mario1, (682,246))
+graphic.alpha_composite(mario1, (682-0,246-0))
 
 mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
 size = ((369),(369))
@@ -32,7 +32,7 @@ graphic.alpha_composite(mario3, (1516,246))
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
 size = ((276),(276))
 mario4 = mario4.resize(size)
-graphic.alpha_composite(mario4, (684,667))
+graphic.alpha_composite(mario4, (684-0,667-30))
 
 mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
 size = ((276),(276))
@@ -57,6 +57,9 @@ coords = [[34, 769, 633, 938],
           [996, 860, 1273, 938],
           [1301, 860, 1579, 938],
           [1608, 860, 1885, 938]]
+font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
+text_color = (255, 255, 255)
+shadow_color = (0, 0, 0, 255)
 for index, coord in enumerate(coords):
     x1, y1 = coord[0], coord[1]
     x2, y2 = coord[2], coord[3]
@@ -75,11 +78,12 @@ for index, coord in enumerate(coords):
         draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
     draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
+    text = f'{index+1}'
+
+
+
 text = "Smash @ UVA S24 #12"
-font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
 font_size = 124
-text_color = (255, 255, 255)
-shadow_color = (0, 0, 0, 255)
 font = ImageFont.truetype(font_path, font_size)
 draw.text((63,30), text, font=font, fill=shadow_color)
 draw.text((60,25), text, font=font, fill=text_color)
