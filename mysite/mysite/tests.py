@@ -1,5 +1,35 @@
 from PIL import Image, ImageDraw, ImageFont
 
+def addName(draw, index, color, text):
+    areas = [[159, 783, 446, 120], 
+             [770, 575, 263, 78], 
+             [1189, 575, 263, 78], 
+             [1604, 575, 263, 78],   
+             [746, 873, 200, 54], 
+             [1057, 873, 200, 54], 
+             [1368, 873, 200, 54], 
+             [1670, 873, 200, 54]]
+
+    x, y, width, height = areas[index]
+    font_size = 150
+    font = ImageFont.truetype(font_path, font_size)
+
+    box = draw.textbbox((0,0), text, font=font)
+    text_width = box[2] - box[0]
+    text_height = box[3] - box[1]
+    while text_width > width or text_height > height:
+        font_size -= 1
+        font = ImageFont.truetype(font_path, font_size)
+        box = draw.textbbox((0,0), text, font=font)
+        text_width = box[2] - box[0]
+        text_height = box[3] - box[1]
+
+    xCoord = x + (width - text_width) / 2
+    yCoord = y + (height - text_height) / 2
+    draw.text((xCoord+3, yCoord+3), text, font=font, fill=(0,0,0))
+    draw.text((xCoord, yCoord), text, font=font, fill=color)
+    draw.rectangle([(x,y), (x+width, y+height)], outline=(0,0,0), width=3)
+
 graphic = Image.new("RGBA", (1920,1080))
 
 background_image = Image.open('mysite/static/images/backgrounds/uva_fall_background.png')
@@ -8,7 +38,7 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
-char = 'Sora'
+char = 'Mewtwo'
 mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((599),(599))
 mario0 = mario0.resize(size)
@@ -32,7 +62,7 @@ graphic.alpha_composite(mario3, (1516,246))
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
 size = ((276),(276))
 mario4 = mario4.resize(size)
-graphic.alpha_composite(mario4, (684-0,667-30))
+graphic.alpha_composite(mario4, (684-0,667-0))
 
 mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
 size = ((276),(276))
@@ -49,6 +79,7 @@ size = ((276),(276))
 mario7 = mario7.resize(size)
 graphic.alpha_composite(mario7, (1608,667))
 
+
 coords = [[34, 769, 633, 938],
           [682, 563, 1051, 667],
           [1099, 563, 1468, 667],
@@ -59,7 +90,7 @@ coords = [[34, 769, 633, 938],
           [1608, 860, 1885, 938]]
 font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
 text_color = (255, 255, 255)
-shadow_color = (0, 0, 0, 255)
+shadow_color = (25, 25, 25, 155)
 for index, coord in enumerate(coords):
     x1, y1 = coord[0], coord[1]
     x2, y2 = coord[2], coord[3]
@@ -101,6 +132,52 @@ draw.text((60,975), text, font=font, fill=text_color)
 text = 'Charlottesville, VA'
 draw.text((1543,978), text, font=font, fill=shadow_color)
 draw.text((1540,975), text, font=font, fill=text_color)
+
+
+'''
+numCoords = [[375, 225],
+          [682+200, 263],
+          [1099+200, 263],
+          [1516+200, 263],
+          [684, 660],
+          [996, 660],
+          [1301, 660],
+          [1608, 660]]
+'''
+numCoords = [[34, 769-35],
+          [682+5, 563-20],
+          [1099+5, 563-20],
+          [1516+5, 563-20],
+          [684+3, 860-10],
+          [996+3, 860-10],
+          [1301+3, 860-10],
+          [1608+3, 860-10]]
+font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
+for index, coord in enumerate(numCoords):
+    x1, y1 = coord[0], coord[1]
+    text = str(index+1)
+    if index == 0:
+        font_size = 205
+    elif index < 4:
+        font_size = 125
+    else:
+        font_size = 85
+    font = ImageFont.truetype(font_path, font_size)
+    draw.text((x1+3,y1+3), text, font=font, fill=shadow_color)
+    draw.text((x1,y1), text, font=font, fill=text_color)
+
+names = ['Tofu', 
+         'JOHN LION|apT',
+         'JL|Luke M',
+         'Giselle',
+         'JL|Mr. C',
+         'BN|StormSilver',
+         'Test name',
+         'JL|Zach L.']
+
+
+for index, name in enumerate(names):
+    addName(draw, index, (255,255,255), name)
 
 
 # Display the image
