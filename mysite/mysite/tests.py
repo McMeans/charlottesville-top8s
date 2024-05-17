@@ -1,7 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
+import random, string
 
-def addName(draw, index, color, text):
-    areas = [[159, 783, 446, 120], 
+def addName(draw, index, color, text, font_path):
+    areas = [[159, 791, 446, 120], 
              [770, 575, 263, 78], 
              [1189, 575, 263, 78], 
              [1604, 575, 263, 78],   
@@ -17,7 +18,7 @@ def addName(draw, index, color, text):
     box = draw.textbbox((0,0), text, font=font)
     text_width = box[2] - box[0]
     text_height = box[3] - box[1]
-    while text_width > width or text_height > height:
+    while text_width > width or text_height > (height * 0.75):
         font_size -= 1
         font = ImageFont.truetype(font_path, font_size)
         box = draw.textbbox((0,0), text, font=font)
@@ -26,9 +27,15 @@ def addName(draw, index, color, text):
 
     xCoord = x + (width - text_width) / 2
     yCoord = y + (height - text_height) / 2
+    if index == 0:
+        yCoord -= (25*(4/len(name)))
+    elif index < 4:
+        yCoord -= (20*(4/len(name)))
+    else:
+        yCoord -= (17*(4/len(name)))
     draw.text((xCoord+3, yCoord+3), text, font=font, fill=(0,0,0))
     draw.text((xCoord, yCoord), text, font=font, fill=color)
-    draw.rectangle([(x,y), (x+width, y+height)], outline=(0,0,0), width=3)
+    #draw.rectangle([(x,y), (x+width, y+height)], outline=(0,0,0), width=3)
 
 graphic = Image.new("RGBA", (1920,1080))
 
@@ -133,17 +140,6 @@ text = 'Charlottesville, VA'
 draw.text((1543,978), text, font=font, fill=shadow_color)
 draw.text((1540,975), text, font=font, fill=text_color)
 
-
-'''
-numCoords = [[375, 225],
-          [682+200, 263],
-          [1099+200, 263],
-          [1516+200, 263],
-          [684, 660],
-          [996, 660],
-          [1301, 660],
-          [1608, 660]]
-'''
 numCoords = [[34, 769-35],
           [682+5, 563-20],
           [1099+5, 563-20],
@@ -166,18 +162,17 @@ for index, coord in enumerate(numCoords):
     draw.text((x1+3,y1+3), text, font=font, fill=shadow_color)
     draw.text((x1,y1), text, font=font, fill=text_color)
 
-names = ['Tofu', 
-         'JOHN LION|apT',
-         'JL|Luke M',
-         'Giselle',
-         'JL|Mr. C',
-         'BN|StormSilver',
-         'Test name',
-         'JL|Zach L.']
 
+names = ['Tofu', 'JOHN LION|apT', 'JL|Luke M', 'Giselle', 'JL|Mr. C', 'BN|StormSilver', 'Test name','JL|Zach L.']
+#names = ['', '', '', '', '', '', '', '']
 
 for index, name in enumerate(names):
-    addName(draw, index, (255,255,255), name)
+    '''
+    characters = string.ascii_letters + string.digits
+    length = random.randint(4, 25)
+    name = name.join(random.choices(characters, k=length))
+    '''
+    addName(draw, index, (255,255,255), name, font_path)
 
 
 # Display the image
