@@ -45,42 +45,49 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
-char = 'Mewtwo'
+char = 'Luigi'
 mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((599),(599))
 mario0 = mario0.resize(size)
 graphic.alpha_composite(mario0, (34-0,271-0))
 
+char = 'Pikachu'
 mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png')
 size = ((369),(369))
 mario1 = mario1.resize(size)
 graphic.alpha_composite(mario1, (682-0,246-0))
 
+char = 'Chrom'
 mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
 size = ((369),(369))
 mario2 = mario2.resize(size)
 graphic.alpha_composite(mario2, (1099,246))
 
+char = 'Mewtwo'
 mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png')
 size = ((369),(369))
 mario3 = mario3.resize(size)
 graphic.alpha_composite(mario3, (1516,246))
 
+char = 'Inkling'
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
 size = ((276),(276))
 mario4 = mario4.resize(size)
 graphic.alpha_composite(mario4, (684-0,667-0))
 
+char = 'Ness'
 mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
 size = ((276),(276))
 mario5 = mario5.resize(size)
 graphic.alpha_composite(mario5, (996,667))
 
+char = 'Mario'
 mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png')
 size = ((276),(276))
 mario6 = mario6.resize(size)
 graphic.alpha_composite(mario6, (1301,667))
 
+char = 'Bowser'
 mario7 = Image.open(f'mysite/static/images/renders/{char}/{char}_7.png')
 size = ((276),(276))
 mario7 = mario7.resize(size)
@@ -96,6 +103,7 @@ coords = [[34, 769, 633, 938],
           [1301, 860, 1579, 938],
           [1608, 860, 1885, 938]]
 font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
+#font_path = 'mysite/static/fonts/AlbertSans-Bold.ttf'
 text_color = (255, 255, 255)
 shadow_color = (25, 25, 25, 155)
 for index, coord in enumerate(coords):
@@ -148,7 +156,6 @@ numCoords = [[34, 769-35],
           [996+3, 860-10],
           [1301+3, 860-10],
           [1608+3, 860-10]]
-font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
 for index, coord in enumerate(numCoords):
     x1, y1 = coord[0], coord[1]
     text = str(index+1)
@@ -163,13 +170,13 @@ for index, coord in enumerate(numCoords):
     draw.text((x1,y1), text, font=font, fill=text_color)
 
 
-names = ['Tofu', 'JOHN LION|apT', 'JL|Luke M', 'Giselle', 'JL|Mr. C', 'BN|StormSilver', 'Test name','JL|Zach L.']
+names = ['JOHN LION|JuiceGoose', 'JOHN LION|apT', 'JL|Luke M', 'MEOW|Giselle', 'JL|Mr. C', 'BN|StormSilver', 'TestName09872345','JL|Zach L.']
 #names = ['', '', '', '', '', '', '', '']
 
 for index, name in enumerate(names):
     '''
     characters = string.ascii_letters + string.digits
-    length = random.randint(4, 25)
+    length = random.randint(4, 10)
     name = name.join(random.choices(characters, k=length))
     '''
     addName(draw, index, (255,255,255), name, font_path)

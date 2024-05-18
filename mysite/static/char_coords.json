@@ -1,6 +1,7 @@
 {
     "directions": ["u/d 1", "l/r 1", "u/d 2-4", "l/r 2-4", "u/d 5-8", "l/r 5-8"],
     "Banjo & Kazooie": [0, 0, 0, 0, 30, 0],
+    "Bowser": [0, 0, 0, 0, 30, 0],
     "Bowser Jr": [],
     "Duck Hunt": [30, 0, 30, 0, 50, 0],
     "Ice Climbers": [0, 0, 0, 0, 30, 0],
