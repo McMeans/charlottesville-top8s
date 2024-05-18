@@ -5,17 +5,12 @@ from PIL import Image, ImageDraw, ImageFont
 import os, json
 
 def homepage_view(request):
-    return render(request, 'mysite/homepage.html')
+    context = {
+        "indexes": range(1,9)
+    }
+    return render(request, 'mysite/homepage.html', context)
 
 def submit(request):
-    graphic = Image.new("RGB", (1920,1080))
-    draw = ImageDraw.Draw(graphic)
-    background_image = Image.open('static/images/backgrounds/uva_fall_background.png')
-    graphic.paste(background_image, (0,0))
-    graphic.show()
-    return None
-    
-    
     top_players = [None] * 8
     elimination_style = request.POST.get('elim_type')
     for index, player in enumerate(top_players):
@@ -77,7 +72,8 @@ def submit(request):
         constructCUT(top_players, event)
     return None #TODO: DELETE THIS LINE WHEN FINISHED
     return render(request, 'homepage.html', {
-        "graphic": "success"
+        "graphic": "success",
+        "indexes": range(1,9)
     })
 
 def constructSmashAtUVA(top_players, event):
