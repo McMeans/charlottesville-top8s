@@ -8,6 +8,14 @@ def homepage_view(request):
     return render(request, 'mysite/homepage.html')
 
 def submit(request):
+    graphic = Image.new("RGB", (1920,1080))
+    draw = ImageDraw.Draw(graphic)
+    background_image = Image.open('static/images/backgrounds/uva_fall_background.png')
+    graphic.paste(background_image, (0,0))
+    graphic.show()
+    return None
+    
+    
     top_players = [None] * 8
     elimination_style = request.POST.get('elim_type')
     for index, player in enumerate(top_players):
