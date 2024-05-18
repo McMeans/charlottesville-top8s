@@ -389,114 +389,24 @@
 </footer>
 
 <script>
-    //import jsonData from 'static/alts.json'
     function updateAlts(characterID, selectID) {
         const characterSelect = document.getElementById(characterID);
         const altSelect = document.getElementById(selectID);
 
-        //TODO: GET RID OF THIS
-        const jsonData = [
-            {
-                "Banjo & Kazooie" : ["Default", "Pink", "Black", "Red", "White", "Yellow", "Blue", "Green"],
-                "Bayonetta": ["Default", "Original", "Yellow", "Green", "Red", "Pink", "White", "Blue"],
-                "Bowser": ["Default", "Black", "Yellow", "Green", "Grey", "Orange", "Red", "Blue"],
-                "Bowser Jr": ["Junior", "Larry", "Roy", "Wendy", "Iggy", "Morton", "Lemmy", "Ludwig"],
-                "Byleth": ["Male", "Female", "Blue", "Red", "Yellow", "Green", "Black", "Grey"],
-                "Captain Falcon": ["Default", "Black", "Red", "Green", "Blue", "White", "Yellow", "Cyan"],
-                "Chrom": ["Default", "Red", "Green", "Yellow", "Black", "Purple", "White", "Cyan"],
-                "Cloud": ["Default", "Advent", "Blue", "Advent Blue", "Red", "Advent Black", "Brown", "Advent Purple"],
-                "Corrin": ["Male", "Female", "Red", "Orange", "Blue", "Pink", "Green", "Black"],
-                "Daisy": ["Default", "Green", "Pink", "Blue", "Red", "Purple", "White", "Black"],
-                "Dark Pit": ["Default", "Green", "Brown", "Yellow", "Red", "Blue", "White", "Purple"],
-                "Dark Samus": ["Default", "Green", "Purple", "Red", "Yellow", "Grey", "Black", "Pink"],
-                "Diddy Kong": ["Default", "White", "Pink", "Purple", "Green", "Blue", "Yellow", "Cyan"],
-                "Donkey Kong": ["Default", "Black", "Red", "Blue", "Green", "White", "Yellow", "Pink"],
-                "Dr Mario": ["Default", "Red", "Blue", "Green", "Black", "Yellow", "Purple", "Pink"],
-                "Duck Hunt": ["Default", "Black", "Blue", "Brown", "White", "Tan", "Yellow", "Red"],
-                "Falco": ["Default", "Orange", "Blue", "Red", "Green", "Black", "White", "Pink"],
-                "Fox": ["Default", "Black", "Red", "Green", "Orange", "White", "Yellow", "Purple"],
-                "Ganondorf": ["Default", "Violet", "Blue", "Green", "Purple", "Brown", "White", "Grey"],
-                "Greninja": ["Default", "Red", "Pink", "Black", "Violet", "Green", "Grey", "Purple"],
-                "Hero": ["Luminary", "Erdrick", "Solo", "Eight", "Luminary Red", "Erdrick White", "Solo Orange", "Eight Blue"],
-                "Ice Climbers": ["Default", "Blue", "Green", "Indigo", "Red", "Brown", "White", "Orange"],
-                "Ike": ["Default", "Brown", "Purple", "Red", "Yellow", "Green", "Blue", "Black"],
-                "Incineroar": ["Default", "Green", "Black", "Blue", "Orange", "Purple", "Grey", "White"],
-                "Inkling": ["Orange", "Blue", "Yellow", "Green", "Pink", "Cyan", "Purple", "Indigo"],
-                "Isabelle": ["Default", "Yellow", "Pink", "Red", "Purple", "Teal", "Grey", "Blue"],
-                "Jigglypuff": ["Default", "Red", "White", "Blue", "Green", "Pink", "Nurse", "Glasses"],
-                "Joker": ["Default", "Purple", "Blue", "Yellow", "Red", "White", "School", "School White"],
-                "Kazuya": ["Default", "Suit", "Red", "White", "Blue", "Purple", "Black", "Yellow"],
-                "Ken": ["Default", "Grey", "Blue", "White", "Green", "Yellow", "Cyan", "Black"],
-                "King Dedede": ["Default", "Pink", "Green", "Purple", "Cyan", "Grey", "Blue", "Black"],
-                "King K Rool": ["Default", "Orange", "Blue", "Yellow", "Pink", "Black", "Brown", "White"],
-                "Kirby": ["Default", "Yellow", "Blue", "Red", "Green", "White", "Orange", "Purple"],
-                "Link": ["Blue", "Green", "Red", "Fierce Deity", "Indigo", "Teal", "White", "Black"],
-                "Little Mac": ["Default", "Yellow", "White", "Blue", "Black", "Pink", "Wire", "Green"],
-                "Lucario": ["Default", "Purple", "White", "Grey", "Teal", "Navy", "Green", "Pink"],
-                "Lucas": ["Default", "Orange", "Blue", "Red", "Grey", "Cyan", "Green", "Purple"],
-                "Lucina": ["Default", "Green", "Black", "White", "Red", "Yellow", "Navy", "Purple"],
-                "Luigi": ["Default", "Orange", "Pink", "Cyan", "White", "Purple", "Blue", "Yellow"],
-                "Mario": ["Default", "Striped", "Blue", "Black", "Green", "Purple", "Builder", "Wedding"],
-                "Marth": ["Default", "Red", "Green", "Black", "White", "Blue", "Yellow", "Purple"],
-                "Mega Man": ["Default", "Red", "Green", "Brown", "Cyan", "Chartreuse", "Orange", "Grey"],
-                "Meta Knight": ["Default", "White", "Red", "Green", "Navy", "Pink", "Galacta", "Dark"],
-                "Mewtwo": ["Default", "Orange", "Blue", "Brown", "Pink", "Yellow", "Cyan", "Purple"],
-                "Min Min": ["Default", "Cyan", "Red", "Yellow", "Blue", "Green", "Pink", "Black"],
-                "Mr Game & Watch": ["Default", "Red", "Yellow", "Blue", "Teal", "Cyan", "Green", "White"],
-                "Ness": ["Default", "White", "Yellow", "Green", "Blue", "Black", "Cyan", "Purple"],
-                "Olimar": ["Tan", "Red", "Green", "Blue", "Alph", "Alph Green", "Alph Pink", "Alph Red"],
-                "Pac-Man": ["Default", "Blue", "Yellow", "Black", "Purple", "White", "Red", "Plaid"],
-                "Palutena": ["Default", "Pink", "Cyan", "Green", "Blue", "Red", "Black", "Purple"],
-                "Peach": ["Default", "Yellow", "Red", "Blue", "Green", "White", "Fire", "Black"],
-                "Pichu": ["Default", "Goggles", "Red", "Grey", "Blue", "Spiky", "White", "Band"],
-                "Pikachu": ["Default", "Red", "Green", "Yellow", "Blue", "Glasses", "Female", "Libre"],
-                "Piranha Plant": ["Default", "Green", "Yellow", "Pink", "Black", "White", "Purple", "Blue"],
-                "Pit": ["Default", "Yellow", "Red", "Green", "Blue", "Black", "White", "Pink"],
-                "Pokemon Trainer": ["Default", "Red", "Green", "Pink", "Yellow", "White", "Blue", "Purple"],
-                "Pyra and Mythra": ["Default", "Green", "Swapped", "Gormotti", "Black", "Blue", "Saturated", "Metal"],
-                "Richter": ["Default", "Red", "Purple", "Green", "Yellow", "Blue", "Black", "White"],
-                "Ridley": ["Default", "Meta", "Red", "Blue", "Green", "Purple", "Yellow", "Grey"],
-                "ROB": ["Default", "Grey", "Yellow", "Purple", "Blue", "Green", "Cyan", "Red"],
-                "Robin": ["Male", "Female", "Green", "Red", "Blue", "Yellow", "White", "Pink"],
-                "Rosalina & Luma": ["Default", "Pink", "Yellow", "Green", "Red", "Purple", "Black", "White"],
-                "Roy": ["Default", "Red", "Green", "Violet", "Cyan", "Purple", "Pink", "Yellow"],
-                "Ryu": ["Default", "Grey", "White", "Black", "Orange", "Blue", "Green", "Purple"],
-                "Samus": ["Default", "Blue", "Pink", "Brown", "Purple", "Green", "White", "Black"],
-                "Sephiroth": ["Default", "Purple", "Green", "Red", "White", "Blue", "Coatless", "Coatless Violet"],
-                "Sheik": ["Default", "Red", "Indigo", "Purple", "Green", "Black", "Yellow", "White"],
-                "Shulk": ["Default", "White", "Black", "Orange", "Blue", "Lavender", "Yellow", "Trunks"],
-                "Simon": ["Default", "Red", "Yellow", "Black", "Blue", "Purple", "Orange", "Indigo"],
-                "Snake": ["Grey", "Black", "Red", "Blue", "Green", "White", "Chartreuse", "Brown"],
-                "Sonic": ["Default", "Purple", "Cyan", "White", "Black", "Yellow", "Orange", "Green"],
-                "Sora": ["Default", "Two", "Dream", "Three", "Grey", "Red", "Blue", "White"],
-                "Steve": ["Steve", "Alex", "Steve White", "Alex White", "Steve Black", "Alex Blue", "Zombie", "Enderman"],
-                "Terry": ["Default", "Blue", "Brown", "Green", "Orange", "Grey", "Black", "Yellow"],
-                "Toon Link": ["Default", "Red", "Blue", "Purple", "Brown", "Black", "Grey", "Dark Green"],
-                "Villager": ["Default", "Pink", "Yellow", "Green", "Cyan", "Blue", "Purple", "Chartreuse"],
-                "Wario": ["Default", "Classic", "Red", "Classic Red", "Yellow", "Classic Cyan", "Green", "Classic Green"],
-                "Wii Fit Trainer": ["Female", "Male", "Green", "Male Green", "Red", "Male Red", "Yellow", "Male Yellow"],
-                "Wolf": ["Default", "Brown", "Red", "Blue", "Green", "Orange", "Black", "Pink"],
-                "Yoshi": ["Default", "Red", "Blue", "Yellow", "Pink", "Cyan", "Purple", "Crafted"],
-                "Young Link": ["Default", "Red", "Blue", "White", "Pink", "Cyan", "Orange", "Dark"],
-                "Zelda": ["Default", "Red", "Blue", "Violet", "Green", "Black", "Purple", "White"],
-                "Zero Suit Samus": ["Default", "Blue", "Red", "Black", "Green", "White", "Shorts Orange", "Short Blue"],
-                "Mii Brawler": ["Default"],
-                "Mii Swordfighter": ["Default"],
-                "Mii Gunner": ["Default"],
-                "Random": ["Default"]
-            }
-        ];
-
         altSelect.innerHTML = '';
-        const character = characterSelect.value;
-        const alts = jsonData.find(item => item.hasOwnProperty(character))[character];
-
-        const index = 0;
-        for (i = 0; i < alts.length; i++) {
-            const option = document.createElement('option');
-            option.text = i + " - " + alts[i];
-            altSelect.add(option);
-        }
+        const character = characterSelect.value.toString();
+        fetch("{% static 'alts.json' %}")
+            .then(response => {
+                return response.json();
+            })
+            .then(jsonData => {
+                const alts = jsonData[character];
+                for (i = 0; i < alts.length; i++) {
+                    const option = document.createElement('option');
+                    option.text = i + " - " + alts[i];
+                    altSelect.add(option);
+                }
+            });
     }
     
     function changeEvent() {
