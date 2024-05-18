@@ -60,3 +60,11 @@ body {
     padding: 50px;
     font-weight: 500;
 }
+
+footer {
+    color: rgb(240, 145, 86);
+}
+
+a {
+    color: rgb(216, 110, 45);
+}

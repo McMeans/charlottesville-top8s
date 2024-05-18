@@ -2465,10 +2465,20 @@
         <h2>Result</h2>
         <img style="width: 100%; height: auto;" src="static/graphic.png">    
     {% else %}
-        <h2>Example</h2>
-        <img style="width: 100%; height: auto;" src="{% static 'images/misc/sample.png' %}">
+        <h2>Examples</h2>
+        <div style="display: flex;">
+            <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'sampleUVA.png' %}">
+            <img style="width: 50%; height: auto;" src="{% static 'sampleCUT.png' %}">
+        </div>        
     {% endif %}
 </div>
+
+<footer class="text-muted">
+    <br>
+    Created by Luke McMeans (2024)
+    <br><br>
+    Inspired by <a href="https://www.top8er.com/">top8er.com</a> by @Riokaru and @Elenriqu3
+</footer>
 
 <script>
     //import jsonData from 'static/alts.json'
