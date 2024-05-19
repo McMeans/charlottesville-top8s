@@ -277,7 +277,25 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         draw.text((xCoord, yCoord), name, font=font, fill=text_color)
 
         #TODO: Add handles and non-primary characters
-    
+        handleCoords = [[],
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                        []]
+        handle = player.player_handle
+        handle_adjust = 0
+        if not handle == None:
+            handle_font = 'mysite/static/fonts/LibreFranklin-Bold.ttf'
+            font = ImageFont.truetype(handle_font, 19)
+            box = draw.textbbox((0,0), handle, font=font)
+            draw.rounded_rectangle((x1, y1-90, x1+65+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
+            draw.text((x1+45, y1-85), handle, font=font, fill=(255,255,255))
+            handle_adjust = 45
+        #TODO: Add secondary-tertiary icons
+        
     return None #TODO: DELETE WHEN DONE
 
 def addSideBrackets(event, graphic, draw, font_path):

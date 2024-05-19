@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import random, string
 
-def addName(draw, index, color, text, font_path):
+def addName(graphic, draw, index, color, text, font_path):
     areas = [[159, 791, 446, 120], 
              [770, 575, 263, 78], 
              [1189, 575, 263, 78], 
@@ -10,7 +10,15 @@ def addName(draw, index, color, text, font_path):
              [1057, 873, 200, 54], 
              [1368, 873, 200, 54], 
              [1670, 873, 200, 54]]
-
+    handle = "@lukem004"
+    font = ImageFont.truetype('mysite/static/fonts/LibreFranklin-Bold.ttf', 19)
+    box = draw.textbbox((0,0), handle, font=font)
+    draw.rounded_rectangle((50, 50, 50+65+(box[2]-box[0]), 85), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
+    draw.text((95, 55), handle, font=font, fill=(255,255,255))
+    xlogo = Image.open('mysite/static/images/misc/x.png')
+    size = ((20), (20))
+    xlogo = xlogo.resize(size)
+    graphic.paste(xlogo, (67,58))
     x, y, width, height = areas[index]
     font_size = 150
     font = ImageFont.truetype(font_path, font_size)
@@ -200,7 +208,7 @@ for index, name in enumerate(names):
     length = random.randint(4, 10)
     name = name.join(random.choices(characters, k=length))
     '''
-    addName(draw, index, (255,255,255), name, font_path)
+    addName(graphic, draw, index, (255,255,255), name, font_path)
 
 
 # Display the image
