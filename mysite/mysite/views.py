@@ -116,11 +116,34 @@ def constructCUT(top_players, event):
     background_image = Image.open('mysite/static/images/backgrounds/cut_background.png')
     graphic.paste(background_image, (0,0))
     font_path = 'mysite/static/fonts/AlbertSans-Bold.ttf'
-    shadow_color = (0,0,0)
-    text_color = (255, 255, 255)
+    shadow_color = (255,255,255)
+    text_color = (0,0,0)
 
-    #TODO: ADD TEXT
+    font = ImageFont.truetype(font_path, 130)
+    draw.text((308,45), event.event_title, font=font, fill=(189, 0, 0))
+    draw.text((305,40), event.event_title, font=font, fill=text_color)
     
+    font = ImageFont.truetype(font_path, 40)
+    draw.text((63,978), event.event_participants + ' Participants', font=font, fill=shadow_color)
+    draw.text((60,975), event.event_participants + ' Participants', font=font, fill=text_color)
+    
+    shadow_color = (0,0,0)
+    text_color = (255,255,255)
+    text = 'Charlottesville, VA'
+    draw.text((1543,978), text, font=font, fill=shadow_color)
+    draw.text((1540,975), text, font=font, fill=text_color)
+
+    font = ImageFont.truetype(font_path, 50)
+    draw.text((1323,64), 'Top 8', font=font, fill=shadow_color)
+    draw.text((1320,60), 'Top 8', font=font, fill=text_color)
+
+    box = draw.textbbox((0,0), "04/12/24", font=font)
+    midpoint = [1280+((box[2]-box[0])/2), 120+((box[3]-box[1])/2)]
+    box2 = draw.textbbox((0,0), event.event_date, font=font)
+    drawCoords = [midpoint[0]-((box2[2]-box2[0])/2), midpoint[1]-((box2[3]-box2[1])/2)]
+    draw.text((drawCoords[0]+4, drawCoords[1]+3), event.event_date, font=font, fill=shadow_color)
+    draw.text((drawCoords[0], drawCoords[1]), event.event_date, font=font, fill=text_color)
+
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
     return None #TODO: DELETE THIS LINE WHEN DONE
@@ -171,7 +194,8 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         render = render.resize(size)
         graphic.alpha_composite(render, (positions[0]-displacement[0], positions[1]-displacement[1]))
 
-        text_color, border_color = (255, 255, 255)
+        text_color = (255, 255, 255)
+        border_color = (255, 255, 255)
         shadow_color = (0, 0, 0)
         x1, y1 = coord[0], coord[1]
         x2, y2 = coord[2], coord[3]
@@ -179,9 +203,11 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             start_color = (229, 114, 0)
             end_color = (217, 69, 31)
         elif index == 0 or index == 1 or index == 4:
-            start_color, shadow_color = (255, 255, 255)
+            start_color = (255, 255, 255)
+            shadow_color = (255, 255, 255)
             end_color = (217, 217, 217)
-            text_color, border_color = (0, 0, 0)
+            text_color = (0, 0, 0)
+            border_color = (0, 0, 0)
         else:
             start_color = (24, 24, 24)
             end_color = (0, 0, 0)
