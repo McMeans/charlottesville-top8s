@@ -2,14 +2,46 @@ from PIL import Image, ImageDraw, ImageFont
 import random, string
 
 def addName(graphic, draw, index, color, text, font_path, boxCoords):
-    areas = [[159, 791, 446, 120], 
-             [770, 575, 263, 78], 
-             [1189, 575, 263, 78], 
-             [1604, 575, 263, 78],   
-             [746, 873, 200, 54], 
-             [1057, 873, 200, 54], 
-             [1368, 873, 200, 54], 
-             [1670, 873, 200, 54]]
+    numCoords = [[371, 280],
+                 [885, 255],
+                 [1298, 255],
+                 [1715, 255],
+                 [845, 712],
+                 [1157, 712],
+                 [1459, 712],
+                 [1766, 712]]
+    font = ImageFont.truetype('mysite/static/fonts/Rokkitt-BoldItalic.ttf', 2000)
+    x1, y1 = numCoords[index][0], numCoords[index][1]
+    if index == 5 or index == 7:
+        placement = str(index)
+    else:
+        placement = str(index+1)
+    
+    if index == 0:
+        dimensions = [281, 478]
+        shadow_displace = [11, 15]
+    elif index < 4:
+        dimensions = [185, 299]
+        shadow_displace = [20, 22]
+    else:
+        dimensions = [130, 143]
+        shadow_displace = [25, 29]
+    curDim = draw.textbbox((0, 0), placement, font=font)
+    text_image = Image.new('RGBA', (curDim[2]-curDim[0]+shadow_displace[0], curDim[3]-curDim[1]+shadow_displace[1]))
+    placementDraw = ImageDraw.Draw(text_image)
+    placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=(0,0,0))
+    placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=(255,255,255))
+    text_image = text_image.resize((dimensions[0], dimensions[1]), Image.Resampling.LANCZOS)
+    graphic.alpha_composite(text_image, (x1, y1))
+    
+    areas = [[59, 791, 552, 120], 
+             [700, 575, 333, 78], 
+             [1119, 575, 333, 78], 
+             [1534, 575, 333, 78],   
+             [700, 873, 246, 54], 
+             [1011, 873, 246, 54], 
+             [1318, 873, 246, 54], 
+             [1624, 873, 246, 54]]
     handle = "@JuiceGoose_ssbu"
     font = ImageFont.truetype('mysite/static/fonts/LibreFranklin-Bold.ttf', 19)
     box = draw.textbbox((0,0), handle, font=font)
@@ -37,14 +69,14 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
     xCoord = x + (width - text_width) / 2
     yCoord = y + (height - text_height) / 2
     if index == 0:
-        yCoord -= (25*(4/len(name)))
+        yCoord -= (27*(4/len(name)))
     elif index < 4:
         yCoord -= (20*(4/len(name)))
     else:
         yCoord -= (17*(4/len(name)))
     draw.text((xCoord+3, yCoord+3), text, font=font, fill=(0,0,0))
     draw.text((xCoord, yCoord), text, font=font, fill=color)
-    #draw.rectangle([(x,y), (x+width, y+height)], outline=(0,0,0), width=3)
+    #draw.rectangle([(x,y), (x+width, y+height)], outline=(128,128,128), width=3)
 
 graphic = Image.new("RGBA", (1920,1080))
 
@@ -176,28 +208,6 @@ shadow_color=(255,255,255)
 text = '12 Participants'
 draw.text((63,978), text, font=font, fill=shadow_color)
 draw.text((60,975), text, font=font, fill=text_color)
-
-
-numCoords = [[34, 769-35],
-          [682+5, 563-20],
-          [1099+5, 563-20],
-          [1516+5, 563-20],
-          [684+3, 860-10],
-          [996+3, 860-10],
-          [1301+3, 860-10],
-          [1608+3, 860-10]]
-for index, coord in enumerate(numCoords):
-    x1, y1 = coord[0], coord[1]
-    text = str(index+1)
-    if index == 0:
-        font_size = 205
-    elif index < 4:
-        font_size = 125
-    else:
-        font_size = 85
-    font = ImageFont.truetype(font_path, font_size)
-    draw.text((x1+3,y1+3), text, font=font, fill=shadow_color)
-    draw.text((x1,y1), text, font=font, fill=text_color)
 
 
 names = ['JOHN LION|JuiceGoose', 'JOHN LION|apT', 'JL|LukeM', 'MEOW|Giselle', 'JL|Mr. C', 'BN|StormSilver', 'TestName09872345','JL|Zach L.']

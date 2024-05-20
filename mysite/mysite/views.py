@@ -20,14 +20,14 @@ def submit(request):
         if not handle.startswith('@'):
             handle = '@' + handle
         if elimination_style is 'double_elim':
-            if number is (6 or 8):
+            if number == 6 or number == 8:
                 placement = number-1
             else: 
                 placement = number
         else:
-            if number is (1 or 2 or 3):
+            if number == 1 or number == 2 or number == 3:
                 placement = number
-            elif number is 4:
+            elif number == 4:
                 placement = 3
             else: 
                 placement = 5
@@ -43,9 +43,9 @@ def submit(request):
             primary = customImage
             terChar = secChar
             secChar = primChar
-        if secChar is not 'None':
+        if secChar is not None:
             secondary = f"static/images/icons/{secChar}_icon.png"
-            if terChar is not 'None':
+            if terChar is not None:
                 tertiary = f"static/images/icons/{terChar}_icon.png"
         #player = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
         top_players[index] = {
@@ -208,7 +208,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 
         #TODO: ACCOUNT FOR RESIZING
         positions = [[34, 271],[682, 246],[1099, 246],[1516, 246],[684, 667],[996, 667],[1301, 667],[1608, 667]][index]
-        if index is 0:
+        if index == 0:
             size = ((599),(599))
             if displace:
                 displacement = [charCoords[charName][0], charCoords[charName][1]]
@@ -231,7 +231,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         if event["title"].startswith("Smash"):
             start_color = (229, 114, 0)
             end_color = (217, 69, 31)
-        elif index is (0 or 1 or 4):
+        elif index == 0 or index == 1 or index == 4:
             start_color = (255, 255, 255)
             shadow_color = (255, 255, 255)
             end_color = (217, 217, 217)
@@ -251,35 +251,43 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
         draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
-        numCoord = [[34, 769-35],
-                    [682+5, 563-20],
-                    [1099+5, 563-20],
-                    [1516+5, 563-20],
-                    [684+3, 860-10],
-                    [996+3, 860-10],
-                    [1301+3, 860-10],
-                    [1608+3, 860-10]][index]
-        x1, y1 = numCoord[0], numCoord[1]
-        if index is 0:
-            font_size = 205
+        numCoords = [[371, 280],
+                 [885, 255],
+                 [1298, 255],
+                 [1715, 255],
+                 [845, 712],
+                 [1157, 712],
+                 [1459, 712],
+                 [1766, 712]]
+        font = ImageFont.truetype('mysite/static/fonts/Rokkitt-BoldItalic.ttf', 2000)
+        x1, y1 = numCoords[index][0], numCoords[index][1]
+        placement = str(index+1)
+        if index == 0:
+            dimensions = [281, 478]
+            shadow_displace = [11, 15]
         elif index < 4:
-            font_size = 125
+            dimensions = [185, 299]
+            shadow_displace = [20, 22]
         else:
-            font_size = 85
-        font = ImageFont.truetype(font_path, font_size)
-        num = player["placement"]
-        draw.text((x1+3,y1+3), num, font=font, fill=shadow_color)
-        draw.text((x1,y1), num, font=font, fill=text_color)
+            dimensions = [130, 143]
+            shadow_displace = [25, 29]
+        curDim = draw.textbbox((0, 0), placement, font=font)
+        text_image = Image.new('RGBA', (curDim[2]-curDim[0]+shadow_displace[0], curDim[3]-curDim[1]+shadow_displace[1]))
+        placementDraw = ImageDraw.Draw(text_image)
+        placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=shadow_color)
+        placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=text_color)
+        text_image = text_image.resize((dimensions[0], dimensions[1]), Image.Resampling.LANCZOS)
+        graphic.alpha_composite(text_image, (x1, y1))
 
         name = player["name"]
-        areas = [[159, 791, 446, 120], 
-                [770, 575, 263, 78], 
-                [1189, 575, 263, 78], 
-                [1604, 575, 263, 78],   
-                [746, 873, 200, 54], 
-                [1057, 873, 200, 54], 
-                [1368, 873, 200, 54], 
-                [1670, 873, 200, 54]]
+        areas = [[59, 791, 552, 120], 
+                 [700, 575, 333, 78], 
+                 [1119, 575, 333, 78], 
+                 [1534, 575, 333, 78],   
+                 [700, 873, 246, 54], 
+                 [1011, 873, 246, 54], 
+                 [1318, 873, 246, 54], 
+                 [1624, 873, 246, 54]]
 
         x, y, width, height = areas[index]
         font_size = 150
@@ -296,7 +304,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 
         xCoord = x + (width - text_width) / 2
         yCoord = y + (height - text_height) / 2
-        if index is 0:
+        if index == 0:
             yCoord -= (25*(4/len(name)))
         elif index < 4:
             yCoord -= (20*(4/len(name)))
@@ -325,7 +333,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
     redempWinner = event["redemption_winner"]
-    if (sideTitle and redempWinner) is not None:
+    if sideTitle is not None and redempWinner is not None:
         #TODO: Implement
         return None
     elif sideTitle is not None:
