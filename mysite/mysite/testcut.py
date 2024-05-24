@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw, ImageFont
 import random, string
 
 def addName(graphic, draw, index, color, text, font_path, boxCoords):
-    text = "JOHN LION"
     if index == 0 or index == 1 or index == 4:
         text_color = (0,0,0)
         shadow_color = (255, 255, 255)
@@ -62,6 +61,12 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
     x, y, width, height = areas[index]
     font_size = 150
     font = ImageFont.truetype(font_path, font_size)
+
+    size = ((30),(30))
+    icon = Image.open(f'mysite/static/images/icons/Wario_icon.png').resize(size)
+    icon2 = Image.open(f'mysite/static/images/icons/Sora_icon.png').resize(size)
+    graphic.alpha_composite(icon, (x1,y1-80))
+    graphic.alpha_composite(icon2, (x1+34,y1-80))
 
     box = draw.textbbox((0,0), text, font=font)
     text_width = box[2] - box[0]

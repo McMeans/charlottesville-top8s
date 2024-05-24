@@ -11,9 +11,9 @@ def homepage_view(request):
     return render(request, 'mysite/homepage.html', context)
 
 def submit(request):
-    top_players = [None, None, None, None, None, None, None, None]
+    top_players = []
     elimination_style = request.POST.get('elim_type')
-    for index, player in enumerate(top_players):
+    for index in range(1,8):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
         handle = request.POST.get(f"player{number}_handle").strip().replace(" ","")
@@ -33,7 +33,7 @@ def submit(request):
                 placement = 5
         primChar = request.POST.get(f"player{number}_primary")
         primAlt = (request.POST.get(f"player{number}_alt"))[0:1]
-        primary = f"static/images/renders/{primChar}/{primChar}_{primAlt}.png"
+        primary = f"mysite/static/images/renders/{primChar}/{primChar}_{primAlt}.png"
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
@@ -47,15 +47,14 @@ def submit(request):
             secondary = f"static/images/icons/{secChar}_icon.png"
             if terChar is not None:
                 tertiary = f"static/images/icons/{terChar}_icon.png"
-        #player = Player.objects.create(player_name=name, player_handle=handle, player_placement=placement, primary_character=primary, secondary_character=secondary, tertiary_character=tertiary)
-        top_players[index] = {
+        top_players.append({
             'name': str(name),
             'handle': str(handle),
             'placement': str(placement),
-            'primary': str(primary),
-            'secondary': str(secondary),
-            'tertiary': str(tertiary)
-        }
+            'primary': primary,
+            'secondary': secondary,
+            'tertiary': tertiary
+        })
     date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
     if request.POST.get('event_type') is 'smashatuva':
         title = "Smash @ UVA " + request.POST.get('semester')[0:1] + date[-2:] + " #"
@@ -66,21 +65,18 @@ def submit(request):
     if request.POST.get('redemption_check'):
         redempWinner = request.POST.get('redemption_name').strip()
         redempChar = request.POST.get('redemption_primary')
-        redempAlt = request.POST.get('redemption_alt')[0:1]
-        redempRender = f"static/images/renders/{redempChar}_{redempAlt}_redemption.png"
+        redempRender = f"static/images/renders/{redempChar}_icon.png"
     else:
         redempWinner = None
         redempChar = None
         redempAlt = None
         redempRender = None
-    
     if request.POST.get('side_check'):
         sideTitle = request.POST.get('side_event').strip()
         sideWinner = request.POST.get('side_name').strip()
     else:
         sideTitle = None
         sideWinner = None
-    #event = Event.objects.create(event_title=title, event_participants=participants, event_date=date, side_title=sideTitle, side_winner=sideWinner, redemption_winner=redempWinner, redemption_redner=redempRender)
     event = {
         "title": title,
         "participants": participants,
@@ -314,21 +310,26 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         draw.text((xCoord, yCoord), name, font=font, fill=text_color)
 
         handle = player["handle"]
-        handle_adjust = 0
+        x1, y1 = coord[0], coord[1]
         if handle is not None:
+            y1 -= 45
             handle_font = 'mysite/static/fonts/LibreFranklin-Bold.ttf'
             font = ImageFont.truetype(handle_font, 19)
             box = draw.textbbox((0,0), handle, font=font)
-            draw.rounded_rectangle((x1, y1-45, x1+60+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
+            draw.rounded_rectangle((x1, y1, x1+60+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
             draw.text((x1+40, y1-40), handle, font=font, fill=(255,255,255))
             xlogo = Image.open('mysite/static/images/misc/x.png')
             size = ((20), (20))
             xlogo = xlogo.resize(size)
             graphic.paste(xlogo, (x1+15,y1-37))
-            handle_adjust = 45
-        #TODO: Add secondary-tertiary icons
-
-    return None #TODO: DELETE WHEN DONE
+        
+        if player["secondary"] is not None:
+            size = ((30),(30))
+            sec = Image.open(player["secondary"]).resize(size)
+            graphic.alpha_composite(sec, (x1,y1-80))
+            if player["tertiary"] is not None:
+                ter = Image.open(player["tertiary"]).resize(size)
+                graphic.alpha_composite(ter, (x1+34,y1-80))
 
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
