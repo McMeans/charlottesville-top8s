@@ -2,6 +2,13 @@ from PIL import Image, ImageDraw, ImageFont
 import random, string
 
 def addName(graphic, draw, index, color, text, font_path, boxCoords):
+    text = "JOHN LION"
+    if index == 0 or index == 1 or index == 4:
+        text_color = (0,0,0)
+        shadow_color = (255, 255, 255)
+    else:
+        text_color = (255, 255, 255)
+        shadow_color = (0, 0, 0)
     numCoords = [[371, 280],
                  [885, 255],
                  [1298, 255],
@@ -29,8 +36,8 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
     curDim = draw.textbbox((0, 0), placement, font=font)
     text_image = Image.new('RGBA', (curDim[2]-curDim[0]+shadow_displace[0], curDim[3]-curDim[1]+shadow_displace[1]))
     placementDraw = ImageDraw.Draw(text_image)
-    placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=(0,0,0))
-    placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=(255,255,255))
+    placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=shadow_color)
+    placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=text_color)
     text_image = text_image.resize((dimensions[0], dimensions[1]), Image.Resampling.LANCZOS)
     graphic.alpha_composite(text_image, (x1, y1))
     
@@ -73,9 +80,9 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
     elif index < 4:
         yCoord -= (20*(4/len(name)))
     else:
-        yCoord -= (17*(4/len(name)))
-    draw.text((xCoord+3, yCoord+3), text, font=font, fill=(0,0,0))
-    draw.text((xCoord, yCoord), text, font=font, fill=color)
+        yCoord -= (14*(4/len(name)))
+    draw.text((xCoord+3, yCoord+3), text, font=font, fill=shadow_color)
+    draw.text((xCoord, yCoord), text, font=font, fill=text_color)
     #draw.rectangle([(x,y), (x+width, y+height)], outline=(128,128,128), width=3)
 
 graphic = Image.new("RGBA", (1920,1080))
@@ -211,14 +218,14 @@ draw.text((60,975), text, font=font, fill=text_color)
 
 
 names = ['JOHN LION|JuiceGoose', 'JOHN LION|apT', 'JL|LukeM', 'MEOW|Giselle', 'JL|Mr. C', 'BN|StormSilver', 'TestName09872345','JL|Zach L.']
-#names = ['', '', '', '', '', '', '', '']
+names = ['', '', '', '', '', '', '', '']
 
 for index, name in enumerate(names):
-    '''
+    
     characters = string.ascii_letters + string.digits
     length = random.randint(4, 10)
     name = name.join(random.choices(characters, k=length))
-    '''
+    
     addName(graphic, draw, index, (255,255,255), name, font_path, coords[index])
 
 

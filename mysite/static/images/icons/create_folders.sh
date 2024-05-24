@@ -1,6 +1,0 @@
-folders=("Banjo & Kazooie" "Bayonetta" "Bowser" "Bowser Jr" "Byleth" "Captain Falcon" "Chrom" "Cloud" "Corrin" "Daisy" "Dark Pit" "Dark Samus" "Diddy Kong" "Donkey Kong" "Dr Mario" "Duck Hunt" "Falco" "Fox" "Ganondorf" "Greninja" "Hero" "Ice Climbers" "Ike" "Incineroar" "Inkling" "Isabelle" "Jigglypuff" "Joker" "Kazuya" "Ken" "King Dedede" "King K Rool" "Kirby" "Link" "Little Mac" "Lucario" "Lucas" "Lucina" "Luigi" "Mario" "Marth" "Mega Man" "Meta Knight" "Mewtwo" "Min Min" "Mr Game & Watch" "Ness" "Olimar" "Pac-Man" "Palutena" "Peach" "Pichu" "Pikachu" "Piranha Plant" "Pit" "Pokemon Trainer" "Pyra and Mythra" "Richter" "Ridley" "ROB" "Robin" "Rosalina & Luma" "Roy" "Ryu" "Samus" "Sephiroth" "Sheik" "Shulk" "Simon" "Snake" "Sonic" "Sora" "Steve" "Terry" "Toon Link" "Villager" "Wario" "Wii Fit Trainer" "Wolf" "Yoshi" "Young Link" "Zelda" "Zero Suit Samus" "Mii Brawler" "Mii Swordfighter" "Mii Gunner" "Random")
-
-# Loop through the array and create folders
-for folder in "${folders[@]}"; do
-    mkdir "$folder"
-done
