@@ -41,7 +41,17 @@ def submit(request):
         tertiary = None
         customImage = request.POST.get(f"player{number}_custom").strip()
         if customImage != '':
-            primary = customImage
+            customFilePath = f"static/images/misc/customs/custom_{index}.png"
+            temp = Image.new("RGBA", (1000,1000))
+            custom = Image.open(customImage)
+            aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
+            new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
+            custom = custom.resize(new_size, Image.Resampling.LANCZOS)
+            x = (1000 - custom.width) // 2
+            y = (1000 - custom.height) // 2
+            temp.alpha_composite(custom, (x,y))
+            temp.save(customFilePath)
+            primary = customFilePath
             terChar = secChar
             secChar = primChar
         if secChar != 'None':
