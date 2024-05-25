@@ -223,16 +223,35 @@ draw.text((60,975), text, font=font, fill=text_color)
 
 
 names = ['JOHN LION|JuiceGoose', 'JOHN LION|apT', 'JL|LukeM', 'MEOW|Giselle', 'JL|Mr. C', 'BN|StormSilver', 'TestName09872345','JL|Zach L.']
-names = ['', '', '', '', '', '', '', '']
+#names = ['', '', '', '', '', '', '', '']
 
 for index, name in enumerate(names):
-    
-    characters = string.ascii_letters + string.digits
-    length = random.randint(4, 10)
-    name = name.join(random.choices(characters, k=length))
-    
+    if name == "":
+        characters = string.ascii_letters + string.digits
+        length = random.randint(4, 10)
+        name = name.join(random.choices(characters, k=length))
     addName(graphic, draw, index, (255,255,255), name, font_path, coords[index])
 
+
+char = "Wario"
+redempImage = Image.open(f"mysite/static/images/icons/{char}_icon.png").resize((75,75))
+winner = "JL|JB"
+graphic.alpha_composite(redempImage, (1030,967))
+"""font = ImageFont.truetype(font_path, 20)
+draw.text((1050+75+20,975), "Redemption Winner", font=font, fill=(255, 255, 255))
+font = ImageFont.truetype(font_path, 30)
+draw.text((1050+75+20,975+25), winner, font=font, fill=(255, 255, 255))"""
+
+"""smashlogo = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+graphic.alpha_composite(smashlogo, (990-60-75,967))"""
+title = "Squad Strike Winner"
+winner = "JB & jclyde"
+font = ImageFont.truetype(font_path, 20)
+boxDim = draw.textbbox((0, 0), title, font=font)
+draw.text((960-(boxDim[2]),975), title, font=font, fill=(0, 0, 0))
+font = ImageFont.truetype(font_path, 30)
+boxDim = draw.textbbox((0, 0), winner, font=font)
+draw.text((960-(boxDim[2]),975+25), winner, font=font, fill=(0, 0, 0))
 
 # Display the image
 graphic.show()

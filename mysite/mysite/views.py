@@ -72,7 +72,7 @@ def submit(request):
         redempAlt = None
         redempRender = None
     if request.POST.get('side_check'):
-        sideTitle = request.POST.get('side_event').strip()
+        sideTitle = request.POST.get('side_event').strip() + " Winner"
         sideWinner = request.POST.get('side_name').strip()
     else:
         sideTitle = None
@@ -334,12 +334,40 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
     redempWinner = event["redemption_winner"]
+    text_color = (255, 255, 255)
     if sideTitle is not None and redempWinner is not None:
-        #TODO: Implement
-        return None
-    elif sideTitle is not None:
-        #TODO: Implement
-        return None
-    elif redempWinner is not None:
-        #TODO: Implement
-        return None
+        redempImage = Image.open(event["redemption_render"]).resize((75,75))
+        graphic.alpha_composite(redempImage, (1050,967))
+        font = ImageFont.truetype(font_path, 20)
+        draw.text((1050+75+20,975), "Redemption Winner", font=font, fill=text_color)
+        font = ImageFont.truetype(font_path, 30)
+        draw.text((1050+75+20,975+25), redempWinner, font=font, fill=text_color)
+        if event["title"].startswith("The"):
+            text_color = (0,0,0)
+        sideWinner = event["side_winner"]
+        smashlogo = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+        graphic.alpha_composite(smashlogo, (990-60-75,967))
+        font = ImageFont.truetype(font_path, 20)
+        boxDim = draw.textbbox((0, 0), sideTitle, font=font)
+        draw.text((830-(boxDim[2]),975), sideTitle, font=font, fill=text_color)
+        font = ImageFont.truetype(font_path, 30)
+        boxDim = draw.textbbox((0, 0), sideWinner, font=font)
+        draw.text((830-(boxDim[2]),975+25), sideWinner, font=font, fill=text_color)
+    elif sideTitle is not None or redempWinner is not None:
+        if sideTitle is not None:
+            icon = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+            title = sideTitle
+            winner = event["side_winner"]
+        else:
+            icon = Image.open(event["redemption_render"]).resize((75,75))
+            title = "Redemption Winner"
+            winner = redempWinner
+        graphic.alpha_composite(icon, (1030,967))
+        font = ImageFont.truetype(font_path, 20)
+        if event["title"].startswith("The"):
+            text_color = (0,0,0)
+        boxDim = draw.textbbox((0, 0), title, font=font)
+        draw.text((960-(boxDim[2]),975), title, font=font, fill=(0, 0, 0))
+        font = ImageFont.truetype(font_path, 30)
+        boxDim = draw.textbbox((0, 0), winner, font=font)
+        draw.text((960-(boxDim[2]),975+25), winner, font=font, fill=(0, 0, 0))

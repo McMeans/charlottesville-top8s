@@ -51,7 +51,7 @@ select {
 }
 
 body {
-    background-image: linear-gradient(rgba(35, 45, 75, 0.9), rgba(16, 20, 34, 0.9)), url(https://news.virginia.edu/sites/default/files/Header_NA_Lawn_Fall_SS_01_1.jpg);
+    background-image: linear-gradient(rgba(35, 45, 75, 0.9), rgba(16, 20, 34, 0.9)), url("charlottesville.jpeg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
