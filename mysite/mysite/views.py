@@ -146,8 +146,9 @@ def constructCUT(top_players, event):
 
     titleText = event["title"]
     font = ImageFont.truetype(font_path, 130)
-    draw.text((308,45), titleText, font=font, fill=(189, 0, 0))
-    draw.text((305,40), titleText, font=font, fill=text_color)
+    titleBox = draw.textbbox((0,0), titleText, font=font)
+    draw.text((1091-titleBox[2],45), titleText, font=font, fill=(189, 0, 0))
+    draw.text((1088-titleBox[2],40), titleText, font=font, fill=text_color)
     
     participantsText = f'{event["participants"]} Participants'
     font = ImageFont.truetype(font_path, 40)
@@ -300,17 +301,27 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             font_size -= 1
             font = ImageFont.truetype(font_path, font_size)
             box = draw.textbbox((0,0), name, font=font)
-            text_width = box[2] - box[0]
-            text_height = box[3] - box[1]
+            text_width = box[2]
+            text_height = box[3]
 
         xCoord = x + (width - text_width) / 2
         yCoord = y + (height - text_height) / 2
         if index == 0:
-            yCoord -= (25*(4/len(name)))
+            if len(name) == 1:
+                yCoord -= 8*(1/len(name))
+            else:
+                yCoord -= 12*(1/len(name))
         elif index < 4:
-            yCoord -= (20*(4/len(name)))
+            if len(name) == 1:
+                yCoord -= 9*(1/len(name))
+            else:
+                yCoord -= 18*(1/len(name))
         else:
-            yCoord -= (17*(4/len(name)))
+            if len(name) == 1:
+                yCoord -= 6*(1/len(name))
+            else:
+                yCoord -= 12*(1/len(name))
+
         draw.text((xCoord+3, yCoord+3), name, font=font, fill=shadow_color)
         draw.text((xCoord, yCoord), name, font=font, fill=text_color)
 
