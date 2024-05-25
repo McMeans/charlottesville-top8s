@@ -185,8 +185,8 @@ draw.text((60,25), text, font=font, fill=text_color)
 
 font = ImageFont.truetype(font_path, 64)
 text = 'Top 8 - 04/12/24'
-draw.text((63,168), text, font=font, fill=shadow_color)
-draw.text((60,165), text, font=font, fill=text_color)
+draw.text((63,173), text, font=font, fill=shadow_color)
+draw.text((60,170), text, font=font, fill=text_color)
 
 font = ImageFont.truetype(font_path, 40)
 text = '12 Participants'

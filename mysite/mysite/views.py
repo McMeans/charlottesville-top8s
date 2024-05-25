@@ -13,13 +13,14 @@ def homepage_view(request):
 def submit(request):
     top_players = []
     elimination_style = request.POST.get('elim_type')
-    for index in range(1,8):
+    for index in range(0,8):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
         handle = request.POST.get(f"player{number}_handle").strip().replace(" ","")
-        if not handle.startswith('@'):
-            handle = '@' + handle
-        if elimination_style is 'double_elim':
+        if handle != "":
+            if not handle.startswith('@'):
+                handle = '@' + handle
+        if elimination_style == 'double_elim':
             if number == 6 or number == 8:
                 placement = number-1
             else: 
@@ -32,20 +33,20 @@ def submit(request):
             else: 
                 placement = 5
         primChar = request.POST.get(f"player{number}_primary")
-        primAlt = (request.POST.get(f"player{number}_alt"))[0:1]
-        primary = f"mysite/static/images/renders/{primChar}/{primChar}_{primAlt}.png"
+        primAlt = request.POST.get(f"player{number}_alt")[0:1]
+        primary = f"static/images/renders/{primChar}/{primChar}_{primAlt}.png"
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
-        customImage = request.POST.get(f"player{number}_custom")
-        if customImage is (None or ""):
+        customImage = request.POST.get(f"player{number}_custom").strip()
+        if customImage != '':
             primary = customImage
             terChar = secChar
             secChar = primChar
-        if secChar is not None:
+        if secChar != 'None':
             secondary = f"static/images/icons/{secChar}_icon.png"
-            if terChar is not None:
+            if terChar != 'None':
                 tertiary = f"static/images/icons/{terChar}_icon.png"
         top_players.append({
             'name': str(name),
@@ -55,9 +56,11 @@ def submit(request):
             'secondary': secondary,
             'tertiary': tertiary
         })
+
     date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
-    if request.POST.get('event_type') is 'smashatuva':
-        title = "Smash @ UVA " + request.POST.get('semester')[0:1] + date[-2:] + " #"
+    date = date[0:6] + date[8:10]
+    if request.POST.get('event_type') == 'smashatuva':
+        title = "Smash @ UVA " + request.POST.get('semester')[4].upper() + date[-2:] + " #"
     else:
         title = "The CUT "
     title += request.POST.get('event_number')
@@ -65,7 +68,7 @@ def submit(request):
     if request.POST.get('redemption_check'):
         redempWinner = request.POST.get('redemption_name').strip()
         redempChar = request.POST.get('redemption_primary')
-        redempRender = f"static/images/renders/{redempChar}_icon.png"
+        redempRender = f"static/images/icons/{redempChar}_icon.png"
     else:
         redempWinner = None
         redempChar = None
@@ -91,16 +94,16 @@ def submit(request):
     else:
         constructCUT(top_players, event)
     return None #TODO: DELETE THIS LINE WHEN FINISHED
-    return render(request, 'homepage.html', {
+    return render(request, 'mysite/homepage.html', {
         "graphic": "success",
         "indexes": range(1,9)
     })
 
 def constructSmashAtUVA(top_players, event):
-    graphic = Image.new("RGB", (1920,1080))
+    graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     titleText = str(event["title"])
-    if titleText[12] is 'F':
+    if titleText[12] == 'F':
         background_image = Image.open('static/images/backgrounds/uva_fall_background.png')
     else:
         background_image = Image.open('static/images/backgrounds/uva_spring_background.png')
@@ -110,13 +113,13 @@ def constructSmashAtUVA(top_players, event):
     text_color = (255, 255, 255)
 
     font = ImageFont.truetype(font_path, 124)
-    draw.text((63,168), titleText, font=font, fill=shadow_color)
-    draw.text((60,165), titleText, font=font, fill=text_color)
+    draw.text((63,30), titleText, font=font, fill=shadow_color)
+    draw.text((60,25), titleText, font=font, fill=text_color)
     
     font = ImageFont.truetype(font_path, 64)
     top8text = f"Top 8 - {event["date"]}"
-    draw.text((63,168), top8text, font=font, fill=shadow_color)
-    draw.text((60,165), top8text, font=font, fill=text_color)
+    draw.text((63,174), top8text, font=font, fill=shadow_color)
+    draw.text((60,170), top8text, font=font, fill=text_color)
 
     font = ImageFont.truetype(font_path, 40)
     participantsText = f'{event["participants"]} Participants'
@@ -128,11 +131,12 @@ def constructSmashAtUVA(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
+    graphic.show()
     return None #TODO: DELETE THIS LINE WHEN DONE
-    graphic.save("graphic.png")
+    graphic.save("staticfiles/graphic.png")
 
 def constructCUT(top_players, event):
-    graphic = Image.new("RGB", (1920,1080))
+    graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     background_image = Image.open('static/images/backgrounds/cut_background.png')
     graphic.paste(background_image, (0,0))
@@ -170,6 +174,7 @@ def constructCUT(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
+    graphic.show()
     return None #TODO: DELETE THIS LINE WHEN DONE
     graphic.save("graphic.png")
 
@@ -255,9 +260,9 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                  [1157, 712],
                  [1459, 712],
                  [1766, 712]]
-        font = ImageFont.truetype('mysite/static/fonts/Rokkitt-BoldItalic.ttf', 2000)
+        font = ImageFont.truetype('static/fonts/Rokkitt-BoldItalic.ttf', 2000)
         x1, y1 = numCoords[index][0], numCoords[index][1]
-        placement = str(index+1)
+        placement = player["placement"]
         if index == 0:
             dimensions = [281, 478]
             shadow_displace = [11, 15]
@@ -311,25 +316,25 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 
         handle = player["handle"]
         x1, y1 = coord[0], coord[1]
-        if handle is not None:
+        if handle != "":
             y1 -= 45
-            handle_font = 'mysite/static/fonts/LibreFranklin-Bold.ttf'
+            handle_font = 'static/fonts/LibreFranklin-Bold.ttf'
             font = ImageFont.truetype(handle_font, 19)
             box = draw.textbbox((0,0), handle, font=font)
             draw.rounded_rectangle((x1, y1, x1+60+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
-            draw.text((x1+40, y1-40), handle, font=font, fill=(255,255,255))
-            xlogo = Image.open('mysite/static/images/misc/x.png')
+            draw.text((x1+40, y1-40+45), handle, font=font, fill=(255,255,255))
+            xlogo = Image.open('static/images/misc/x.png')
             size = ((20), (20))
             xlogo = xlogo.resize(size)
-            graphic.paste(xlogo, (x1+15,y1-37))
+            graphic.paste(xlogo, (x1+15,y1-37+45))
         
         if player["secondary"] is not None:
             size = ((30),(30))
             sec = Image.open(player["secondary"]).resize(size)
-            graphic.alpha_composite(sec, (x1,y1-80))
+            graphic.alpha_composite(sec, (x1,y1-80+45))
             if player["tertiary"] is not None:
                 ter = Image.open(player["tertiary"]).resize(size)
-                graphic.alpha_composite(ter, (x1+34,y1-80))
+                graphic.alpha_composite(ter, (x1+34,y1-80+45))
 
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
@@ -345,7 +350,7 @@ def addSideBrackets(event, graphic, draw, font_path):
         if event["title"].startswith("The"):
             text_color = (0,0,0)
         sideWinner = event["side_winner"]
-        smashlogo = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+        smashlogo = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
         graphic.alpha_composite(smashlogo, (990-60-75,967))
         font = ImageFont.truetype(font_path, 20)
         boxDim = draw.textbbox((0, 0), sideTitle, font=font)
@@ -355,7 +360,7 @@ def addSideBrackets(event, graphic, draw, font_path):
         draw.text((830-(boxDim[2]),975+25), sideWinner, font=font, fill=text_color)
     elif sideTitle is not None or redempWinner is not None:
         if sideTitle is not None:
-            icon = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+            icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
             title = sideTitle
             winner = event["side_winner"]
         else:

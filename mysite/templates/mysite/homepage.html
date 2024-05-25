@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'style.css' %}">
 
 <h1>Charlottesville Top8s</h1>
-<text>Created by Luke McMeans</text>
+<text>Created by Luke McMeans</text><br><br>
 <form action="{% url 'submit' %}" method="post">
     {% csrf_token %}
     <fieldset>
@@ -155,7 +155,6 @@
                 <label>Secondary Character (optional)</label><br>
                 <select name="player{{ i }}_secondary" label="Player{{ i }} Secondary" id="player{{ i }}_secondary">
                     <option value="None">None</option>
-                    <option value="Random">Random</option>
                     <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
                     <option value="Bayonetta">Bayonetta</option>
                     <option value="Bowser">Bowser</option>
@@ -248,7 +247,6 @@
                 <label>Tertiary Character (optional)</label><br>
                 <select name="player{{ i }}_tertiary" label="Player{{ i }} Tertiary" id="player{{ i }}_tertiary">
                     <option value="None">None</option>
-                    <option value="Random">Random</option>
                     <option value="Banjo &amp; Kazooie">Banjo &amp; Kazooie</option>
                     <option value="Bayonetta">Bayonetta</option>
                     <option value="Bowser">Bowser</option>
@@ -371,7 +369,7 @@
 <div class="row" style="width: 80%; margin-left: 10%">
     {% if graphic %}
         <h2>Result</h2>
-        <img style="width: 100%; height: auto;" src="static/graphic.png">    
+        <img style="width: 100%; height: auto;" src="{% static 'graphic.png' %}">    
     {% else %}
         <h2>Examples</h2>
         <div style="display: flex;">
@@ -451,6 +449,7 @@
 
         if(checkbox.checked){
             redemptionDiv.innerHTML = `
+                    {% csrf_token %}
                     <h2>Redemption Winnner</h2>
                     <div>
                         <label>Player Name (with tags)</label><br>
@@ -560,6 +559,7 @@
 
         if(checkbox.checked){
             sideDiv.innerHTML = `
+                    {% csrf_token %}
                     <h2>Side Bracket Winnner</h2>
                     <div>
                         <label>Side Event Name:</label><br>
