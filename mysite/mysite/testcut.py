@@ -98,21 +98,21 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 
 
-char = 'Olimar'
-refChar = "Luigi"
-useRefChar = True
+char = 'Isabelle'
+refChar = "King Dedede"
+useRefChar = False
 
 mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((599),(599)) #DEFAULT
 size = (599, 599)
-mario0 = mario0.resize(size)
+mario0 = mario0.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario0, (0-(0),271-(0)))
 
 twoFourCoords = [648-(0), 246-(0)]
-mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png')
+mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
 size = ((369),(369)) #DEFAULT
 size = (369, 369)
-mario1 = mario1.resize(size)
+mario1 = mario1.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario1, (twoFourCoords[0],twoFourCoords[1]))
 
 if useRefChar:
@@ -130,7 +130,7 @@ fiveEightCoords = [654-(0), 667-(0)]
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
 size = ((276),(276)) #DEFAULT
 size = (276, 276)
-mario4 = mario4.resize(size)
+mario4 = mario4.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario4, (fiveEightCoords[0],fiveEightCoords[1]))
 
 mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')

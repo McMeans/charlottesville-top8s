@@ -214,11 +214,13 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         
         if charName in charCoords:
             displace = True
+            #positions = charCoords[charName]
         else:
             displace = False
-        displacement = [0, 0]
+            #positions = charCoords["DEFAULT"]
+        displacement = [0, 0] #DELETE
 
-        #TODO: ACCOUNT FOR RESIZING
+        #TODO: FINISH WHEN ADJUSTMENTS ARE DONE
         positions = [[34, 271],[682, 246],[1099, 246],[1516, 246],[684, 667],[996, 667],[1301, 667],[1608, 667]][index]
         if index == 0:
             size = ((599),(599))
@@ -330,7 +332,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             if len(name) == 1:
                 yCoord -= 6*(1/len(name))
             else:
-                yCoord -= 12*(1/len(name))
+                yCoord -= 12*(1.2/len(name))
 
         draw.text((xCoord+3, yCoord+3), name, font=font, fill=shadow_color)
         draw.text((xCoord, yCoord), name, font=font, fill=text_color)
