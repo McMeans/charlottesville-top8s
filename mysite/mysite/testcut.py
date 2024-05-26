@@ -97,20 +97,28 @@ graphic.paste(background_image, (0,0))
 
 draw = ImageDraw.Draw(graphic)
 
-char = 'Ken'
-mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
-size = ((599),(599))
-mario0 = mario0.resize(size)
-graphic.alpha_composite(mario0, (0-35,271-0))
 
-twoFourCoords = [648-20, 246-0]
+char = 'Olimar'
+refChar = "Luigi"
+useRefChar = True
+
+mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
+size = ((599),(599)) #DEFAULT
+size = (599, 599)
+mario0 = mario0.resize(size)
+graphic.alpha_composite(mario0, (0-(0),271-(0)))
+
+twoFourCoords = [648-(0), 246-(0)]
 mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png')
-size = ((369),(369))
+size = ((369),(369)) #DEFAULT
+size = (369, 369)
 mario1 = mario1.resize(size)
 graphic.alpha_composite(mario1, (twoFourCoords[0],twoFourCoords[1]))
 
-refChar = "Luigi"
-mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
+if useRefChar:
+    mario2 = Image.open(f'mysite/static/images/renders/{refChar}/{refChar}_2.png')
+else:
+    mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
 mario2 = mario2.resize(size)
 graphic.alpha_composite(mario2, (twoFourCoords[0]+(1*(1065-648)),twoFourCoords[1]))
 
@@ -118,9 +126,10 @@ mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png')
 mario3 = mario3.resize(size)
 graphic.alpha_composite(mario3, (twoFourCoords[0]+(2*(1065-648)),twoFourCoords[1]))
 
-fiveEightCoords = [654-0, 667-0]
+fiveEightCoords = [654-(0), 667-(0)]
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
-size = ((276),(276))
+size = ((276),(276)) #DEFAULT
+size = (276, 276)
 mario4 = mario4.resize(size)
 graphic.alpha_composite(mario4, (fiveEightCoords[0],fiveEightCoords[1]))
 
@@ -128,7 +137,10 @@ mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
 mario5 = mario5.resize(size)
 graphic.alpha_composite(mario5, (fiveEightCoords[0]+(1*(1578-1271)),fiveEightCoords[1]))
 
-mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png')
+if useRefChar:
+    mario6 = Image.open(f'mysite/static/images/renders/{refChar}/{refChar}_6.png')
+else:
+    mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png')
 mario6 = mario6.resize(size)
 graphic.alpha_composite(mario6, (fiveEightCoords[0]+(2*(1578-1271)),fiveEightCoords[1]))
 
