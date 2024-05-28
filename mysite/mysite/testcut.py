@@ -98,23 +98,23 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 
 
-char = 'Palutena'
+char = 'Richter'
 refChar = "King Dedede"
 useRefChar = False
-crop = [0, 0, 1000, 1000]
+crop = [0, 0, 1000, 800]
 crop_box = (crop[0], crop[1], crop[2], crop[3])
 
-mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png').crop(crop_box)
+mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png').rotate(0, resample=Image.BILINEAR).crop(crop_box)
 size = ((599),(599)) #DEFAULT
-size = (int((599)*((crop[2]-crop[0])/1000)), int((599)*((crop[3]-crop[1])/1000)))
+size = (int((729)*((crop[2]-crop[0])/1000)), int((729)*((crop[3]-crop[1])/1000)))
 mario0 = mario0.resize(size).rotate(0, resample=Image.BILINEAR)
-graphic.alpha_composite(mario0, (0-(0),271-(0)))
+graphic.alpha_composite(mario0, (0-(50),271-(30)))
 
-twoFourCoords = [648-(0), 246-(0)]
-mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png').crop(crop_box)
+twoFourCoords = [648-(50), 246-(30)]
+mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png').rotate(0, resample=Image.BILINEAR).crop(crop_box)
 size = ((369),(369)) #DEFAULT
-size = (int((369)*((crop[2]-crop[0])/1000)), int((369)*((crop[3]-crop[1])/1000)))
-mario1 = mario1.resize(size).rotate(0, resample=Image.BILINEAR)
+size = (int((519)*((crop[2]-crop[0])/1000)), int((519)*((crop[3]-crop[1])/1000)))
+mario1 = mario1.resize(size)
 graphic.alpha_composite(mario1, (twoFourCoords[0],twoFourCoords[1]))
 
 if useRefChar:
@@ -128,10 +128,10 @@ mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png').crop(cr
 mario3 = mario3.resize(size)
 graphic.alpha_composite(mario3, (twoFourCoords[0]+(2*(1065-648)),twoFourCoords[1]))
 
-fiveEightCoords = [654-(0), 667-(0)]
+fiveEightCoords = [654-(10), 667-(25)]
 mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png').crop(crop_box)
 size = ((276),(276)) #DEFAULT
-size = (int((276)*((crop[2]-crop[0])/1000)), int((276)*((crop[3]-crop[1])/1000)))
+size = (int((346)*((crop[2]-crop[0])/1000)), int((346)*((crop[3]-crop[1])/1000)))
 mario4 = mario4.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario4, (fiveEightCoords[0],fiveEightCoords[1]))
 
