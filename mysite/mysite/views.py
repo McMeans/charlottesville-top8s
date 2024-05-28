@@ -395,7 +395,7 @@ def addSideBrackets(event, graphic, draw, font_path):
         if event["title"].startswith("The"):
             text_color = (0,0,0)
         boxDim = draw.textbbox((0, 0), title, font=font)
-        draw.text((960-(boxDim[2]),975), title, font=font, fill=(0, 0, 0))
+        draw.text((960-(boxDim[2]),975), title, font=font, fill=text_color)
         font = ImageFont.truetype(font_path, 30)
         boxDim = draw.textbbox((0, 0), winner, font=font)
-        draw.text((960-(boxDim[2]),975+25), winner, font=font, fill=(0, 0, 0))
+        draw.text((960-(boxDim[2]),975+25), winner, font=font, fill=text_color)

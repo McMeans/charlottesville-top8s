@@ -98,53 +98,55 @@ graphic.paste(background_image, (0,0))
 draw = ImageDraw.Draw(graphic)
 
 
-char = 'Isabelle'
+char = 'Palutena'
 refChar = "King Dedede"
 useRefChar = False
+crop = [0, 0, 1000, 1000]
+crop_box = (crop[0], crop[1], crop[2], crop[3])
 
-mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
+mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png').crop(crop_box)
 size = ((599),(599)) #DEFAULT
-size = (599, 599)
+size = (int((599)*((crop[2]-crop[0])/1000)), int((599)*((crop[3]-crop[1])/1000)))
 mario0 = mario0.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario0, (0-(0),271-(0)))
 
 twoFourCoords = [648-(0), 246-(0)]
-mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
+mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png').crop(crop_box)
 size = ((369),(369)) #DEFAULT
-size = (369, 369)
+size = (int((369)*((crop[2]-crop[0])/1000)), int((369)*((crop[3]-crop[1])/1000)))
 mario1 = mario1.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario1, (twoFourCoords[0],twoFourCoords[1]))
 
 if useRefChar:
     mario2 = Image.open(f'mysite/static/images/renders/{refChar}/{refChar}_2.png')
 else:
-    mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
+    mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png').crop(crop_box)
 mario2 = mario2.resize(size)
 graphic.alpha_composite(mario2, (twoFourCoords[0]+(1*(1065-648)),twoFourCoords[1]))
 
-mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png')
+mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png').crop(crop_box)
 mario3 = mario3.resize(size)
 graphic.alpha_composite(mario3, (twoFourCoords[0]+(2*(1065-648)),twoFourCoords[1]))
 
 fiveEightCoords = [654-(0), 667-(0)]
-mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
+mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png').crop(crop_box)
 size = ((276),(276)) #DEFAULT
-size = (276, 276)
+size = (int((276)*((crop[2]-crop[0])/1000)), int((276)*((crop[3]-crop[1])/1000)))
 mario4 = mario4.resize(size).rotate(0, resample=Image.BILINEAR)
 graphic.alpha_composite(mario4, (fiveEightCoords[0],fiveEightCoords[1]))
 
-mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
+mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png').crop(crop_box)
 mario5 = mario5.resize(size)
 graphic.alpha_composite(mario5, (fiveEightCoords[0]+(1*(1578-1271)),fiveEightCoords[1]))
 
 if useRefChar:
     mario6 = Image.open(f'mysite/static/images/renders/{refChar}/{refChar}_6.png')
 else:
-    mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png')
+    mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png').crop(crop_box)
 mario6 = mario6.resize(size)
 graphic.alpha_composite(mario6, (fiveEightCoords[0]+(2*(1578-1271)),fiveEightCoords[1]))
 
-mario7 = Image.open(f'mysite/static/images/renders/{char}/{char}_7.png')
+mario7 = Image.open(f'mysite/static/images/renders/{char}/{char}_7.png').crop(crop_box)
 mario7 = mario7.resize(size)
 graphic.alpha_composite(mario7, (fiveEightCoords[0]+(3*(1578-1271)),fiveEightCoords[1]))
 
