@@ -103,7 +103,6 @@ def submit(request):
         constructSmashAtUVA(top_players, event)
     else:
         constructCUT(top_players, event)
-    return None #TODO: DELETE THIS LINE WHEN FINISHED
     return render(request, 'mysite/homepage.html', {
         "graphic": "success",
         "indexes": range(1,9)
@@ -141,8 +140,6 @@ def constructSmashAtUVA(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
-    graphic.show()
-    return None #TODO: DELETE THIS LINE WHEN DONE
     graphic.save("staticfiles/graphic.png")
 
 def constructCUT(top_players, event):
@@ -185,9 +182,7 @@ def constructCUT(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
-    graphic.show()
-    return None #TODO: DELETE THIS LINE WHEN DONE
-    graphic.save("graphic.png")
+    graphic.save("staticfiles/graphic.png")
 
 
 def addPlayers(top_players, event, graphic, draw, font_path):
@@ -199,8 +194,9 @@ def addPlayers(top_players, event, graphic, draw, font_path):
           [997, 862, 1272, 937],
           [1302, 862, 1578, 937],
           [1609, 862, 1884, 937]]
-    for index, coord in enumerate(rectCoords):
-        json_file_path = 'static/char_coords.json'
+    for index in range(7, -1, -1):
+        coord = rectCoords[index]
+        json_file_path = 'static/newchar_coords.json'
         with open(json_file_path, 'r') as file:
             charCoords = json.load(file)
 
@@ -211,31 +207,31 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         if charName.__contains__('_'):
             stop_index = charName.find('_')
             charName = charName[:stop_index]
-        
-        if charName in charCoords:
-            displace = True
-            #positions = charCoords[charName]
-        else:
-            displace = False
-            #positions = charCoords["DEFAULT"]
-        displacement = [0, 0] #DELETE
 
-        #TODO: FINISH WHEN ADJUSTMENTS ARE DONE
-        positions = [[34, 271],[682, 246],[1099, 246],[1516, 246],[684, 667],[996, 667],[1301, 667],[1608, 667]][index]
-        if index == 0:
-            size = ((599),(599))
-            if displace:
-                displacement = [charCoords[charName][0], charCoords[charName][1]]
-        elif index < 4:
-            size = ((369),(369))
-            if displace:
-                displacement = [charCoords[charName][2], charCoords[charName][3]]
+        if charName not in charCoords:
+            charData = charCoords["DEFAULT"]
         else:
-            size = ((276),(276))
-            if displace:
-                displacement = [charCoords[charName][4], charCoords[charName][5]]
-        render = render.resize(size)
-        graphic.alpha_composite(render, (positions[0]-displacement[0], positions[1]-displacement[1]))
+            charData = charCoords[charName]
+        
+        if index == 0:
+            renderSize = charData[0]
+            renderX = charData[3][0]
+            renderY = charData[3][1]
+        elif index < 4:
+            renderSize = charData[1]
+            renderX = charData[4][0]+((index-1)*(1065-648))
+            renderY = charData[4][1]
+        else:
+            renderSize = charData[2]
+            renderX = charData[5][0]+((index-4)*(1578-1271))
+            renderY = charData[5][1]
+        crop = charData[6]
+        crop_box = (crop[0], crop[1], crop[2], crop[3])
+        rotation = charData[7]
+
+        renderSize = (int((renderSize)*((crop[2]-crop[0])/1000)), int((renderSize)*((crop[3]-crop[1])/1000)))
+        render = render.rotate(rotation, resample=Image.BILINEAR).crop(crop_box).resize(renderSize)
+        graphic.alpha_composite(render, (renderX, renderY))
 
         text_color = (255, 255, 255)
         border_color = (255, 255, 255)
