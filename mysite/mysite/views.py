@@ -25,13 +25,15 @@ def submit(request):
                 placement = number-1
             else: 
                 placement = number
-        else:
+        elif elimination_style == 'single_elim':
             if number == 1 or number == 2 or number == 3:
                 placement = number
             elif number == 4:
                 placement = 3
             else: 
                 placement = 5
+        else:
+            placement = number
         primChar = request.POST.get(f"player{number}_primary")
         primAlt = request.POST.get(f"player{number}_alt")[0:1]
         primary = f"static/images/renders/{primChar}/{primChar}_{primAlt}.png"
@@ -39,7 +41,7 @@ def submit(request):
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
-        customImage = request.POST.get(f"player{number}_custom").strip()
+        customImage = '' #TODO: FIX        request.POST.get(f"player{number}_custom").strip()
         if customImage != '':
             customFilePath = f"static/images/misc/customs/custom_{index}.png"
             temp = Image.new("RGBA", (1000,1000))
@@ -117,7 +119,7 @@ def constructSmashAtUVA(top_players, event):
     else:
         background_image = Image.open('static/images/backgrounds/uva_spring_background.png')
     graphic.paste(background_image, (0,0))
-    font_path = 'static/fonts/Roboto-BoldItalic.ttf'
+    font_path = 'static/fonts/LibreFranklin-BoldItalic.ttf'
     shadow_color = (0,0,0)
     text_color = (255, 255, 255)
 
@@ -186,6 +188,14 @@ def constructCUT(top_players, event):
 
 
 def addPlayers(top_players, event, graphic, draw, font_path):
+    font = ImageFont.truetype(font_path, 20)
+    credits = "Generator by"
+    draw.text((1772, 22), credits, font=font, fill = "black")
+    draw.text((1770, 20), credits, font=font, fill = "white")
+    credits = "@lukem004"
+    draw.text((1782, 48), credits, font=font, fill = "black")
+    draw.text((1780, 46), credits, font=font, fill = "white")
+    
     rectCoords = [[35, 770, 632, 937],
           [683, 564, 1050, 666],
           [1100, 564, 1467, 666],
@@ -378,12 +388,13 @@ def addSideBrackets(event, graphic, draw, font_path):
         boxDim = draw.textbbox((0, 0), sideWinner, font=font)
         draw.text((830-(boxDim[2]),975+25), sideWinner, font=font, fill=text_color)
     elif sideTitle is not None or redempWinner is not None:
+        icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
         if sideTitle is not None:
-            icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
             title = sideTitle
             winner = event["side_winner"]
         else:
-            icon = Image.open(event["redemption_render"]).resize((75,75))
+            if not event["redemption_render"].endswith("Random_icon.png"):
+                icon = Image.open(event["redemption_render"]).resize((75,75))
             title = "Redemption Winner"
             winner = redempWinner
         graphic.alpha_composite(icon, (1030,967))

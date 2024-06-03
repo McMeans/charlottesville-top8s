@@ -192,7 +192,14 @@ for index, coord in enumerate(coords):
 
     text = f'{index+1}'
 
-
+font = ImageFont.truetype(font_path, 20)
+credits = "Generated using"
+draw.text((1772-53, 22), credits, font=font, fill = "black")
+draw.text((1770-53, 20), credits, font=font, fill = "white")
+credits = Image.open("mysite/staticfiles/top8sLogo.png")
+credits = credits.resize((int(credits.width * .13), int(credits.height * .13)))
+graphic.alpha_composite(credits, (1782-65,48))
+    
 
 text = "The CUT 144"
 font_size = 130

@@ -3,8 +3,7 @@
 
 <link rel="stylesheet" href="{% static 'style.css' %}">
 
-<h1>Charlottesville Top8s</h1>
-<text>Created by Luke McMeans</text><br><br>
+<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">  
 <form action="{% url 'submit' %}" method="post">
     {% csrf_token %}
     <fieldset>
@@ -148,8 +147,9 @@
             </div>
             <div>
                 <label>Custom Character Image (optional)</label><br>
+                <sub>[CURRENTLY UNAVALIABLE]</sub><br>
                 <input type="file" name="player{{ i }}_custom" label="Player{{ i }} Custom Image" id="player{{ i }}_custom"
-                    accept="image/png, image/jpg, image/jpeg">
+                    accept="image/png, image/jpg, image/jpeg" disabled>
             </div>
             <div>
                 <label>Secondary Character (optional)</label><br>
@@ -347,7 +347,11 @@
         </div>
         <div>
             <input type="radio" id="single_elim" name="elim_type" value="single_elim">
-            <label for="single_elim">Single Elimination or Round Robin</label>
+            <label for="single_elim">Single Elimination</label>
+        </div>
+        <div>
+            <input type="radio" id="round_robin" name="elim_type" value="round_robin">
+            <label for="round_robin">Round Robin, no bracket</label>
         </div>
     </fieldset>
 
@@ -363,7 +367,7 @@
     </fieldset>
 
     <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
-    <input type="submit" value="SUBMIT">
+    <input type="submit" value="GENERATE">
 </form>
 
 <div class="row" style="width: 80%; margin-left: 10%">
@@ -375,7 +379,7 @@
         <div style="display: flex;">
             <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'sampleUVA.png' %}">
             <img style="width: 50%; height: auto;" src="{% static 'sampleCUT.png' %}">
-        </div>        
+        </div>
     {% endif %}
 </div>
 
@@ -384,6 +388,8 @@
     Created by Luke McMeans (2024)
     <br><br>
     Inspired by <a href="https://www.top8er.com/">top8er.com</a> by @Riokaru and @Elenriqu3
+    <br><br>
+    Not affiliated with the University of Virginia nor the City of Charlottesville
 </footer>
 
 <script>
@@ -432,7 +438,7 @@
                     `;
                 }
                 dynamicFieldset.innerHTML += `
-                    <input type="number" name="event_number" label="Event Number" id="event_number" required>
+                    <input type="number" name="event_number" label="Event Number" id="event_number" step="0.5" required>
                     <br>
                     <label>Event Date:</label><br>
                     <input type="date" name="event_date" id="event_date" required><br>
@@ -449,7 +455,6 @@
 
         if(checkbox.checked){
             redemptionDiv.innerHTML = `
-                    {% csrf_token %}
                     <h2>Redemption Winnner</h2>
                     <div>
                         <label>Player Name (with tags)</label><br>
@@ -559,7 +564,6 @@
 
         if(checkbox.checked){
             sideDiv.innerHTML = `
-                    {% csrf_token %}
                     <h2>Side Bracket Winnner</h2>
                     <div>
                         <label>Side Event Name:</label><br>
@@ -586,4 +590,6 @@
     updateAlts("player7_primary", "player7_alt");
     updateAlts("player8_primary", "player8_alt");
     changeEvent();
+    addRedemption();
+    addSideEvent();
 </script>

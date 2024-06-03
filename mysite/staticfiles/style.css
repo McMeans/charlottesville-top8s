@@ -1,21 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 fieldset {
-    border: 3px solid;
-    padding: 10px;
+    flex-basis: calc(33.33% - 20px);
+    padding: 30px;
+    border-radius: 20px;
+    background-image: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+    border: 0px;
+    padding: 20px;
+    flex-wrap: wrap;
+    margin: 10px;
 }
 
 .grid-container {
+    align-items: center;
     display: flex;
+    overflow-x: auto;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .grid-item {
-    flex-basis: calc(33.33% - 20px);
-    border: 3px solid;
-    padding: 10px;
+    flex: 0 0 auto;
+    min-width: 250px;
+    margin-right: 10px;
 }
 
 sub {
@@ -39,13 +47,13 @@ h4 {
 }
 
 input {
-    background-color: rgba(35, 45, 75, 0.9);
+    background-color: rgba(43, 52, 80, 0.9);
     font-family: 'Zilla Slab', sans-serif;
     color: white;
 }
 
 select {
-    background-color: rgba(35, 45, 75, 0.9);
+    background-color: rgba(43, 52, 80, 0.9);
     color: white;
     font-family: 'Zilla Slab', sans-serif;
 }
