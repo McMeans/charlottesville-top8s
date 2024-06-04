@@ -12,7 +12,7 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
                  [1157, 712],
                  [1459, 712],
                  [1766, 712]]
-    font = ImageFont.truetype('mysite/static/fonts/Rokkitt-BoldItalic.ttf', 2000)
+    font = ImageFont.truetype('static/fonts/Rokkitt-BoldItalic.ttf', 2000)
     x1, y1 = numCoords[index][0], numCoords[index][1]
     if index == 5 or index == 7:
         placement = str(index)
@@ -45,12 +45,12 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
              [1318, 873, 246, 54], 
              [1624, 873, 246, 54]]
     handle = "@JuiceGoose_ssbu"
-    font = ImageFont.truetype('mysite/static/fonts/LibreFranklin-Bold.ttf', 19)
+    font = ImageFont.truetype('static/fonts/LibreFranklin-Bold.ttf', 19)
     box = draw.textbbox((0,0), handle, font=font)
     x1, y1 = boxCoords[0], boxCoords[1]
     draw.rounded_rectangle((x1, y1-45, x1+60+(box[2]-box[0]), y1-10), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
     draw.text((x1+40, y1-40), handle, font=font, fill=(255,255,255))
-    xlogo = Image.open('mysite/static/images/misc/x.png')
+    xlogo = Image.open('static/images/misc/x.png')
     size = ((20), (20))
     xlogo = xlogo.resize(size)
     graphic.paste(xlogo, (x1+15,y1-37))
@@ -59,8 +59,8 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
     font = ImageFont.truetype(font_path, font_size)
 
     size = ((30),(30))
-    icon = Image.open(f'mysite/static/images/icons/Wario_icon.png').resize(size)
-    icon2 = Image.open(f'mysite/static/images/icons/Sora_icon.png').resize(size)
+    icon = Image.open(f'static/images/icons/Wario_icon.png').resize(size)
+    icon2 = Image.open(f'static/images/icons/Sora_icon.png').resize(size)
     graphic.alpha_composite(icon, (x1,y1-80))
     graphic.alpha_composite(icon2, (x1+34,y1-80))
 
@@ -88,56 +88,56 @@ def addName(graphic, draw, index, color, text, font_path, boxCoords):
 
 graphic = Image.new("RGBA", (1920,1080))
 
-background_image = Image.open('mysite/static/images/backgrounds/uva_fall_background.png')
+background_image = Image.open('static/images/backgrounds/uva_fall_background.png')
 graphic.paste(background_image, (0,0))
 
 draw = ImageDraw.Draw(graphic)
 border_color = (255, 255, 255)
 
 char = 'Luigi'
-mario0 = Image.open(f'mysite/static/images/renders/{char}/{char}_0.png')
+mario0 = Image.open(f'static/images/renders/{char}/{char}_0.png')
 size = ((599),(599))
 mario0 = mario0.resize(size)
 graphic.alpha_composite(mario0, (34-0,271-0))
 
 char = 'Pikachu'
-mario1 = Image.open(f'mysite/static/images/renders/{char}/{char}_1.png')
+mario1 = Image.open(f'static/images/renders/{char}/{char}_1.png')
 size = ((369),(369))
 mario1 = mario1.resize(size)
 graphic.alpha_composite(mario1, (682-0,246-0))
 
 char = 'Chrom'
-mario2 = Image.open(f'mysite/static/images/renders/{char}/{char}_2.png')
+mario2 = Image.open(f'static/images/renders/{char}/{char}_2.png')
 size = ((369),(369))
 mario2 = mario2.resize(size)
 graphic.alpha_composite(mario2, (1099,246))
 
 char = 'Mewtwo'
-mario3 = Image.open(f'mysite/static/images/renders/{char}/{char}_3.png')
+mario3 = Image.open(f'static/images/renders/{char}/{char}_3.png')
 size = ((369),(369))
 mario3 = mario3.resize(size)
 graphic.alpha_composite(mario3, (1516,246))
 
 char = 'Inkling'
-mario4 = Image.open(f'mysite/static/images/renders/{char}/{char}_4.png')
+mario4 = Image.open(f'static/images/renders/{char}/{char}_4.png')
 size = ((276),(276))
 mario4 = mario4.resize(size)
 graphic.alpha_composite(mario4, (684-0,667-0))
 
 char = 'Ness'
-mario5 = Image.open(f'mysite/static/images/renders/{char}/{char}_5.png')
+mario5 = Image.open(f'static/images/renders/{char}/{char}_5.png')
 size = ((276),(276))
 mario5 = mario5.resize(size)
 graphic.alpha_composite(mario5, (996,667))
 
 char = 'Mario'
-mario6 = Image.open(f'mysite/static/images/renders/{char}/{char}_6.png')
+mario6 = Image.open(f'static/images/renders/{char}/{char}_6.png')
 size = ((276),(276))
 mario6 = mario6.resize(size)
 graphic.alpha_composite(mario6, (1301,667))
 
 char = 'Bowser'
-mario7 = Image.open(f'mysite/static/images/renders/{char}/{char}_7.png')
+mario7 = Image.open(f'static/images/renders/{char}/{char}_7.png')
 size = ((276),(276))
 mario7 = mario7.resize(size)
 graphic.alpha_composite(mario7, (1608,667))
@@ -151,8 +151,8 @@ coords = [[34, 769, 633, 938],
           [996, 860, 1273, 938],
           [1301, 860, 1579, 938],
           [1608, 860, 1885, 938]]
-font_path = 'mysite/static/fonts/Roboto-BoldItalic.ttf'
-#font_path = 'mysite/static/fonts/AlbertSans-Bold.ttf'
+font_path = 'static/fonts/Roboto-BoldItalic.ttf'
+#font_path = 'static/fonts/AlbertSans-Bold.ttf'
 text_color = (255, 255, 255)
 shadow_color = (25, 25, 25, 155)
 for index, coord in enumerate(coords):
@@ -174,6 +174,20 @@ for index, coord in enumerate(coords):
     draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
     text = f'{index+1}'
+
+
+
+font = ImageFont.truetype(font_path, 16)
+credits = "Generated using"
+draw.text((1767, 22), credits, font=font, fill = "black")
+draw.text((1765, 20), credits, font=font, fill = "white")
+credits = "By Luke McMeans"
+draw.text((1755, 72), credits, font=font, fill = "black")
+draw.text((1753, 70), credits, font=font, fill = "white")
+font = ImageFont.truetype(font_path, 20)
+credits = "CharlottesvilleTop8s"
+draw.text((1697, 45), credits, font=font, fill = "black")
+draw.text((1695, 43), credits, font=font, fill = "white")
 
 
 
@@ -210,7 +224,7 @@ for index, name in enumerate(names):
     addName(graphic, draw, index, (255,255,255), name, font_path, coords[index])
 
 char = "Wario"
-redempImage = Image.open(f"mysite/static/images/icons/{char}_icon.png").resize((75,75))
+redempImage = Image.open(f"static/images/icons/{char}_icon.png").resize((75,75))
 winner = "JL|JB"
 graphic.alpha_composite(redempImage, (1050,967))
 font = ImageFont.truetype(font_path, 20)
@@ -218,7 +232,7 @@ draw.text((1050+75+20,975), "Redemption Winner", font=font, fill=(255, 255, 255)
 font = ImageFont.truetype(font_path, 30)
 draw.text((1050+75+20,975+25), winner, font=font, fill=(255, 255, 255))
 
-smashlogo = Image.open(f"mysite/static/images/misc/smashlogo.png").resize((75,75))
+smashlogo = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
 graphic.alpha_composite(smashlogo, (990-60-75,967))
 title = "Squad Strike Winner"
 winner = "JB & jclyde"

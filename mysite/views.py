@@ -188,13 +188,17 @@ def constructCUT(top_players, event):
 
 
 def addPlayers(top_players, event, graphic, draw, font_path):
+    font = ImageFont.truetype(font_path, 16)
+    credits = "Generated using"
+    draw.text((1767, 22), credits, font=font, fill = "black")
+    draw.text((1765, 20), credits, font=font, fill = "white")
+    credits = "By Luke McMeans"
+    draw.text((1755, 72), credits, font=font, fill = "black")
+    draw.text((1753, 70), credits, font=font, fill = "white")
     font = ImageFont.truetype(font_path, 20)
-    credits = "Generator by"
-    draw.text((1772, 22), credits, font=font, fill = "black")
-    draw.text((1770, 20), credits, font=font, fill = "white")
-    credits = "@lukem004"
-    draw.text((1782, 48), credits, font=font, fill = "black")
-    draw.text((1780, 46), credits, font=font, fill = "white")
+    credits = "CharlottesvilleTop8s"
+    draw.text((1697, 45), credits, font=font, fill = "black")
+    draw.text((1695, 43), credits, font=font, fill = "white")
     
     rectCoords = [[35, 770, 632, 937],
           [683, 564, 1050, 666],
