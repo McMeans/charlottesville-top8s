@@ -16,10 +16,9 @@ def submit(request):
     for index in range(0,8):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
-        handle = request.POST.get(f"player{number}_handle").strip().replace(" ","")
-        if handle != "":
-            if not handle.startswith('@'):
-                handle = '@' + handle
+        handle = request.POST.get(f"player{number}_handle").replace(" ","")
+        if handle != "" and not handle.startswith('@'):
+            handle = '@' + handle
         if elimination_style == 'double_elim':
             if number == 6 or number == 8:
                 placement = number-1
@@ -41,7 +40,7 @@ def submit(request):
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
-        customImage = '' #TODO: FIX        request.POST.get(f"player{number}_custom").strip()
+        customImage = '' #TODO: FIX        request.POST.get(f"player{number}_custom")
         if customImage != '':
             customFilePath = f"static/images/misc/customs/custom_{index}.png"
             temp = Image.new("RGBA", (1000,1000))
@@ -54,8 +53,9 @@ def submit(request):
             temp.alpha_composite(custom, (x,y))
             temp.save(customFilePath)
             primary = customFilePath
-            terChar = secChar
-            secChar = primChar
+            if primChar != 'Random':   
+                terChar = secChar
+                secChar = primChar
         if secChar != 'None':
             secondary = f"static/images/icons/{secChar}_icon.png"
             if terChar != 'None':
@@ -84,7 +84,6 @@ def submit(request):
     else:
         redempWinner = None
         redempChar = None
-        redempAlt = None
         redempRender = None
     if request.POST.get('side_check'):
         sideTitle = request.POST.get('side_event').strip() + " Winner"
@@ -209,172 +208,173 @@ def addPlayers(top_players, event, graphic, draw, font_path):
           [1302, 862, 1578, 937],
           [1609, 862, 1884, 937]]
     for index in range(7, -1, -1):
-        coord = rectCoords[index]
-        json_file_path = 'static/newchar_coords.json'
-        with open(json_file_path, 'r') as file:
-            charCoords = json.load(file)
+        if index+1 <= int(event["participants"]):
+            coord = rectCoords[index]
+            json_file_path = 'static/newchar_coords.json'
+            with open(json_file_path, 'r') as file:
+                charCoords = json.load(file)
 
-        player = top_players[index]
-        primary = player["primary"]
-        render = Image.open(primary)
-        charName = str(os.path.basename(primary))
-        if charName.__contains__('_'):
-            stop_index = charName.find('_')
-            charName = charName[:stop_index]
+            player = top_players[index]
+            primary = player["primary"]
+            render = Image.open(primary)
+            charName = str(os.path.basename(primary))
+            if charName.__contains__('_'):
+                stop_index = charName.find('_')
+                charName = charName[:stop_index]
 
-        if charName not in charCoords:
-            charData = charCoords["DEFAULT"]
-        else:
-            charData = charCoords[charName]
-        
-        if index == 0:
-            renderSize = charData[0]
-            renderX = charData[3][0]
-            renderY = charData[3][1]
-        elif index < 4:
-            renderSize = charData[1]
-            renderX = charData[4][0]+((index-1)*(1065-648))
-            renderY = charData[4][1]
-        else:
-            renderSize = charData[2]
-            renderX = charData[5][0]+((index-4)*(1578-1271))
-            renderY = charData[5][1]
-        crop = charData[6]
-        crop_box = (crop[0], crop[1], crop[2], crop[3])
-        rotation = charData[7]
+            if charName not in charCoords:
+                charData = charCoords["DEFAULT"]
+            else:
+                charData = charCoords[charName]
+            
+            if index == 0:
+                renderSize = charData[0]
+                renderX = charData[3][0]
+                renderY = charData[3][1]
+            elif index < 4:
+                renderSize = charData[1]
+                renderX = charData[4][0]+((index-1)*(1065-648))
+                renderY = charData[4][1]
+            else:
+                renderSize = charData[2]
+                renderX = charData[5][0]+((index-4)*(1578-1271))
+                renderY = charData[5][1]
+            crop = charData[6]
+            crop_box = (crop[0], crop[1], crop[2], crop[3])
+            rotation = charData[7]
 
-        renderSize = (int((renderSize)*((crop[2]-crop[0])/1000)), int((renderSize)*((crop[3]-crop[1])/1000)))
-        render = render.rotate(rotation, resample=Image.BILINEAR).crop(crop_box).resize(renderSize)
-        graphic.alpha_composite(render, (renderX, renderY))
+            renderSize = (int((renderSize)*((crop[2]-crop[0])/1000)), int((renderSize)*((crop[3]-crop[1])/1000)))
+            render = render.rotate(rotation, resample=Image.BILINEAR).crop(crop_box).resize(renderSize, Image.Resampling.LANCZOS)
+            graphic.alpha_composite(render, (renderX, renderY))
 
-        text_color = (255, 255, 255)
-        border_color = (255, 255, 255)
-        shadow_color = (0, 0, 0)
-        x1, y1 = coord[0], coord[1]
-        x2, y2 = coord[2], coord[3]
-        if event["title"].startswith("Smash"):
-            start_color = (229, 114, 0)
-            end_color = (217, 69, 31)
-        elif index == 0 or index == 1 or index == 4:
-            start_color = (255, 255, 255)
-            shadow_color = (255, 255, 255)
-            end_color = (217, 217, 217)
-            text_color = (0, 0, 0)
-            border_color = (0, 0, 0)
-        else:
-            start_color = (24, 24, 24)
-            end_color = (0, 0, 0)
-        gradient = [
-            (
-                int(start_color[0] + (end_color[0] - start_color[0]) * (i - y1) / (y2 - y1)),
-                int(start_color[1] + (end_color[1] - start_color[1]) * (i - y1) / (y2 - y1)),
-                int(start_color[2] + (end_color[2] - start_color[2]) * (i - y1) / (y2 - y1))
-            ) for i in range(y1, y2)
-        ]
-        for y in range(y1, y2):
-            draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
-        draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
+            text_color = (255, 255, 255)
+            border_color = (255, 255, 255)
+            shadow_color = (0, 0, 0)
+            x1, y1 = coord[0], coord[1]
+            x2, y2 = coord[2], coord[3]
+            if event["title"].startswith("Smash"):
+                start_color = (229, 114, 0)
+                end_color = (217, 69, 31)
+            elif index == 0 or index == 1 or index == 4:
+                start_color = (255, 255, 255)
+                shadow_color = (255, 255, 255)
+                end_color = (217, 217, 217)
+                text_color = (0, 0, 0)
+                border_color = (0, 0, 0)
+            else:
+                start_color = (24, 24, 24)
+                end_color = (0, 0, 0)
+            gradient = [
+                (
+                    int(start_color[0] + (end_color[0] - start_color[0]) * (i - y1) / (y2 - y1)),
+                    int(start_color[1] + (end_color[1] - start_color[1]) * (i - y1) / (y2 - y1)),
+                    int(start_color[2] + (end_color[2] - start_color[2]) * (i - y1) / (y2 - y1))
+                ) for i in range(y1, y2)
+            ]
+            for y in range(y1, y2):
+                draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
+            draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
-        numCoords = [[371, 280],
-                 [885, 255],
-                 [1298, 255],
-                 [1715, 255],
-                 [845, 712],
-                 [1157, 712],
-                 [1459, 712],
-                 [1766, 712]]
-        font = ImageFont.truetype('static/fonts/Rokkitt-BoldItalic.ttf', 2000)
-        x1, y1 = numCoords[index][0], numCoords[index][1]
-        placement = player["placement"]
-        if index == 0:
-            dimensions = [281, 478]
-            shadow_displace = [11, 15]
-        elif index < 4:
-            dimensions = [185, 299]
-            shadow_displace = [20, 22]
-        else:
-            dimensions = [130, 143]
-            shadow_displace = [25, 29]
-        curDim = draw.textbbox((0, 0), placement, font=font)
-        text_image = Image.new('RGBA', (curDim[2]-curDim[0]+shadow_displace[0], curDim[3]-curDim[1]+shadow_displace[1]))
-        placementDraw = ImageDraw.Draw(text_image)
-        placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=shadow_color)
-        placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=text_color)
-        text_image = text_image.resize((dimensions[0], dimensions[1]), Image.Resampling.LANCZOS)
-        graphic.alpha_composite(text_image, (x1, y1))
+            numCoords = [[371, 280],
+                    [885, 255],
+                    [1298, 255],
+                    [1715, 255],
+                    [845, 712],
+                    [1157, 712],
+                    [1459, 712],
+                    [1766, 712]]
+            font = ImageFont.truetype('static/fonts/Rokkitt-BoldItalic.ttf', 2000)
+            x1, y1 = numCoords[index][0], numCoords[index][1]
+            placement = player["placement"]
+            if index == 0:
+                dimensions = [281, 478]
+                shadow_displace = [11, 15]
+            elif index < 4:
+                dimensions = [185, 299]
+                shadow_displace = [20, 22]
+            else:
+                dimensions = [130, 143]
+                shadow_displace = [25, 29]
+            curDim = draw.textbbox((0, 0), placement, font=font)
+            text_image = Image.new('RGBA', (curDim[2]-curDim[0]+shadow_displace[0], curDim[3]-curDim[1]+shadow_displace[1]))
+            placementDraw = ImageDraw.Draw(text_image)
+            placementDraw.text((-curDim[0]+shadow_displace[0],-curDim[1]+shadow_displace[1]), placement, font=font, fill=shadow_color)
+            placementDraw.text((-curDim[0],-curDim[1]), placement, font=font, fill=text_color)
+            text_image = text_image.resize((dimensions[0], dimensions[1]), Image.Resampling.LANCZOS)
+            graphic.alpha_composite(text_image, (x1, y1))
 
-        name = player["name"]
-        areas = [[59, 791, 552, 120], 
-                 [700, 575, 333, 78], 
-                 [1119, 575, 333, 78], 
-                 [1534, 575, 333, 78],   
-                 [700, 873, 246, 54], 
-                 [1011, 873, 246, 54], 
-                 [1318, 873, 246, 54], 
-                 [1624, 873, 246, 54]]
+            name = player["name"]
+            areas = [[59, 791, 552, 120], 
+                    [700, 575, 333, 78], 
+                    [1119, 575, 333, 78], 
+                    [1534, 575, 333, 78],   
+                    [700, 873, 246, 54], 
+                    [1011, 873, 246, 54], 
+                    [1318, 873, 246, 54], 
+                    [1624, 873, 246, 54]]
 
-        x, y, width, height = areas[index]
-        font_size = 150
-        font = ImageFont.truetype(font_path, font_size)
-        box = draw.textbbox((0,0), name, font=font)
-        text_width = box[2] - box[0]
-        text_height = box[3] - box[1]
-        while text_width > width or text_height > (height * 0.75):
-            font_size -= 1
+            x, y, width, height = areas[index]
+            font_size = 150
             font = ImageFont.truetype(font_path, font_size)
             box = draw.textbbox((0,0), name, font=font)
-            text_width = box[2]
-            text_height = box[3]
+            text_width = box[2] - box[0]
+            text_height = box[3] - box[1]
+            while text_width > width or text_height > (height * 0.75):
+                font_size -= 1
+                font = ImageFont.truetype(font_path, font_size)
+                box = draw.textbbox((0,0), name, font=font)
+                text_width = box[2]
+                text_height = box[3]
 
-        xCoord = x + (width - text_width) / 2
-        yCoord = y + (height - text_height) / 2
-        if index == 0:
-            if len(name) == 1:
-                yCoord -= 8*(1/len(name))
+            xCoord = x + (width - text_width) / 2
+            yCoord = y + (height - text_height) / 2
+            if index == 0:
+                if len(name) == 1:
+                    yCoord -= 8*(1/len(name))
+                else:
+                    yCoord -= 12*(1/len(name))
+            elif index < 4:
+                if len(name) == 1:
+                    yCoord -= 9*(1/len(name))
+                else:
+                    yCoord -= 18*(1/len(name))
             else:
-                yCoord -= 12*(1/len(name))
-        elif index < 4:
-            if len(name) == 1:
-                yCoord -= 9*(1/len(name))
-            else:
-                yCoord -= 18*(1/len(name))
-        else:
-            if len(name) == 1:
-                yCoord -= 6*(1/len(name))
-            else:
-                yCoord -= 12*(1.2/len(name))
+                if len(name) == 1:
+                    yCoord -= 6*(1/len(name))
+                else:
+                    yCoord -= 12*(1.2/len(name))
 
-        draw.text((xCoord+3, yCoord+3), name, font=font, fill=shadow_color)
-        draw.text((xCoord, yCoord), name, font=font, fill=text_color)
+            draw.text((xCoord+3, yCoord+3), name, font=font, fill=shadow_color)
+            draw.text((xCoord, yCoord), name, font=font, fill=text_color)
 
-        handle = player["handle"]
-        x1, y1 = coord[0], coord[1]
-        if handle != "":
-            y1 -= 45
-            handle_font = 'static/fonts/LibreFranklin-Bold.ttf'
-            font = ImageFont.truetype(handle_font, 19)
-            box = draw.textbbox((0,0), handle, font=font)
-            draw.rounded_rectangle((x1, y1, x1+60+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
-            draw.text((x1+40, y1-40+45), handle, font=font, fill=(255,255,255))
-            xlogo = Image.open('static/images/misc/x.png')
-            size = ((20), (20))
-            xlogo = xlogo.resize(size)
-            graphic.paste(xlogo, (x1+15,y1-37+45))
-        
-        if player["secondary"] is not None:
-            size = ((30),(30))
-            sec = Image.open(player["secondary"]).resize(size)
-            graphic.alpha_composite(sec, (x1,y1-80+45))
-            if player["tertiary"] is not None:
-                ter = Image.open(player["tertiary"]).resize(size)
-                graphic.alpha_composite(ter, (x1+34,y1-80+45))
+            handle = player["handle"]
+            x1, y1 = coord[0], coord[1]
+            if handle != "":
+                y1 -= 45
+                handle_font = 'static/fonts/LibreFranklin-Bold.ttf'
+                font = ImageFont.truetype(handle_font, 19)
+                box = draw.textbbox((0,0), handle, font=font)
+                draw.rounded_rectangle((x1, y1, x1+60+(box[2]-box[0]), y1+35), fill=(35,35,35), outline=(255,255,255), width=3, radius=20)
+                draw.text((x1+40, y1-40+45), handle, font=font, fill=(255,255,255))
+                xlogo = Image.open('static/images/misc/x.png')
+                size = ((20), (20))
+                xlogo = xlogo.resize(size, Image.Resampling.LANCZOS)
+                graphic.paste(xlogo, (x1+15,y1-37+45))
+            
+            if player["secondary"] is not None:
+                size = ((30),(30))
+                sec = Image.open(player["secondary"]).resize(size, Image.Resampling.LANCZOS)
+                graphic.alpha_composite(sec, (x1,y1-80+45))
+                if player["tertiary"] is not None:
+                    ter = Image.open(player["tertiary"]).resize(size, Image.Resampling.LANCZOS)
+                    graphic.alpha_composite(ter, (x1+34,y1-80+45))
 
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
     redempWinner = event["redemption_winner"]
     text_color = (255, 255, 255)
     if sideTitle is not None and redempWinner is not None:
-        redempImage = Image.open(event["redemption_render"]).resize((75,75))
+        redempImage = Image.open(event["redemption_render"]).resize((75,75), Image.Resampling.LANCZOS)
         graphic.alpha_composite(redempImage, (1050,967))
         font = ImageFont.truetype(font_path, 20)
         draw.text((1050+75+20,975), "Redemption Winner", font=font, fill=text_color)
@@ -383,7 +383,7 @@ def addSideBrackets(event, graphic, draw, font_path):
         if event["title"].startswith("The"):
             text_color = (0,0,0)
         sideWinner = event["side_winner"]
-        smashlogo = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
+        smashlogo = Image.open(f"static/images/misc/smashlogo.png").resize((75,75), Image.Resampling.LANCZOS)
         graphic.alpha_composite(smashlogo, (990-60-75,967))
         font = ImageFont.truetype(font_path, 20)
         boxDim = draw.textbbox((0, 0), sideTitle, font=font)
@@ -392,13 +392,13 @@ def addSideBrackets(event, graphic, draw, font_path):
         boxDim = draw.textbbox((0, 0), sideWinner, font=font)
         draw.text((830-(boxDim[2]),975+25), sideWinner, font=font, fill=text_color)
     elif sideTitle is not None or redempWinner is not None:
-        icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75))
+        icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75), Image.Resampling.LANCZOS)
         if sideTitle is not None:
             title = sideTitle
             winner = event["side_winner"]
         else:
             if not event["redemption_render"].endswith("Random_icon.png"):
-                icon = Image.open(event["redemption_render"]).resize((75,75))
+                icon = Image.open(event["redemption_render"]).resize((75,75), Image.Resampling.LANCZOS)
             title = "Redemption Winner"
             winner = redempWinner
         graphic.alpha_composite(icon, (1030,967))
