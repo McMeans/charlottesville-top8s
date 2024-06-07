@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import Player, Event
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import os, json
