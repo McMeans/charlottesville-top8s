@@ -273,5 +273,8 @@ font = ImageFont.truetype(font_path, 30)
 boxDim = draw.textbbox((0, 0), winner, font=font)
 draw.text((830-(boxDim[2]),975+25), winner, font=font, fill=(0, 0, 0))
 
+image = Image.open('static/images/misc/uvalogo.png').convert('RGBA').resize((200, 200))
+graphic.alpha_composite(image, (720+((7-4)*(1578-1271)), 700))
+
 # Display the image
 graphic.show()

@@ -200,29 +200,29 @@ def addPlayers(top_players, event, graphic, draw, font_path):
     draw.text((1695, 43), credits, font=font, fill = "white")
     
     rectCoords = [[35, 770, 632, 937],
-                [683, 564, 1050, 666],
-                [1100, 564, 1467, 666],
-                [1517, 564, 1884, 666],
-                [683, 862, 959, 937],
-                [997, 862, 1272, 937],
-                [1302, 862, 1578, 937],
-                [1609, 862, 1884, 937]]
+                  [683, 564, 1050, 666],
+                  [1100, 564, 1467, 666],
+                  [1517, 564, 1884, 666],
+                  [683, 862, 959, 937],
+                  [997, 862, 1272, 937],
+                  [1302, 862, 1578, 937],
+                  [1609, 862, 1884, 937]]
     numCoords = [[371, 280],
-                [885, 255],
-                [1298, 255],
-                [1715, 255],
-                [845, 712],
-                [1157, 712],
-                [1459, 712],
-                [1766, 712]]
+                 [885, 255],
+                 [1298, 255],
+                 [1715, 255],
+                 [845, 712],
+                 [1157, 712],
+                 [1459, 712],
+                 [1766, 712]]
     areas = [[59, 791, 552, 120], 
-            [700, 575, 333, 78], 
-            [1119, 575, 333, 78], 
-            [1534, 575, 333, 78],   
-            [700, 873, 246, 54], 
-            [1011, 873, 246, 54], 
-            [1318, 873, 246, 54], 
-            [1624, 873, 246, 54]]
+             [700, 575, 333, 78], 
+             [1119, 575, 333, 78], 
+             [1534, 575, 333, 78],   
+             [700, 873, 246, 54], 
+             [1011, 873, 246, 54], 
+             [1318, 873, 246, 54], 
+             [1624, 873, 246, 54]]
     for index in range(7, -1, -1):
         if index+1 <= int(event["participants"]):
             coord = rectCoords[index]
@@ -367,6 +367,21 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                 if player["tertiary"] is not None:
                     ter = Image.open(player["tertiary"]).resize(size, Image.Resampling.LANCZOS)
                     graphic.alpha_composite(ter, (x1+34,y1-80+45))
+        else:
+            if 'UVA' in event["title"]:
+                icon = Image.open('static/images/misc/uvalogo.png').convert('RGBA')
+            else:
+                icon = Image.open('static/images/misc/cutlogo.png').convert('RGBA')
+            if index < 4:
+                resize = ((270, 270))
+                x = 730+((index-1)*(1065-648))
+                y = 320
+            else:
+                resize = (200, 200)
+                x = 720+((index-4)*(1578-1271))
+                y = 710
+            graphic.alpha_composite(icon.resize(resize), (x, y))
+
 
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
