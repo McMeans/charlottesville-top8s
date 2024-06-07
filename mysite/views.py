@@ -200,13 +200,29 @@ def addPlayers(top_players, event, graphic, draw, font_path):
     draw.text((1695, 43), credits, font=font, fill = "white")
     
     rectCoords = [[35, 770, 632, 937],
-          [683, 564, 1050, 666],
-          [1100, 564, 1467, 666],
-          [1517, 564, 1884, 666],
-          [683, 862, 959, 937],
-          [997, 862, 1272, 937],
-          [1302, 862, 1578, 937],
-          [1609, 862, 1884, 937]]
+                [683, 564, 1050, 666],
+                [1100, 564, 1467, 666],
+                [1517, 564, 1884, 666],
+                [683, 862, 959, 937],
+                [997, 862, 1272, 937],
+                [1302, 862, 1578, 937],
+                [1609, 862, 1884, 937]]
+    numCoords = [[371, 280],
+                [885, 255],
+                [1298, 255],
+                [1715, 255],
+                [845, 712],
+                [1157, 712],
+                [1459, 712],
+                [1766, 712]]
+    areas = [[59, 791, 552, 120], 
+            [700, 575, 333, 78], 
+            [1119, 575, 333, 78], 
+            [1534, 575, 333, 78],   
+            [700, 873, 246, 54], 
+            [1011, 873, 246, 54], 
+            [1318, 873, 246, 54], 
+            [1624, 873, 246, 54]]
     for index in range(7, -1, -1):
         if index+1 <= int(event["participants"]):
             coord = rectCoords[index]
@@ -275,14 +291,6 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                 draw.line([(x1, y), (x2, y)], fill=gradient[y - y1], width=1)
             draw.rectangle((x1, y1, x2, y2), outline=border_color, width=4)
 
-            numCoords = [[371, 280],
-                    [885, 255],
-                    [1298, 255],
-                    [1715, 255],
-                    [845, 712],
-                    [1157, 712],
-                    [1459, 712],
-                    [1766, 712]]
             font = ImageFont.truetype('static/fonts/Rokkitt-BoldItalic.ttf', 2000)
             x1, y1 = numCoords[index][0], numCoords[index][1]
             placement = player["placement"]
@@ -304,15 +312,6 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             graphic.alpha_composite(text_image, (x1, y1))
 
             name = player["name"]
-            areas = [[59, 791, 552, 120], 
-                    [700, 575, 333, 78], 
-                    [1119, 575, 333, 78], 
-                    [1534, 575, 333, 78],   
-                    [700, 873, 246, 54], 
-                    [1011, 873, 246, 54], 
-                    [1318, 873, 246, 54], 
-                    [1624, 873, 246, 54]]
-
             x, y, width, height = areas[index]
             font_size = 150
             font = ImageFont.truetype(font_path, font_size)
