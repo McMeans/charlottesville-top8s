@@ -46,7 +46,7 @@ h4 {
     font-weight: 600;
 }
 
-input {
+input:not([type="file"]) {
     background-color: rgba(43, 52, 80, 0.9);
     font-family: 'Zilla Slab', sans-serif;
     color: white;
@@ -67,6 +67,10 @@ body {
     color: white;
     padding: 50px;
     font-weight: 500;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 footer {
