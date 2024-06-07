@@ -40,11 +40,11 @@ def submit(request):
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
-        customImage = '' #TODO: FIX        request.POST.get(f"player{number}_custom")
-        if customImage != '':
+        if request.POST.get(f"player{number}_custom") != '':
+            customImage = request.FILES[f"player{number}_custom"]
             customFilePath = f"static/images/misc/customs/custom_{index}.png"
             temp = Image.new("RGBA", (1000,1000))
-            custom = Image.open(customImage)
+            custom = Image.open(customImage).convert("RGBA")
             aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
             new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
             custom = custom.resize(new_size, Image.Resampling.LANCZOS)
@@ -132,7 +132,8 @@ def constructSmashAtUVA(top_players, event):
     draw.text((60,170), top8text, font=font, fill=text_color)
 
     font = ImageFont.truetype(font_path, 40)
-    participantsText = f'{event["participants"]} Participants'
+    participants = int(event["participants"])
+    participantsText = f'{participants} Participant{"s" if participants != 1 else ""}'
     draw.text((63,978), participantsText, font=font, fill=shadow_color)
     draw.text((60,975), participantsText, font=font, fill=text_color)
     locationText = 'Charlottesville, VA'
@@ -210,7 +211,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
     for index in range(7, -1, -1):
         if index+1 <= int(event["participants"]):
             coord = rectCoords[index]
-            json_file_path = 'static/newchar_coords.json'
+            json_file_path = 'static/char_coords.json'
             with open(json_file_path, 'r') as file:
                 charCoords = json.load(file)
 
@@ -223,7 +224,7 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                 charName = charName[:stop_index]
 
             if charName not in charCoords:
-                charData = charCoords["DEFAULT"]
+                charData = charCoords["Custom"]
             else:
                 charData = charCoords[charName]
             

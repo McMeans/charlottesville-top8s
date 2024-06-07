@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'style.css' %}">
 
 <img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">  
-<form action="{% url 'submit' %}" method="post">
+<form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <fieldset>
         <label>What event is this for?</label>
@@ -151,9 +151,8 @@
             </div>
             <div>
                 <label>Custom Character Image (optional)</label><br>
-                <sub>[CURRENTLY UNAVALIABLE]</sub><br>
                 <input type="file" name="player{{ i }}_custom" label="Player{{ i }} Custom Image" id="player{{ i }}_custom"
-                    accept="image/png, image/jpg, image/jpeg" disabled>
+                    accept="image/png, image/jpg, image/jpeg">
             </div>
             <div>
                 <label>Secondary Character (optional)</label><br>
@@ -581,17 +580,17 @@
         const warning = document.getElementById('under_eight')
         if(participants <= 0){
             warning.innerHTML = `
-                    Please enter a value greater than or equal to 1.
+                Please enter a value greater than or equal to 1.
             `;
         }
         else if(participants < 8){
             if(participants === 7){
                 warning.innerHTML = `
-                    [WARNING] You've entered a number less than 8. This means Player 8 will be ignored. Regardless, please add a value to its name, as it is still required (but won't show).
+                    [WARNING] You've entered a number less than 8. This means Player 8 will be ignored, but please add a value to its name as it is still required (but won't show).
                 `;
             } else {
                 warning.innerHTML = `
-                    [WARNING] You've entered a number less than 8. This means Players ${participants+1}-8 will be ignored. Regardless, please add a value to their names, as they are still required (but won't show).
+                    [WARNING] You've entered a number less than 8. This means Players ${participants+1}-8 will be ignored, but please add a value to their names as they are still required (but won't show).
                 `;
             }
         } else {
