@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
+from .char_names import characters
 import os, json
 
 def homepage_view(request):
     context = {
-        "indexes": range(1,9)
+        "indexes": range(1,9),
+        "characters": characters
     }
     return render(request, 'mysite/homepage.html', context)
 
@@ -105,7 +107,8 @@ def submit(request):
         constructCUT(top_players, event)
     return render(request, 'mysite/homepage.html', {
         "graphic": "success",
-        "indexes": range(1,9)
+        "indexes": range(1,9),
+        "characters": characters
     })
 
 def constructSmashAtUVA(top_players, event):
