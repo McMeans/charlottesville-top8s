@@ -14,6 +14,7 @@ def homepage_view(request):
 def submit(request):
     top_players = []
     elimination_style = request.POST.get('elim_type')
+    customs = []
     for index in range(0,8):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
@@ -43,20 +44,20 @@ def submit(request):
         tertiary = None
         if request.POST.get(f"player{number}_custom") != '':
             customImage = request.FILES[f"player{number}_custom"]
-            customFilePath = f"static/images/misc/customs/custom_{index}.png"
-            temp = Image.new("RGBA", (1000,1000))
+            render = Image.new("RGBA", (1000,1000))
             custom = Image.open(customImage).convert("RGBA")
             aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
             new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
             custom = custom.resize(new_size, Image.Resampling.LANCZOS)
             x = (1000 - custom.width) // 2
             y = (1000 - custom.height) // 2
-            temp.alpha_composite(custom, (x,y))
-            temp.save(customFilePath)
-            primary = customFilePath
-            if primChar != 'Random':   
+            render.alpha_composite(custom, (x,y))
+            customs.append(render)
+            if primChar != 'Random':
                 terChar = secChar
                 secChar = primChar
+        else:
+            customs.append(None)
         if secChar != 'None':
             secondary = f"static/images/icons/{secChar}_icon.png"
             if terChar != 'None':
@@ -102,16 +103,16 @@ def submit(request):
         "redemption_render": redempRender
     }
     if title.startswith("Smash"):
-        constructSmashAtUVA(top_players, event)
+        constructSmashAtUVA(top_players, event, customs)
     else:
-        constructCUT(top_players, event)
+        constructCUT(top_players, event, customs)
     return render(request, 'mysite/homepage.html', {
         "graphic": "success",
         "indexes": range(1,9),
         "characters": characters
     })
 
-def constructSmashAtUVA(top_players, event):
+def constructSmashAtUVA(top_players, event, customs):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     titleText = str(event["title"])
@@ -142,11 +143,11 @@ def constructSmashAtUVA(top_players, event):
     draw.text((1543,978), locationText, font=font, fill=shadow_color)
     draw.text((1540,975), locationText, font=font, fill=text_color)
 
-    addPlayers(top_players, event, graphic, draw, font_path)
+    addPlayers(top_players, event, customs, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
     graphic.save("staticfiles/graphic.png")
 
-def constructCUT(top_players, event):
+def constructCUT(top_players, event, customs):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     background_image = Image.open('static/images/backgrounds/cut_background.png')
@@ -184,12 +185,12 @@ def constructCUT(top_players, event):
     draw.text((drawCoords[0]+4, drawCoords[1]+3), dateText, font=font, fill=shadow_color)
     draw.text((drawCoords[0], drawCoords[1]), dateText, font=font, fill=text_color)
 
-    addPlayers(top_players, event, graphic, draw, font_path)
+    addPlayers(top_players, event, customs, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
     graphic.save("staticfiles/graphic.png")
 
 
-def addPlayers(top_players, event, graphic, draw, font_path):
+def addPlayers(top_players, event, customs, graphic, draw, font_path):
     font = ImageFont.truetype(font_path, 16)
     credits = "Generated using"
     draw.text((1767, 22), credits, font=font, fill = "black")
@@ -234,16 +235,14 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                 charCoords = json.load(file)
 
             player = top_players[index]
-            primary = player["primary"]
-            render = Image.open(primary)
-            charName = str(os.path.basename(primary))
-            if charName.__contains__('_'):
-                stop_index = charName.find('_')
-                charName = charName[:stop_index]
-
-            if charName not in charCoords:
+            if customs[index] is not None:
+                render = customs[index]
                 charData = charCoords["Custom"]
             else:
+                primary = player["primary"]
+                render = Image.open(primary)
+                charName = str(os.path.basename(primary))
+                charName = charName[:charName.find("_")]
                 charData = charCoords[charName]
             
             if index == 0:
