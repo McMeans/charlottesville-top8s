@@ -14,7 +14,6 @@ def homepage_view(request):
 def submit(request):
     top_players = []
     elimination_style = request.POST.get('elim_type')
-    customs = []
     for index in range(0,8):
         number = index+1
         name = request.POST.get(f"player{number}_name").strip()
@@ -37,38 +36,38 @@ def submit(request):
             placement = number
         primChar = request.POST.get(f"player{number}_primary")
         primAlt = request.POST.get(f"player{number}_alt")[0:1]
-        primary = f"static/images/renders/{primChar}/{primChar}_{primAlt}.png"
+        primary = Image.open(f"static/images/renders/{primChar}/{primChar}_{primAlt}.png")
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
         if request.POST.get(f"player{number}_custom") != '':
             customImage = request.FILES[f"player{number}_custom"]
-            render = Image.new("RGBA", (1000,1000))
+            temp = Image.new("RGBA", (1000,1000))
             custom = Image.open(customImage).convert("RGBA")
             aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
             new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
             custom = custom.resize(new_size, Image.Resampling.LANCZOS)
             x = (1000 - custom.width) // 2
             y = (1000 - custom.height) // 2
-            render.alpha_composite(custom, (x,y))
-            customs.append(render)
+            temp.alpha_composite(custom, (x,y))
+            primary = temp
             if primChar != 'Random':
                 terChar = secChar
                 secChar = primChar
-        else:
-            customs.append(None)
+            primChar = 'Custom'
         if secChar != 'None':
-            secondary = f"static/images/icons/{secChar}_icon.png"
+            secondary = Image.open(f"static/images/icons/{secChar}_icon.png")
             if terChar != 'None':
-                tertiary = f"static/images/icons/{terChar}_icon.png"
+                tertiary = Image.open(f"static/images/icons/{terChar}_icon.png")
         top_players.append({
             'name': str(name),
             'handle': str(handle),
             'placement': str(placement),
             'primary': primary,
             'secondary': secondary,
-            'tertiary': tertiary
+            'tertiary': tertiary,
+            'character': str(primChar)
         })
 
     date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
@@ -103,16 +102,17 @@ def submit(request):
         "redemption_render": redempRender
     }
     if title.startswith("Smash"):
-        constructSmashAtUVA(top_players, event, customs)
+        constructSmashAtUVA(top_players, event)
     else:
-        constructCUT(top_players, event, customs)
-    return render(request, 'mysite/homepage.html', {
+        constructCUT(top_players, event)
+    context = {
         "graphic": "success",
         "indexes": range(1,9),
         "characters": characters
-    })
+    }
+    return render(request, 'mysite/homepage.html', context)
 
-def constructSmashAtUVA(top_players, event, customs):
+def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     titleText = str(event["title"])
@@ -143,11 +143,11 @@ def constructSmashAtUVA(top_players, event, customs):
     draw.text((1543,978), locationText, font=font, fill=shadow_color)
     draw.text((1540,975), locationText, font=font, fill=text_color)
 
-    addPlayers(top_players, event, customs, graphic, draw, font_path)
+    addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
     graphic.save("staticfiles/graphic.png")
 
-def constructCUT(top_players, event, customs):
+def constructCUT(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     background_image = Image.open('static/images/backgrounds/cut_background.png')
@@ -185,12 +185,12 @@ def constructCUT(top_players, event, customs):
     draw.text((drawCoords[0]+4, drawCoords[1]+3), dateText, font=font, fill=shadow_color)
     draw.text((drawCoords[0], drawCoords[1]), dateText, font=font, fill=text_color)
 
-    addPlayers(top_players, event, customs, graphic, draw, font_path)
+    addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
     graphic.save("staticfiles/graphic.png")
 
 
-def addPlayers(top_players, event, customs, graphic, draw, font_path):
+def addPlayers(top_players, event, graphic, draw, font_path):
     font = ImageFont.truetype(font_path, 16)
     credits = "Generated using"
     draw.text((1767, 22), credits, font=font, fill = "black")
@@ -235,15 +235,8 @@ def addPlayers(top_players, event, customs, graphic, draw, font_path):
                 charCoords = json.load(file)
 
             player = top_players[index]
-            if customs[index] is not None:
-                render = customs[index]
-                charData = charCoords["Custom"]
-            else:
-                primary = player["primary"]
-                render = Image.open(primary)
-                charName = str(os.path.basename(primary))
-                charName = charName[:charName.find("_")]
-                charData = charCoords[charName]
+            render = player['primary']
+            charData = charCoords[player['character']]
             
             if index == 0:
                 renderSize = charData[0]
@@ -364,10 +357,10 @@ def addPlayers(top_players, event, customs, graphic, draw, font_path):
             
             if player["secondary"] is not None:
                 size = ((30),(30))
-                sec = Image.open(player["secondary"]).resize(size, Image.Resampling.LANCZOS)
+                sec = player["secondary"].resize(size, Image.Resampling.LANCZOS)
                 graphic.alpha_composite(sec, (x1,y1-80+45))
                 if player["tertiary"] is not None:
-                    ter = Image.open(player["tertiary"]).resize(size, Image.Resampling.LANCZOS)
+                    ter = player["tertiary"].resize(size, Image.Resampling.LANCZOS)
                     graphic.alpha_composite(ter, (x1+34,y1-80+45))
         else:
             if 'UVA' in event["title"]:
