@@ -269,8 +269,8 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             x1, y1 = coord[0], coord[1]
             x2, y2 = coord[2], coord[3]
             if event["title"].startswith("Smash"):
-                start_color = (229, 114, 0)
-                end_color = (217, 69, 31)
+                start_color = (248, 109, 7) #(229, 114, 0)
+                end_color = (222, 82, 55) #(217, 69, 31) 
             elif index == 0 or index == 1 or index == 4:
                 start_color = (255, 255, 255)
                 shadow_color = (255, 255, 255)

@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="{% static 'style.css' %}">
 
-<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">  
+<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <fieldset>
@@ -375,7 +375,7 @@
     <input type="submit" value="GENERATE">
 </form>
 
-<div class="row" style="width: 80%; margin-left: 10%">
+<div class="row" style="width: 90%; margin-left: 5%;">
     {% if graphic %}
         <h2>Result</h2>
         <img style="width: 100%; height: auto;" src="{% static 'graphic.png' %}">    
@@ -585,15 +585,13 @@
                 Please enter a value greater than or equal to 1.
             `;
         } else if(participants < 8){
-            if(participants === 7){
-                warning.innerHTML = `
-                    [WARNING] You've entered a number less than 8. This means Player 8 won't show on the graphic.
-                `;
+            warning.innerHTML = `[WARNING] You've entered a number less than 8. This means Player`;
+            if(participants !== 7){
+                warning.innerHTML += `s ${participants+1}-`;
             } else {
-                warning.innerHTML = `
-                    [WARNING] You've entered a number less than 8. This means Players ${participants+1}-8 won't show on the graphic.
-                `;
+                warning.innerHTML += ` `;
             }
+            warning.innerHTML += `8 won't show on the graphic.`;
         } else {
             warning.innerHTML = ``;
         }
@@ -604,8 +602,12 @@
                 playerText.value = `*NOT INCLUDED*`;
                 playerHandle.value = `*NOT INCLUDED*`;
             } else {
-                playerText.value = ``;
-                playerHandle.value = ``;
+                if(playerText.value === "*NOT INCLUDED*"){
+                    playerText.value = ``;
+                }
+                if(playerHandle.value === "*NOT INCLUDED*"){
+                    playerHandle.value = ``;
+                }
             }
         }
     }
