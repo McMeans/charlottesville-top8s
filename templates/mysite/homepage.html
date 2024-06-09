@@ -99,17 +99,18 @@
     <fieldset>
         <label>Bracket format:</label>
         <div>
-            <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked>
+            <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked onclick="showPlacements()">
             <label for="double_elim">Double Elimination</label>
         </div>
         <div>
-            <input type="radio" id="single_elim" name="elim_type" value="single_elim">
+            <input type="radio" id="single_elim" name="elim_type" value="single_elim" onclick="showPlacements()">
             <label for="single_elim">Single Elimination</label>
         </div>
         <div>
-            <input type="radio" id="round_robin" name="elim_type" value="round_robin">
+            <input type="radio" id="round_robin" name="elim_type" value="round_robin" onclick="showPlacements()">
             <label for="round_robin">Round Robin, no bracket</label>
         </div>
+        <sub id="placements"></sub>
     </fieldset>
 
     <fieldset>
@@ -250,20 +251,21 @@
         const participants = Number(document.getElementById('participants').value)
         const warning = document.getElementById('under_eight')
         if(participants <= 0){
-            warning.innerHTML = `
+            message = `
                 Please enter a value greater than or equal to 1.
             `;
         } else if(participants < 8){
-            warning.innerHTML = `[WARNING] You've entered a number less than 8. This means Player`;
+            message = `[WARNING] You've entered a number less than 8. This means Player`;
             if(participants !== 7){
-                warning.innerHTML += `s ${participants+1}-`;
+                message += `s ${participants+1}-`;
             } else {
-                warning.innerHTML += ` `;
+                message += ` `;
             }
-            warning.innerHTML += `8 won't show on the graphic.`;
+            message += `8 won't show on the graphic.`;
         } else {
-            warning.innerHTML = ``;
+            message = ``;
         }
+        warning.innnerHTML = message;
         for(var i = 1; i < 9; i++){
             const playerText = document.getElementById(`player${i}_name`);
             const playerHandle = document.getElementById(`player${i}_handle`)
@@ -279,6 +281,32 @@
                 }
             }
         }
+        showPlacements();
+    }
+
+    function showPlacements(){
+        const singleElim = document.getElementById('single_elim')
+        const doubleElim = document.getElementById('double_elim')
+        const roundRobin = document.getElementById('round_robin')
+        const placements = document.getElementById('placements')
+        const participants = Number(document.getElementById('participants').value)
+        if(singleElim.checked){
+            arr = ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th']
+        } else if(doubleElim.checked){
+            arr = ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th']
+        } else {
+            arr = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+        }
+        message = `Placements will be as follows: `;
+        for(var i = 0; i < arr.length; i++){
+            message += arr[i]
+            if(i === arr.length-1 || i === participants-1){
+                break;
+            } else {
+                message += `, `;
+            }
+        }
+        placements.innerHTML = message
     }
 
     updateAlts("player1_primary", "player1_alt");
@@ -292,4 +320,5 @@
     changeEvent();
     addRedemption();
     addSideEvent();
+    showPlacements();
 </script>
