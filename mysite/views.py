@@ -105,12 +105,7 @@ def submit(request):
         constructSmashAtUVA(top_players, event)
     else:
         constructCUT(top_players, event)
-    context = {
-        "graphic": "success",
-        "indexes": range(1,9),
-        "characters": characters
-    }
-    return render(request, 'mysite/homepage.html', context)
+    return render(request, 'mysite/result.html', {'tab_title': title + " Graphic"})
 
 def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))

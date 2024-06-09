@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ tab_title }}</title>
+<link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
+
+<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">
+
+<div class="result"> 
+    <div style="width: 90%; margin-left: 5%;">
+        <h2>Result</h2>
+        <img style="width: 100%; height: auto;" src="{% static 'graphic.png' %}">
+        <br><br>
+        <a href="{% url 'homepage' %}" style="font-size: 20px;">Return to Homepage</a>
+        <br><br>
+    </div>
+</div>
+
+<footer class="text-muted">
+    <br>
+    Created by Luke McMeans (2024)
+    <br><br>
+    Inspired by <a href="https://www.top8er.com/" target="_blank">top8er.com</a> by @Riokaru and @Elenriqu3
+    <br><br>
+    Built and maintained using Django, Pillow, and Heroku. Images and assests from Super Smash Bros. Ultimate belong to Nintendo and Sora Ltd.
+</footer>

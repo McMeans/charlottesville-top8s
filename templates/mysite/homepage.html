@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 
 <link rel="stylesheet" href="{% static 'style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charlottesville Top8s</title>
 <link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
 
 <img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">
@@ -32,7 +35,7 @@
             </div>
             <label>What # Smash@UVA is this (for the semester)?</label><br>
         </div>
-        <input type="number" name="event_number" label="Event Number" id="event_number" required>
+        <input type="number" name="event_number" label="Event Number" id="event_number" step=".5" required>
         <br>
         <label>Event Date:</label><br>
         <input type="date" name="event_date" id="event_date" required><br>
@@ -129,16 +132,11 @@
 </form>
 
 <div class="row" style="width: 90%; margin-left: 5%;">
-    {% if graphic %}
-        <h2>Result</h2>
-        <img style="width: 100%; height: auto;" src="{% static 'graphic.png' %}">    
-    {% else %}
-        <h2>Examples</h2>
-        <div style="display: flex;">
-            <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'sampleUVA.png' %}">
-            <img style="width: 50%; height: auto;" src="{% static 'sampleCUT.png' %}">
-        </div>
-    {% endif %}
+    <h2>Examples</h2>
+    <div style="display: flex;">
+        <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'sampleUVA.png' %}">
+        <img style="width: 50%; height: auto;" src="{% static 'sampleCUT.png' %}">
+    </div>
 </div>
 
 <footer class="text-muted">
@@ -148,7 +146,6 @@
     Inspired by <a href="https://www.top8er.com/" target="_blank">top8er.com</a> by @Riokaru and @Elenriqu3
     <br><br>
     Built and maintained using Django, Pillow, and Heroku. Images and assests from Super Smash Bros. Ultimate belong to Nintendo and Sora Ltd.
-    
 </footer>
 
 <script>
@@ -248,7 +245,9 @@
     }
 
     function checkUnderEight(){
-        const participants = Number(document.getElementById('participants').value)
+        const number = document.getElementById('participants')
+        number.value = parseInt(number.value)
+        const participants = Number(number.value)
         const warning = document.getElementById('under_eight')
         if(participants <= 0){
             message = `
@@ -265,7 +264,7 @@
         } else {
             message = ``;
         }
-        warning.innnerHTML = message;
+        warning.innerHTML = message;
         for(var i = 1; i < 9; i++){
             const playerText = document.getElementById(`player${i}_name`);
             const playerHandle = document.getElementById(`player${i}_handle`)
