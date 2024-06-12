@@ -50,6 +50,10 @@ input:not([type="file"]) {
     background-color: rgba(43, 52, 80, 0.9);
     font-family: 'Zilla Slab', sans-serif;
     color: white;
+    border-color: rgb(129, 129, 129);
+    border-radius: 1px;
+    border-style: solid;
+    border-width: 1px;
 }
 
 select {
