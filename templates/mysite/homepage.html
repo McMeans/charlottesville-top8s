@@ -1,15 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 
-<link rel="stylesheet" href="{% static 'style.css' %}">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Charlottesville Top8s</title>
-<link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
+<head>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charlottesville Top8s</title>
+    <link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
+</head>
 
-<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">
+<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'images/top8sLogo.png' %}">
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    <data id="user_id" value="" hidden></data>
     <fieldset>
         <label>What event is this for?</label>
         <div>
@@ -134,8 +137,8 @@
 <div class="row" style="width: 90%; margin-left: 5%;">
     <h2>Examples</h2>
     <div style="display: flex;">
-        <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'sampleUVA.png' %}">
-        <img style="width: 50%; height: auto;" src="{% static 'sampleCUT.png' %}">
+        <img style="width: 50%; height: auto; margin-right: 10px;" src="{% static 'images/sampleUVA.png' %}">
+        <img style="width: 50%; height: auto;" src="{% static 'images/sampleCUT.png' %}">
     </div>
 </div>
 
@@ -149,6 +152,30 @@
 </footer>
 
 <script>
+    function getUserID(){
+        const item = document.getElementById('user_id')
+        var user_id;
+        if(!localStorage.getItem('user_id')){
+            user_id = generateID();
+            localStorage.setItem('user_id', user_id);
+        } else {
+            user_id = localStorage.getItem('user_id');
+        }
+        item.value = user_id;
+    }
+    function generateID(){
+        const characters = 'abcdefghijklmnopqrstuvwxyz';
+        let result = '';
+        for (let i = 0; i < 4; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        result += '-';
+        for (let i = 0; i < 4; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+    
     function updateAlts(characterID, selectID) {
         const characterSelect = document.getElementById(characterID);
         const altSelect = document.getElementById(selectID);
