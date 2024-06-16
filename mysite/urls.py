@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage_view, name="homepage"),
     path('submit/', views.submit, name="submit"),
-    path('result/<int:id>/', views.result_view, name="result_view")
+    path('result/<int:id>/', views.result_view, name="result_view"),
+    path('gallery/', views.gallery_view, name="gallery"),
+    path('delete/<int:id>/', views.delete, name="delete")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 from .char_names import characters
@@ -21,6 +21,19 @@ def result_view(request, id):
         'graphic': graphic
     }
     return render(request, 'mysite/result.html', context)
+
+def gallery_view(request):
+    graphics = Graphic.objects.all().order_by('-date_time')
+    context = {
+        'tab_title': "Your Graphics",
+        'graphics': graphics
+    }
+    return render(request, 'mysite/gallery.html', context)
+
+def delete(request, id):
+    graphic = get_object_or_404(Graphic, id=id)
+    graphic.delete()
+    return redirect('gallery')
 
 def submit(request):
     top_players = []

@@ -1,0 +1,61 @@
+{% extends 'mysite/base.html' %}
+{% load static %}
+{% block content %}
+<div class="gallery"> 
+    <div style="width: 90%; margin-left: 5%;">
+        <h1>Gallary</h1>
+        <div class="graphics">
+            {% for graphic in graphics %}
+            <div class="graphic-tab">
+                <a href="{% url 'result_view' graphic.id %}"><img class="graphic" src="{{ graphic.image }}"></a>
+                <a href="{% url 'delete' graphic.id %}" class="delete-text">Delete {{ graphic.title }}</a>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{% url 'homepage' %}" class="redirect">⏎ Return to Homepage</a>
+    </div>
+</div>
+<style>
+    .gallery {
+        background-image: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+        border-radius: 15px;
+        padding: 10px;
+    }
+    .graphics {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        width: 100%;
+        justify-content: space-around;
+    }
+    .graphic-tab {
+        flex: 1 0 41%;
+        width: 50%;
+        max-width: clamp(100px, 35vw, 500px);
+        margin-bottom: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 10px;
+    }
+    .graphic {
+        width: 100%;
+        height: auto;
+        display: flex;
+        border: 2px solid white;
+    }
+    .redirect {
+        display: block;
+        font-size: 30px;
+        font-weight: 700;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+    .delete-text {
+        display: block;
+        color: red;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock content %}

@@ -4,10 +4,18 @@
 <div class="result"> 
     <div style="width: 90%; margin-left: 5%;">
         <h2>Result</h2>
-        <img style="width: 100%; height: auto;" src="{{ graphic.image }}">
-        <br><br>
-        <a href="{% url 'homepage' %}" style="font-size: 30px; font-weight: 700; font-style: italic;">⏎ Return to Homepage</a>
-        <br><br>
+        <img style="width: 100%; height: auto; margin-bottom: 20px;" src="{{ graphic.image }}">
+        <a href="{% url 'homepage' %}" class="redirect">⏎  Return to Homepage</a>
+        <a href="{% url 'gallery' %}" class="redirect">View all your submissions</a>
     </div>
 </div>
+<style>
+    .redirect{
+        display: block;
+        font-size: 30px;
+        font-weight: 700;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+</style>
 {% endblock content %}
