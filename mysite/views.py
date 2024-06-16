@@ -2,7 +2,9 @@ from django.shortcuts import render
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 from .char_names import characters
-import os, json
+#from models import Graphic
+from io import BytesIO
+import base64, json
 
 def homepage_view(request):
     context = {
@@ -12,6 +14,7 @@ def homepage_view(request):
     return render(request, 'mysite/homepage.html', context)
 
 def submit(request):
+    userID = request.POST.get('user_id')
     top_players = []
     elimination_style = request.POST.get('elim_type')
     for index in range(0,8):
@@ -69,7 +72,6 @@ def submit(request):
             'tertiary': tertiary,
             'character': str(primChar)
         })
-
     date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
     date = date[0:6] + date[8:10]
     if request.POST.get('event_type') == 'smashatuva':
@@ -102,10 +104,16 @@ def submit(request):
         "redemption_render": redempRender
     }
     if title.startswith("Smash"):
-        constructSmashAtUVA(top_players, event)
+        graphic = constructSmashAtUVA(top_players, event)
     else:
-        constructCUT(top_players, event)
-    return render(request, 'mysite/result.html', {'tab_title': title + " Graphic"})
+        graphic = constructCUT(top_players, event)
+    buffered = BytesIO()
+    graphic.save(buffered, format='PNG')
+    graphicStr = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    return render(request, 'mysite/result.html', {
+        'tab_title': title + " Graphic",
+        'graphic': graphicStr
+    })
 
 def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
@@ -140,7 +148,7 @@ def constructSmashAtUVA(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
-    graphic.save("staticfiles/graphic.png")
+    return graphic
 
 def constructCUT(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
@@ -182,7 +190,7 @@ def constructCUT(top_players, event):
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
-    graphic.save("staticfiles/graphic.png")
+    return graphic
 
 
 def addPlayers(top_players, event, graphic, draw, font_path):

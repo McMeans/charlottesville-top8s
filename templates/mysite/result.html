@@ -7,12 +7,12 @@
 <title>{{ tab_title }}</title>
 <link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
 
-<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'top8sLogo.png' %}">
+<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'images/top8sLogo.png' %}">
 
 <div class="result"> 
     <div style="width: 90%; margin-left: 5%;">
         <h2>Result</h2>
-        <img style="width: 100%; height: auto;" src="{% static 'graphic.png' %}">
+        <img style="width: 100%; height: auto;" src="data:image/png;base64,{{ graphic }}">
         <br><br>
         <a href="{% url 'homepage' %}" style="font-size: 30px; font-weight: 700; font-style: italic;">⏎ Return to Homepage</a>
         <br><br>

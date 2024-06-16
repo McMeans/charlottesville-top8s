@@ -1,7 +1,15 @@
 from django.db import models
 
+class Graphic(models.Model):
+    image = models.ImageField()
+    title = models.TextField(max_length=20)
+    user_id = models.TextField(max_length=9)
+    models.DateTimeField(auto_now_add=True)
 
-class Player(models.Model):
+    def __str__(self):
+        return self.title
+
+"""class Player(models.Model):
     player_name = models.CharField(max_length=40)
     player_handle = models.CharField(max_length=16, null=True)
     player_placement = models.IntegerField()
@@ -29,6 +37,6 @@ class Event(models.Model):
         app_label = 'mysite'
     
     def __str__(self):
-        return self.event_title
+        return self.event_title"""
 
     
