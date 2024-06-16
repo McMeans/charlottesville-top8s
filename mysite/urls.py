@@ -24,5 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage_view, name="homepage"),
     path('submit/', views.submit, name="submit"),
+    path('result/<int:id>/', views.result_view, name="result_view")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

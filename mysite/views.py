@@ -1,20 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 from .char_names import characters
-#from models import Graphic
+from .models import Graphic
 from io import BytesIO
 import base64, json
 
 def homepage_view(request):
     context = {
+        'tab_title': "Charlottesville Top8s",
         "indexes": range(1,9),
         "characters": characters
     }
     return render(request, 'mysite/homepage.html', context)
 
+def result_view(request, id):
+    graphic = Graphic.objects.get(id=id)
+    context = {
+        'tab_title': graphic.title + " Graphic",
+        'graphic': graphic
+    }
+    return render(request, 'mysite/result.html', context)
+
 def submit(request):
-    userID = request.POST.get('user_id')
     top_players = []
     elimination_style = request.POST.get('elim_type')
     for index in range(0,8):
@@ -109,11 +117,10 @@ def submit(request):
         graphic = constructCUT(top_players, event)
     buffered = BytesIO()
     graphic.save(buffered, format='PNG')
-    graphicStr = base64.b64encode(buffered.getvalue()).decode('utf-8')
-    return render(request, 'mysite/result.html', {
-        'tab_title': title + " Graphic",
-        'graphic': graphicStr
-    })
+    graphicSrc = f"data:image/png;base64,{base64.b64encode(buffered.getvalue()).decode('utf-8')}"
+    timeOfGeneration = datetime.now()
+    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration)
+    return redirect('result_view', id=graphicObj.id)
 
 def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
