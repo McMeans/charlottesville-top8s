@@ -31,6 +31,14 @@ fieldset, .result {
     margin-right: 10px;
 }
 
+.redirect{
+    display: block;
+    font-size: 30px;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
 sub {
     color: rgb(240, 145, 86);
 }

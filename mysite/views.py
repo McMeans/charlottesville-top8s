@@ -4,13 +4,23 @@ from PIL import Image, ImageDraw, ImageFont
 from .char_names import characters
 from .models import Graphic
 from io import BytesIO
-import base64, json
+import base64, json, uuid
+
+def getUserID(request):
+    if 'user_id' in request.session:
+        userID = request.session['user_id']
+    else:
+        userID = str(uuid.uuid4())
+        request.session['user_id'] = userID
+    return userID
 
 def homepage_view(request):
+    numSubmissions = Graphic.objects.filter(user=getUserID(request)).count()
     context = {
         'tab_title': "Charlottesville Top8s",
         "indexes": range(1,9),
-        "characters": characters
+        "characters": characters,
+        "num_submissions": numSubmissions
     }
     return render(request, 'mysite/homepage.html', context)
 
@@ -23,7 +33,7 @@ def result_view(request, id):
     return render(request, 'mysite/result.html', context)
 
 def gallery_view(request):
-    graphics = Graphic.objects.all().order_by('-date_time')
+    graphics = Graphic.objects.filter(user=getUserID(request)).order_by('-date_time')
     context = {
         'tab_title': "Your Graphics",
         'graphics': graphics
@@ -33,9 +43,12 @@ def gallery_view(request):
 def delete(request, id):
     graphic = get_object_or_404(Graphic, id=id)
     graphic.delete()
+    if Graphic.objects.filter(user=getUserID(request)).count() == 0:
+        return redirect('homepage')
     return redirect('gallery')
 
 def submit(request):
+    user = getUserID(request)
     top_players = []
     elimination_style = request.POST.get('elim_type')
     for index in range(0,8):
@@ -132,7 +145,7 @@ def submit(request):
     graphic.save(buffered, format='PNG')
     graphicSrc = f"data:image/png;base64,{base64.b64encode(buffered.getvalue()).decode('utf-8')}"
     timeOfGeneration = datetime.now()
-    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration)
+    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration, user=user)
     return redirect('result_view', id=graphicObj.id)
 
 def constructSmashAtUVA(top_players, event):
