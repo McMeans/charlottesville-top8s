@@ -24,13 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@4lu^6sv6kn=%f#(*cplyy!33*@q=p366m%s$i)kl0mnv1m-_('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'charlottesville-top8s-50b4ab9ef36b.herokuapp.com',
     'charlottesville-top8s.fly.dev',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://charlottesville-top8s.fly.dev'
+]
+
+CSRF_COOKIE_SECURE = True
 
 
 # Application definition
