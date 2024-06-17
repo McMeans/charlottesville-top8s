@@ -26,11 +26,13 @@ def homepage_view(request):
 
 def result_view(request, id):
     graphic = Graphic.objects.get(id=id)
-    context = {
-        'tab_title': graphic.title + " Graphic",
-        'graphic': graphic
-    }
-    return render(request, 'mysite/result.html', context)
+    if graphic.user == getUserID(request):
+        context = {
+            'tab_title': graphic.title + " Graphic",
+            'graphic': graphic
+        }
+        return render(request, 'mysite/result.html', context)
+    return redirect('homepage')
 
 def gallery_view(request):
     graphics = Graphic.objects.filter(user=getUserID(request)).order_by('-date_time')
