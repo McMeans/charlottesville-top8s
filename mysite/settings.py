@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'charlottesville-top8s-50b4ab9ef36b.herokuapp.com',
+    'https://charlottesville-top8s.fly.dev',
 ]
 
 
