@@ -33,7 +33,8 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://charlottesville-top8s.fly.dev'
+    'https://charlottesville-top8s-50b4ab9ef36b.herokuapp.com',
+    'https://charlottesville-top8s.fly.dev',
 ]
 
 CSRF_COOKIE_SECURE = True
