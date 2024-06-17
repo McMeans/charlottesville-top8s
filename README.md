@@ -5,4 +5,4 @@ This website generates Top 8 graphics for tournament results inputted by the use
 
 Inspired by top8er.com by @Riokaru and @Elenriqu3
 
-**_VISIT_**: https://charlottesville-top8s-50b4ab9ef36b.herokuapp.com/
+**_VISIT_**: https://lukemcmeans.com/charlottesville-top8s
