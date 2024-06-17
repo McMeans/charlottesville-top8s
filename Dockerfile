@@ -17,6 +17,7 @@ RUN set -ex && \
 COPY . /code
 
 ENV SECRET_KEY "BJtFRwpjTYHmAOSWJMFF5vsMtImyvASf2yqTZ9BgiIMtkuoFE2"
+RUN chmod 664 db.sqlite3
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
