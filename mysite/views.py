@@ -49,14 +49,32 @@ def delete(request, id):
         return redirect('homepage')
     return redirect('gallery')
 
+def edit(request, id):
+    graphic = get_object_or_404(Graphic, id=id)
+    context = {
+        'tab_title': "Charlottesville Top8s",
+        "indexes": range(1,9),
+        "characters": characters,
+        "edit_mode": True,
+        "post_data": json.loads(graphic.data),
+        "file_data": json.loads(graphic.customs)
+    }
+    return render(request, 'mysite/homepage.html', context)
+
 def submit(request):
     user = getUserID(request)
+    post_data = request.POST
+    file_data = request.FILES
+    post_data_json = json.dumps(post_data.dict())
+    file_data_dict = {key: file.name for key, file in file_data.items()}
+    file_data_json = json.dumps(file_data_dict)
+
     top_players = []
-    elimination_style = request.POST.get('elim_type')
+    elimination_style = post_data.get('elim_type')
     for index in range(0,8):
         number = index+1
-        name = request.POST.get(f"player{number}_name").strip()
-        handle = request.POST.get(f"player{number}_handle").replace(" ","")
+        name = post_data.get(f"player{number}_name").strip()
+        handle = post_data.get(f"player{number}_handle").replace(" ","")
         if handle != "" and not handle.startswith('@'):
             handle = '@' + handle
         if elimination_style == 'double_elim':
@@ -73,15 +91,15 @@ def submit(request):
                 placement = 5
         else:
             placement = number
-        primChar = request.POST.get(f"player{number}_primary")
-        primAlt = request.POST.get(f"player{number}_alt")[0:1]
+        primChar = post_data.get(f"player{number}_primary")
+        primAlt = post_data.get(f"player{number}_alt")[0:1]
         primary = Image.open(f"static/images/renders/{primChar}/{primChar}_{primAlt}.png")
-        secChar = request.POST.get(f"player{number}_secondary")
+        secChar = post_data.get(f"player{number}_secondary")
         secondary = None
-        terChar = request.POST.get(f"player{number}_tertiary")
+        terChar = post_data.get(f"player{number}_tertiary")
         tertiary = None
-        if request.POST.get(f"player{number}_custom") != '':
-            customImage = request.FILES[f"player{number}_custom"]
+        if post_data.get(f"player{number}_custom") != '':
+            customImage = file_data[f"player{number}_custom"]
             temp = Image.new("RGBA", (1000,1000))
             custom = Image.open(customImage).convert("RGBA")
             aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
@@ -108,25 +126,25 @@ def submit(request):
             'tertiary': tertiary,
             'character': str(primChar)
         })
-    date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
+    date = datetime.strptime(post_data.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
     date = date[0:6] + date[8:10]
-    if request.POST.get('event_type') == 'smashatuva':
-        title = "Smash @ UVA " + request.POST.get('semester')[4].upper() + date[-2:] + " #"
+    if post_data.get('event_type') == 'smashatuva':
+        title = "Smash @ UVA " + post_data.get('semester')[4].upper() + date[-2:] + " #"
     else:
         title = "The CUT "
-    title += request.POST.get('event_number')
-    participants = request.POST.get('participants')
-    if request.POST.get('redemption_check'):
-        redempWinner = request.POST.get('redemption_name').strip()
-        redempChar = request.POST.get('redemption_primary')
+    title += post_data.get('event_number')
+    participants = post_data.get('participants')
+    if post_data.get('redemption_check'):
+        redempWinner = post_data.get('redemption_name').strip()
+        redempChar = post_data.get('redemption_primary')
         redempRender = f"static/images/icons/{redempChar}_icon.png"
     else:
         redempWinner = None
         redempChar = None
         redempRender = None
-    if request.POST.get('side_check'):
-        sideTitle = request.POST.get('side_event').strip() + " Winner"
-        sideWinner = request.POST.get('side_name').strip()
+    if post_data.get('side_check'):
+        sideTitle = post_data.get('side_event').strip() + " Winner"
+        sideWinner = post_data.get('side_name').strip()
     else:
         sideTitle = None
         sideWinner = None
@@ -147,7 +165,7 @@ def submit(request):
     graphic.save(buffered, format='PNG')
     graphicSrc = f"data:image/png;base64,{base64.b64encode(buffered.getvalue()).decode('utf-8')}"
     timeOfGeneration = datetime.now()
-    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration, user=user)
+    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration, user=user, data=post_data_json, customs=file_data_json)
     return redirect('result_view', id=graphicObj.id)
 
 def constructSmashAtUVA(top_players, event):

@@ -6,7 +6,8 @@
         <h1>Result</h1>
         <img style="width: 100%; height: auto; margin-bottom: 20px;" src="{{ graphic.image }}">
         <a href="{% url 'homepage' %}" class="redirect">⏎  Return to Homepage</a>
-        <a href="{% url 'gallery' %}" class="redirect">View all your submissions</a>
+        <a href="{% url 'edit' graphic.id %}" class="redirect">✎  Edit</a>
+        <a href="{% url 'gallery' %}" class="redirect">View your recent submissions</a>
     </div>
 </div>
 {% endblock content %}
