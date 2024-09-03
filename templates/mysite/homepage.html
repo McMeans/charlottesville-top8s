@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 {% if num_submissions != 0 %}
-<a href="{% url 'gallery' %}" class="redirect" style="max-width: 350px;">View your recent submissions</a>
+<a href="{% url 'gallery' %}" class="redirect" style="max-width: 350px;">View all your submissions</a>
 {% endif %}
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
