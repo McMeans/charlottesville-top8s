@@ -357,9 +357,16 @@ def addPlayers(top_players, event, graphic, draw, font_path):
                 box = draw.textbbox((0,0), name, font=font)
                 text_width = box[2]
                 text_height = box[3]
-
+                
+            if(index == 0 and text_height <= 85):
+                text_width /= 1.5
+                text_height /= 1.5
+                font_size = 150 / 1.5
+                font = ImageFont.truetype(font_path, font_size)
             xCoord = x + (width - text_width) / 2
             yCoord = y + (height - text_height) / 2
+            if index == 0 and text_height <= 85:
+                yCoord -= 25
             if index == 0:
                 if len(name) == 1:
                     yCoord -= 8*(1/len(name))
