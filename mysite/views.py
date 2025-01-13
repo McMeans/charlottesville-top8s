@@ -112,8 +112,10 @@ def submit(request):
     date = date[0:6] + date[8:10]
     if request.POST.get('event_type') == 'smashatuva':
         title = "Smash @ UVA " + request.POST.get('semester')[4].upper() + date[-2:] + " #"
-    else:
+    elif request.POST.get('event_type') == 'thecut':
         title = "The CUT "
+    else:
+        title = "Top CUT "
     title += request.POST.get('event_number')
     participants = request.POST.get('participants')
     if request.POST.get('redemption_check'):
@@ -188,16 +190,24 @@ def constructSmashAtUVA(top_players, event):
 def constructCUT(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
-    background_image = Image.open('static/images/backgrounds/cut_background.png')
+    if event["title"].startswith("The CUT"):
+        background_image = Image.open('static/images/backgrounds/cut_background.png')
+        shadow_color = (255,255,255)
+        text_color = (0,0,0)
+    else:
+        background_image = Image.open('static/images/backgrounds/topcut_background.png')
+        shadow_color = (0,0,0)
+        text_color = (255,255,255)
     graphic.paste(background_image, (0,0))
     font_path = 'static/fonts/AlbertSans-Bold.ttf'
-    shadow_color = (255,255,255)
-    text_color = (0,0,0)
 
     titleText = event["title"]
     font = ImageFont.truetype(font_path, 130)
     titleBox = draw.textbbox((0,0), titleText, font=font)
-    draw.text((1091-titleBox[2],45), titleText, font=font, fill=(189, 0, 0))
+    if event["title"].startswith("The CUT"):
+        draw.text((1091-titleBox[2],45), titleText, font=font, fill=(189, 0, 0))
+    else:
+        draw.text((1091-titleBox[2],45), titleText, font=font, fill=(66, 255, 255))
     draw.text((1088-titleBox[2],40), titleText, font=font, fill=text_color)
     
     participantsText = f'{event["participants"]} Participants'
@@ -205,8 +215,9 @@ def constructCUT(top_players, event):
     draw.text((63,978), participantsText, font=font, fill=shadow_color)
     draw.text((60,975), participantsText, font=font, fill=text_color)
     
-    shadow_color = (0,0,0)
-    text_color = (255,255,255)
+    temp = shadow_color
+    shadow_color = text_color
+    text_color = temp
     text = 'Charlottesville, VA'
     draw.text((1543,978), text, font=font, fill=shadow_color)
     draw.text((1540,975), text, font=font, fill=text_color)
@@ -230,16 +241,22 @@ def constructCUT(top_players, event):
 
 def addPlayers(top_players, event, graphic, draw, font_path):
     font = ImageFont.truetype(font_path, 16)
+    if event["title"].startswith("Top"):
+        text_color = (0,0,0)
+        shadow_color = (255,255,255)
+    else:
+        text_color = (255,255,255)
+        shadow_color = (0,0,0)
     credits = "Generated using"
-    draw.text((1767, 22), credits, font=font, fill = "black")
-    draw.text((1765, 20), credits, font=font, fill = "white")
+    draw.text((1767, 22), credits, font=font, fill = shadow_color)
+    draw.text((1765, 20), credits, font=font, fill = text_color)
     credits = "By Luke McMeans"
-    draw.text((1755, 72), credits, font=font, fill = "black")
-    draw.text((1753, 70), credits, font=font, fill = "white")
+    draw.text((1755, 72), credits, font=font, fill = shadow_color)
+    draw.text((1753, 70), credits, font=font, fill = text_color)
     font = ImageFont.truetype(font_path, 20)
     credits = "CharlottesvilleTop8s"
-    draw.text((1697, 45), credits, font=font, fill = "black")
-    draw.text((1695, 43), credits, font=font, fill = "white")
+    draw.text((1697, 45), credits, font=font, fill = shadow_color)
+    draw.text((1695, 43), credits, font=font, fill = text_color)
     
     rectCoords = [[35, 770, 632, 937],
                   [683, 564, 1050, 666],
@@ -304,15 +321,26 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             if event["title"].startswith("Smash"):
                 start_color = (248, 109, 7) #(229, 114, 0)
                 end_color = (222, 82, 55) #(217, 69, 31) 
-            elif index == 0 or index == 1 or index == 4:
-                start_color = (255, 255, 255)
-                shadow_color = (255, 255, 255)
-                end_color = (217, 217, 217)
-                text_color = (0, 0, 0)
-                border_color = (0, 0, 0)
+            elif event["title"].startswith("Top"):
+                if index == 0 or index == 1 or index == 4:
+                    start_color = (24, 24, 24)
+                    end_color = (0, 0, 0)
+                else:
+                    start_color = (255, 255, 255)
+                    shadow_color = (255, 255, 255)
+                    end_color = (217, 217, 217)
+                    text_color = (0, 0, 0)
+                    border_color = (0, 0, 0)
             else:
-                start_color = (24, 24, 24)
-                end_color = (0, 0, 0)
+                if index == 0 or index == 1 or index == 4:
+                    start_color = (255, 255, 255)
+                    shadow_color = (255, 255, 255)
+                    end_color = (217, 217, 217)
+                    text_color = (0, 0, 0)
+                    border_color = (0, 0, 0)
+                else:
+                    start_color = (24, 24, 24)
+                    end_color = (0, 0, 0)
             gradient = [
                 (
                     int(start_color[0] + (end_color[0] - start_color[0]) * (i - y1) / (y2 - y1)),
@@ -426,8 +454,11 @@ def addPlayers(top_players, event, graphic, draw, font_path):
 def addSideBrackets(event, graphic, draw, font_path):
     sideTitle = event["side_title"]
     redempWinner = event["redemption_winner"]
-    text_color = (255, 255, 255)
     if sideTitle is not None and redempWinner is not None:
+        if event["title"].startswith("Top"):
+            text_color = (0,0,0)
+        else:
+            text_color = (255,255,255)
         redempImage = Image.open(event["redemption_render"]).resize((75,75), Image.Resampling.LANCZOS)
         graphic.alpha_composite(redempImage, (1050,967))
         font = ImageFont.truetype(font_path, 20)
@@ -436,6 +467,8 @@ def addSideBrackets(event, graphic, draw, font_path):
         draw.text((1050+75+20,975+25), redempWinner, font=font, fill=text_color)
         if event["title"].startswith("The"):
             text_color = (0,0,0)
+        else:
+            text_color = (255,255,255)
         sideWinner = event["side_winner"]
         smashlogo = Image.open(f"static/images/misc/smashlogo.png").resize((75,75), Image.Resampling.LANCZOS)
         graphic.alpha_composite(smashlogo, (990-60-75,967))
@@ -446,6 +479,10 @@ def addSideBrackets(event, graphic, draw, font_path):
         boxDim = draw.textbbox((0, 0), sideWinner, font=font)
         draw.text((830-(boxDim[2]),975+25), sideWinner, font=font, fill=text_color)
     elif sideTitle is not None or redempWinner is not None:
+        if event["title"].startswith("The"):
+            text_color = (0,0,0)
+        else:
+            text_color = (255,255,255)
         icon = Image.open(f"static/images/misc/smashlogo.png").resize((75,75), Image.Resampling.LANCZOS)
         if sideTitle is not None:
             title = sideTitle

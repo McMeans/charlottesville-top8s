@@ -14,7 +14,11 @@
         </div>
         <div>
             <input type="radio" id="thecut" name="event_type" value="thecut" onclick="changeEvent()">
-            <label for="smashatuva">The CUT</label>
+            <label for="thecut">The CUT</label>
+        </div>
+        <div>
+            <input type="radio" id="topcut" name="event_type" value="topcut" onclick="changeEvent()">
+            <label for="topcut">Top CUT</label>
         </div>
     </fieldset>
 
@@ -196,7 +200,7 @@
                         </div>
                         <label>What # Smash@UVA is this (for the semester)?</label><br>
                     `;
-                } else if (radio.value === 'thecut') {
+                } else if (radio.value === 'thecut' || radio.value === 'topcut') {
                     dynamicFieldset.innerHTML = `
                         <label>What # CUT is this?</label><br>  
                     `;
