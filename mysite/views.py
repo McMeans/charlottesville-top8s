@@ -53,8 +53,7 @@ def submit(request):
     user = getUserID(request)
     top_players = []
     elimination_style = request.POST.get('elim_type')
-    for index in range(0,8):
-        number = index+1
+    for number in range(1,9):
         name = request.POST.get(f"player{number}_name").strip()
         handle = request.POST.get(f"player{number}_handle").replace(" ","")
         if handle != "" and not handle.startswith('@'):
@@ -115,7 +114,7 @@ def submit(request):
     elif request.POST.get('event_type') == 'thecut':
         title = "The CUT "
     else:
-        title = "Top CUT "
+        title = "The Top CUT #"
     title += request.POST.get('event_number')
     participants = request.POST.get('participants')
     if request.POST.get('redemption_check'):
@@ -190,49 +189,56 @@ def constructSmashAtUVA(top_players, event):
 def constructCUT(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
-    if event["title"].startswith("The CUT"):
+    titleText = event["title"]
+    dateText = event["date"]
+    isTheCut = titleText.startswith("The CUT")
+    if isTheCut:
         background_image = Image.open('static/images/backgrounds/cut_background.png')
+        font_path = 'static/fonts/AlbertSans-Bold.ttf'
+        font = ImageFont.truetype(font_path, 130)
         shadow_color = (255,255,255)
         text_color = (0,0,0)
     else:
         background_image = Image.open('static/images/backgrounds/topcut_background.png')
+        font_path = 'static/fonts/BaiJamjuree-Bold.ttf'
+        font = ImageFont.truetype(font_path, 75)
         shadow_color = (0,0,0)
         text_color = (255,255,255)
     graphic.paste(background_image, (0,0))
-    font_path = 'static/fonts/AlbertSans-Bold.ttf'
 
-    titleText = event["title"]
-    font = ImageFont.truetype(font_path, 130)
-    titleBox = draw.textbbox((0,0), titleText, font=font)
-    if event["title"].startswith("The CUT"):
+    if isTheCut:
+        titleBox = draw.textbbox((0,0), titleText, font=font)
         draw.text((1091-titleBox[2],45), titleText, font=font, fill=(189, 0, 0))
+        draw.text((1088-titleBox[2],40), titleText, font=font, fill=text_color)
     else:
-        draw.text((1091-titleBox[2],45), titleText, font=font, fill=(66, 255, 255))
-    draw.text((1088-titleBox[2],40), titleText, font=font, fill=text_color)
+        titleText = f"{titleText}\n{dateText} - Top 8"
+        draw.text(((553,35)), titleText, font=font, fill=(189, 0, 0))
+        draw.text((550,30), titleText, font=font, fill=text_color)
     
     participantsText = f'{event["participants"]} Participants'
     font = ImageFont.truetype(font_path, 40)
     draw.text((63,978), participantsText, font=font, fill=shadow_color)
     draw.text((60,975), participantsText, font=font, fill=text_color)
     
-    temp = shadow_color
-    shadow_color = text_color
-    text_color = temp
+    if isTheCut:
+        temp = shadow_color
+        shadow_color = text_color
+        text_color = temp
     text = 'Charlottesville, VA'
     draw.text((1543,978), text, font=font, fill=shadow_color)
     draw.text((1540,975), text, font=font, fill=text_color)
 
-    font = ImageFont.truetype(font_path, 50)
-    draw.text((1323,64), 'Top 8', font=font, fill=shadow_color)
-    draw.text((1320,60), 'Top 8', font=font, fill=text_color)
+    if isTheCut:
+        font = ImageFont.truetype(font_path, 50)
+        draw.text((1323,64), 'Top 8', font=font, fill=shadow_color)
+        draw.text((1320,60), 'Top 8', font=font, fill=text_color)
 
-    dateText = event["date"]
-    box = draw.textbbox((0,0), "04/12/24", font=font)
-    midpoint = [1280+((box[2]-box[0])/2), 120+((box[3]-box[1])/2)]
-    box2 = draw.textbbox((0,0), dateText, font=font)
-    drawCoords = [midpoint[0]-((box2[2]-box2[0])/2), midpoint[1]-((box2[3]-box2[1])/2)]
-    draw.text((drawCoords[0]+4, drawCoords[1]+3), dateText, font=font, fill=shadow_color)
-    draw.text((drawCoords[0], drawCoords[1]), dateText, font=font, fill=text_color)
+        box = draw.textbbox((0,0), "04/12/24", font=font)
+        midpoint = [1280+((box[2]-box[0])/2), 120+((box[3]-box[1])/2)]
+        box2 = draw.textbbox((0,0), dateText, font=font)
+        drawCoords = [midpoint[0]-((box2[2]-box2[0])/2), midpoint[1]-((box2[3]-box2[1])/2)]
+        draw.text((drawCoords[0]+4, drawCoords[1]+3), dateText, font=font, fill=shadow_color)
+        draw.text((drawCoords[0], drawCoords[1]), dateText, font=font, fill=text_color)
 
     addPlayers(top_players, event, graphic, draw, font_path)
     addSideBrackets(event, graphic, draw, font_path)
@@ -321,16 +327,12 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             if event["title"].startswith("Smash"):
                 start_color = (248, 109, 7) #(229, 114, 0)
                 end_color = (222, 82, 55) #(217, 69, 31) 
-            elif event["title"].startswith("Top"):
+            elif event["title"].startswith("The Top"):
                 if index == 0 or index == 1 or index == 4:
-                    start_color = (24, 24, 24)
-                    end_color = (0, 0, 0)
+                    start_color = (28, 69, 135)
                 else:
-                    start_color = (255, 255, 255)
-                    shadow_color = (255, 255, 255)
-                    end_color = (217, 217, 217)
-                    text_color = (0, 0, 0)
-                    border_color = (0, 0, 0)
+                    start_color = (102, 0, 0)
+                end_color = (24, 24, 24)
             else:
                 if index == 0 or index == 1 or index == 4:
                     start_color = (255, 255, 255)
@@ -465,7 +467,7 @@ def addSideBrackets(event, graphic, draw, font_path):
         draw.text((1050+75+20,975), "Redemption Winner", font=font, fill=text_color)
         font = ImageFont.truetype(font_path, 30)
         draw.text((1050+75+20,975+25), redempWinner, font=font, fill=text_color)
-        if event["title"].startswith("The"):
+        if event["title"].startswith("The CUT"):
             text_color = (0,0,0)
         else:
             text_color = (255,255,255)
