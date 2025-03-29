@@ -440,6 +440,8 @@ def addPlayers(top_players, event, graphic, draw, font_path):
         else:
             if 'UVA' in event["title"]:
                 icon = Image.open('static/images/misc/uvalogo.png').convert('RGBA')
+            elif "Top" in event["title"]:
+                icon = Image.open('static/images/misc/toplogo.png').convert('RGBA')
             else:
                 icon = Image.open('static/images/misc/cutlogo.png').convert('RGBA')
             if index < 4:
