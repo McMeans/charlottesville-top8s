@@ -1,94 +1,121 @@
 {% extends 'mysite/base.html' %}
 {% load static %}
+
 {% block content %}
 {% if num_submissions != 0 %}
-<a href="{% url 'gallery' %}" class="redirect" style="max-width: 350px;">View all your submissions</a>
+<a href="{% url 'gallery' %}" class="redirect gallery-link">View all your submissions</a>
 {% endif %}
-<form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
+
+<form action="{% url 'submit' %}" method="post" enctype="multipart/form-data" class="tournament-form">
     {% csrf_token %}
-    <fieldset>
-        <label>What event is this for?</label>
-        <div>
-            <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked onclick="changeEvent()">
-            <label for="smashatuva">Smash @ UVA</label>
-        </div>
-        <div>
-            <input type="radio" id="thecut" name="event_type" value="thecut" onclick="changeEvent()">
-            <label for="thecut">The CUT</label>
-        </div>
-        <div>
-            <input type="radio" id="topcut" name="event_type" value="topcut" onclick="changeEvent()">
-            <label for="topcut">The Top CUT</label>
+    
+    <!-- Event Type Selection -->
+    <fieldset class="form-section">
+        <legend>What event is this for?</legend>
+        <div class="radio-group">
+            <div class="radio-item">
+                <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked>
+                <label for="smashatuva">Smash @ UVA</label>
+            </div>
+            <div class="radio-item">
+                <input type="radio" id="thecut" name="event_type" value="thecut">
+                <label for="thecut">The CUT</label>
+            </div>
+            <div class="radio-item">
+                <input type="radio" id="topcut" name="event_type" value="topcut">
+                <label for="topcut">The Top CUT</label>
+            </div>
         </div>
     </fieldset>
 
-    <fieldset>
+    <!-- Event Details -->
+    <fieldset class="form-section">
         <div id="specific_event">
-            <label>Semester:</label>
-            <div>
-                <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
-                <label for="uva_fall">Fall</label>
+            <div class="form-group">
+                <label>Semester:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
+                        <label for="uva_fall">Fall</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="uva_spring" name="semester" value="uva_spring">
+                        <label for="uva_spring">Spring</label>
+                    </div>
+                </div>
             </div>
-            <div>
-                <input type="radio" id="uva_spring" name="semester" value="uva_spring">
-                <label for="uva_spring">Spring</label>
+            <div class="form-group">
+                <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
+                <input type="number" name="event_number" id="event_number" step="0.5" required>
             </div>
-            <label>What # Smash@UVA is this (for the semester)?</label><br>
         </div>
-        <input type="number" name="event_number" label="Event Number" id="event_number" step=".5" required>
-        <br>
-        <label>Event Date:</label><br>
-        <input type="date" name="event_date" id="event_date" required><br>
-        <label>Number of Participants:</label><br>
-        <input type="number" name="participants" id="participants" required min="1" onchange="checkUnderEight()">
-        <br>
-        <sub id="under_eight"></sub>
+        
+        <div class="form-group">
+            <label for="event_date">Event Date:</label>
+            <input type="date" name="event_date" id="event_date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="participants">Number of Participants:</label>
+            <input type="number" name="participants" id="participants" required min="1">
+            <div id="under_eight" class="warning-text"></div>
+        </div>
     </fieldset>
+
+    <!-- Player Grid -->
     <div class="grid-container">
         {% for i in indexes %}
-        <fieldset class="grid-item">
-            <h2>Player {{ i }}</h2>
-            <div>
-                <label>Player Name (with tags)</label><br>
-                <sub>Ex: BN/KML|John Lion</sub><br>
-                <input type="text" name="player{{ i }}_name" maxlength="40" label="Player{{ i }} Name" required="True" id="player{{ i }}_name">
+        <fieldset class="grid-item player-section">
+            <legend>Player {{ i }}</legend>
+            
+            <div class="form-group">
+                <label for="player{{ i }}_name">Player Name (with tags)</label>
+                <small class="help-text">Ex: BN/KML|John Lion</small>
+                <input type="text" name="player{{ i }}_name" id="player{{ i }}_name" maxlength="40" required>
             </div>
-            <div>
-                <label>X/Twitter Handle (optional)</label><br>
-                <input type="text" name="player{{ i }}_handle" minlength="4" maxlength="15" label="Player{{ i }} Handle" id="player{{ i }}_handle">
+            
+            <div class="form-group">
+                <label for="player{{ i }}_handle">X/Twitter Handle (optional)</label>
+                <input type="text" name="player{{ i }}_handle" id="player{{ i }}_handle" minlength="4" maxlength="15">
             </div>
-            <div>
-                <label>Primary Character</label><br>
-                <select name="player{{ i }}_primary" label="Player{{ i }} Primary" required id="player{{ i }}_primary" onchange="updateAlts('player{{ i }}_primary', 'player{{ i }}_alt')">
+            
+            <div class="form-group">
+                <label for="player{{ i }}_primary">Primary Character</label>
+                <select name="player{{ i }}_primary" id="player{{ i }}_primary" required>
                     <option value="Random">Random</option>
                     {% for character in characters %}
                         <option value="{{ character }}">{{ character }}</option>
                     {% endfor %}
-                </select><br>
+                </select>
             </div>
-            <div>
-                <label>Character Alt/Color 
-                    <a href="https://www.ssbwiki.com/Alternate_costume_(SSBU)" target="_blank" style="font-size: smaller; color: rgb(240, 145, 86);">(view all)</a>
-                </label><br>
-                <select name="player{{ i }}_alt" label="Player{{ i }} Alt" required id="player{{ i }}_alt"></select><br>
+            
+            <div class="form-group">
+                <label for="player{{ i }}_alt">Character Alt/Color <a href="https://www.ssbwiki.com/Alternate_costume_(SSBU)" target="_blank" class="help-link">(view all)</a></label>
+                <select name="player{{ i }}_alt" id="player{{ i }}_alt" required></select>
             </div>
-            <div>
-                <label>Custom Character Image (optional)</label><br>
-                <input type="file" name="player{{ i }}_custom" label="Player{{ i }} Custom Image" id="player{{ i }}_custom"
-                    accept="image/png, image/jpg, image/jpeg">
+            
+            <div class="form-group">
+                <label for="player{{ i }}_custom">Custom Character Image (optional)</label>
+                <div class="file-input-container">
+                    <input type="file" name="player{{ i }}_custom" id="player{{ i }}_custom" accept="image/png, image/jpg, image/jpeg">
+                    <button type="button" class="clear-file-btn" onclick="clearFile('player{{ i }}_custom')">Clear</button>
+                </div>
+                <div class="file-name-display" id="player{{ i }}_custom_name"></div>
             </div>
-            <div>
-                <label>Secondary Character (optional)</label><br>
-                <select name="player{{ i }}_secondary" label="Player{{ i }} Secondary" id="player{{ i }}_secondary">
+            
+            <div class="form-group">
+                <label for="player{{ i }}_secondary">Secondary Character (optional)</label>
+                <select name="player{{ i }}_secondary" id="player{{ i }}_secondary">
                     <option value="None">None</option>
                     {% for character in characters %}
                         <option value="{{ character }}">{{ character }}</option>
                     {% endfor %}
-                </select><br>
+                </select>
             </div>
-            <div>
-                <label>Tertiary Character (optional)</label><br>
-                <select name="player{{ i }}_tertiary" label="Player{{ i }} Tertiary" id="player{{ i }}_tertiary">
+            
+            <div class="form-group">
+                <label for="player{{ i }}_tertiary">Tertiary Character (optional)</label>
+                <select name="player{{ i }}_tertiary" id="player{{ i }}_tertiary">
                     <option value="None">None</option>
                     {% for character in characters %}
                         <option value="{{ character }}">{{ character }}</option>
@@ -99,240 +126,415 @@
         {% endfor %}
     </div>
 
-    <fieldset>
-        <label>Bracket format:</label>
-        <div>
-            <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked onclick="showPlacements()">
-            <label for="double_elim">Double Elimination</label>
+    <!-- Bracket Format -->
+    <fieldset class="form-section">
+        <legend>Bracket format:</legend>
+        <div class="radio-group">
+            <div class="radio-item">
+                <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked>
+                <label for="double_elim">Double Elimination</label>
+            </div>
+            <div class="radio-item">
+                <input type="radio" id="single_elim" name="elim_type" value="single_elim">
+                <label for="single_elim">Single Elimination</label>
+            </div>
+            <div class="radio-item">
+                <input type="radio" id="round_robin" name="elim_type" value="round_robin">
+                <label for="round_robin">Round Robin, no bracket</label>
+            </div>
         </div>
-        <div>
-            <input type="radio" id="single_elim" name="elim_type" value="single_elim" onclick="showPlacements()">
-            <label for="single_elim">Single Elimination</label>
-        </div>
-        <div>
-            <input type="radio" id="round_robin" name="elim_type" value="round_robin" onclick="showPlacements()">
-            <label for="round_robin">Round Robin, no bracket</label>
-        </div>
-        <sub id="placements"></sub>
+        <div id="placements" class="info-text"></div>
     </fieldset>
 
-    <fieldset>
-        <input type="checkbox" name="redemption_check" id="redemption_check" onclick="addRedemption()">
-        <label for="redemption_check">Report Redemption Winner</label>
+    <!-- Redemption Bracket -->
+    <fieldset class="form-section">
+        <div class="checkbox-item">
+            <input type="checkbox" name="redemption_check" id="redemption_check">
+            <label for="redemption_check">Report Redemption Winner</label>
+        </div>
         <div id="redemption_bracket"></div>
     </fieldset>
-    <fieldset>
-        <input type="checkbox" name="side_check" id="side_check" onclick="addSideEvent()">
-        <label for="side_check">Report Side Event Winner</label>
+
+    <!-- Side Event -->
+    <fieldset class="form-section">
+        <div class="checkbox-item">
+            <input type="checkbox" name="side_check" id="side_check">
+            <label for="side_check">Report Side Event Winner</label>
+        </div>
         <div id="side_bracket"></div>
     </fieldset>
 
-    <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
-    <input type="submit" value="GENERATE">
+    <div class="form-warning">
+        <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
+    </div>
+    
+    <button type="submit" class="submit-btn">GENERATE</button>
 </form>
 
-<div class="row" style="width: 90%; margin-left: 5%;">
+<!-- Examples Section -->
+<div class="examples-section">
     <h2>Examples</h2>
-    <div style="display: block;">
-        <img style="width: 100%; height: auto; margin-right: 10px;" src="{% static 'images/sampleUVA.png' %}">
-        <img style="width: 100%; height: auto;" src="{% static 'images/sampleCUT.png' %}">
+    <div class="examples-grid">
+        <img src="{% static 'images/sampleUVA.png' %}" alt="Sample UVA tournament graphic" class="example-image" onclick="openImageModal(this.src, this.alt)">
+        <img src="{% static 'images/sampleCUT.png' %}" alt="Sample CUT tournament graphic" class="example-image" onclick="openImageModal(this.src, this.alt)">
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="image-modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <img id="modalImage" class="modal-image" src="" alt="">
+        <div class="modal-caption" id="modalCaption"></div>
     </div>
 </div>
 
 <script>
-    function getUserID() {
-        const item = document.getElementById('user_id');
-        var user_id = localStorage.getItem('user_id');
+// Utility functions
+const utils = {
+    generateID() {
+        const characters = 'abcdefghijklmnopqrstuvwxyz';
+        const generatePart = () => Array.from({length: 4}, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+        return `${generatePart()}-${generatePart()}`;
+    },
+
+    getUserID() {
+        let user_id = localStorage.getItem('user_id');
         if (!user_id) {
-            user_id = generateID();
+            user_id = this.generateID();
             localStorage.setItem('user_id', user_id);
         }
-        item.value = user_id;
+        return user_id;
     }
+};
 
-    function generateID() {
-        const characters = 'abcdefghijklmnopqrstuvwxyz';
-        let result = '';
-        for (let i = 0; i < 4; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        result += '-';
-        for (let i = 0; i < 4; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return result;
-    }
-    
-    function updateAlts(characterID, selectID) {
+// Character alt management
+const characterManager = {
+    async updateAlts(characterID, selectID) {
         const characterSelect = document.getElementById(characterID);
         const altSelect = document.getElementById(selectID);
-        altSelect.innerHTML = '';
         const character = characterSelect.value.toString();
-        fetch("{% static 'alts.json' %}")
-            .then(response => {
-                return response.json();
-            })
-            .then(jsonData => {
-                const alts = jsonData[character];
-                for (i = 0; i < alts.length; i++) {
-                    const option = document.createElement('option');
-                    option.text = i + " - " + alts[i];
-                    altSelect.add(option);
-                }
+        
+        altSelect.innerHTML = '';
+        
+        try {
+            const response = await fetch("{% static 'alts.json' %}");
+            const jsonData = await response.json();
+            const alts = jsonData[character] || [];
+            
+            alts.forEach((alt, index) => {
+                const option = document.createElement('option');
+                option.text = `${index} - ${alt}`;
+                altSelect.add(option);
             });
+        } catch (error) {
+            console.error('Error loading character alts:', error);
+        }
+    },
+
+    initializeAllAlts() {
+        for (let i = 1; i <= 8; i++) {
+            this.updateAlts(`player${i}_primary`, `player${i}_alt`);
+        }
     }
-    
-    function changeEvent() {
+};
+
+// Event type management
+const eventManager = {
+    changeEvent() {
         const eventRadios = document.querySelectorAll('input[name="event_type"]');
         const dynamicFieldset = document.getElementById('specific_event');
+        
         eventRadios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.value === 'smashatuva') {
                     dynamicFieldset.innerHTML = `
                         <label>Semester:</label>
-                        <div>
-                            <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
-                            <label for="uva_fall">Fall</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
+                                <label for="uva_fall">Fall</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="uva_spring" name="semester" value="uva_spring">
+                                <label for="uva_spring">Spring</label>
+                            </div>
                         </div>
-                        <div>
-                            <input type="radio" id="uva_spring" name="semester" value="uva_spring">
-                            <label for="uva_spring">Spring</label>
-                        </div>
-                        <label>What # Smash@UVA is this (for the semester)?</label><br>
+                        <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
                     `;
                 } else if (radio.value === 'thecut' || radio.value === 'topcut') {
                     dynamicFieldset.innerHTML = `
-                        <label>What # CUT is this?</label><br>  
+                        <label for="event_number">What # CUT is this?</label>
                     `;
                 }
             });
         });
     }
+};
 
-    function addRedemption(){
+// Bracket management
+const bracketManager = {
+    addRedemption() {
         const checkbox = document.getElementById('redemption_check');
         const redemptionDiv = document.getElementById('redemption_bracket');
-        if(checkbox.checked){
-            redemptionDiv.innerHTML = `
-                    <h2>Redemption Winnner</h2>
-                    <div>
-                        <label>Player Name (with tags)</label><br>
-                        <sub>Ex: BN/KML|John Lion</sub><br>
-                        <input type="text" name="redemption_name" maxlength="40" label="Redemption Name" required="True" id="redemption_name">
+        
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                redemptionDiv.innerHTML = `
+                    <h3>Redemption Winner</h3>
+                    <div class="form-group">
+                        <label for="redemption_name">Player Name (with tags)</label>
+                        <small class="help-text">Ex: BN/KML|John Lion</small>
+                        <input type="text" name="redemption_name" id="redemption_name" maxlength="40" required>
                     </div>
-                    <div>
-                        <label>Primary Character</label><br>
-                        <select name="redemption_primary" label="Redemption Primary" required id="redemption_primary" onchange="updateAlts('redemption_primary', 'redemption_alt')">
+                    <div class="form-group">
+                        <label for="redemption_primary">Primary Character</label>
+                        <select name="redemption_primary" id="redemption_primary" required>
                             <option value="Random">Random</option>
                             {% for character in characters %}
                                 <option value="{{ character }}">{{ character }}</option>
                             {% endfor %}
-                        </select><br>
+                        </select>
                     </div>
-            `;
-        } else {
-            redemptionDiv.innerHTML = ``;
-        }
-    }
+                `;
+                // Add visible class after a small delay to trigger transition
+                setTimeout(() => {
+                    redemptionDiv.classList.add('visible');
+                }, 10);
+            } else {
+                redemptionDiv.classList.remove('visible');
+                // Remove content after transition completes
+                setTimeout(() => {
+                    redemptionDiv.innerHTML = '';
+                }, 300);
+            }
+        });
+    },
 
-    function addSideEvent(){
+    addSideEvent() {
         const checkbox = document.getElementById('side_check');
         const sideDiv = document.getElementById('side_bracket');
-        if(checkbox.checked){
-            sideDiv.innerHTML = `
-                    <h2>Side Bracket Winnner</h2>
-                    <div>
-                        <label>Side Event Name:</label><br>
-                        <sub>Ex: Ultimate Squad Strike</sub><br>
-                        <input type="text" name="side_event" label="SideEvent Name" required="True" id="side_event" max="30">
+        
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                sideDiv.innerHTML = `
+                    <h3>Side Bracket Winner</h3>
+                    <div class="form-group">
+                        <label for="side_event">Side Event Name:</label>
+                        <small class="help-text">Ex: Ultimate Squad Strike</small>
+                        <input type="text" name="side_event" id="side_event" required maxlength="30">
                     </div>
-                    <div>
-                        <label>Player Name(s) (no tags if multiple winners)</label><br>
-                        <sub>Ex: BN/KML|John Lion</sub><br>
-                        <sub>Ex: John Lion & Mr. Cville</sub><br>
-                        <input type="text" name="side_name" maxlength="80" label="SideEvent Name" required="True" id="side_name">
+                    <div class="form-group">
+                        <label for="side_name">Player Name(s) (no tags if multiple winners)</label>
+                        <small class="help-text">Ex: BN/KML|John Lion</small>
+                        <small class="help-text">Ex: John Lion & Mr. Cville</small>
+                        <input type="text" name="side_name" id="side_name" maxlength="80" required>
                     </div>
-            `;
-        } else {
-            sideDiv.innerHTML = ``;
-        }
+                `;
+                // Add visible class after a small delay to trigger transition
+                setTimeout(() => {
+                    sideDiv.classList.add('visible');
+                }, 10);
+            } else {
+                sideDiv.classList.remove('visible');
+                // Remove content after transition completes
+                setTimeout(() => {
+                    sideDiv.innerHTML = '';
+                }, 300);
+            }
+        });
     }
+};
 
-    function checkUnderEight(){
-        const number = document.getElementById('participants')
-        number.value = parseInt(number.value)
-        const participants = Number(number.value)
-        const warning = document.getElementById('under_eight')
-        if(participants <= 0){
-            message = `
-                Please enter a value greater than or equal to 1.
-            `;
-        } else if(participants < 8){
+// Participant validation
+const participantValidator = {
+    checkUnderEight() {
+        const numberInput = document.getElementById('participants');
+        const participants = parseInt(numberInput.value) || 0;
+        const warning = document.getElementById('under_eight');
+        
+        let message = '';
+        
+        if (participants <= 0) {
+            message = 'Please enter a value greater than or equal to 1.';
+        } else if (participants < 8) {
             message = `[WARNING] You've entered a number less than 8. This means Player`;
-            if(participants !== 7){
-                message += `s ${participants+1}-`;
+            if (participants !== 7) {
+                message += `s ${participants + 1}-8 won't show on the graphic.`;
             } else {
-                message += ` `;
+                message += ` 8 won't show on the graphic.`;
             }
-            message += `8 won't show on the graphic.`;
-        } else {
-            message = ``;
         }
+        
         warning.innerHTML = message;
-        for(var i = 1; i < 9; i++){
+        this.updatePlayerFields(participants);
+        placementManager.showPlacements();
+    },
+
+    updatePlayerFields(participants) {
+        for (let i = 1; i <= 8; i++) {
             const playerText = document.getElementById(`player${i}_name`);
-            const playerHandle = document.getElementById(`player${i}_handle`)
-            if(participants > 0 && i > participants){
-                playerText.value = `*NOT INCLUDED*`;
-                playerHandle.value = `*NOT INCLUDED*`;
+            const playerHandle = document.getElementById(`player${i}_handle`);
+            
+            if (participants > 0 && i > participants) {
+                playerText.value = '*NOT INCLUDED*';
+                playerHandle.value = '*NOT INCLUDED*';
             } else {
-                if(playerText.value === "*NOT INCLUDED*"){
-                    playerText.value = ``;
+                if (playerText.value === '*NOT INCLUDED*') {
+                    playerText.value = '';
                 }
-                if(playerHandle.value === "*NOT INCLUDED*"){
-                    playerHandle.value = ``;
+                if (playerHandle.value === '*NOT INCLUDED*') {
+                    playerHandle.value = '';
                 }
             }
         }
-        showPlacements();
     }
+};
 
-    function showPlacements(){
-        const singleElim = document.getElementById('single_elim')
-        const doubleElim = document.getElementById('double_elim')
-        const roundRobin = document.getElementById('round_robin')
-        const placements = document.getElementById('placements')
-        const participants = Number(document.getElementById('participants').value)
-        if(singleElim.checked){
-            arr = ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th']
-        } else if(doubleElim.checked){
-            arr = ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th']
+// Placement management
+const placementManager = {
+    showPlacements() {
+        const singleElim = document.getElementById('single_elim');
+        const doubleElim = document.getElementById('double_elim');
+        const roundRobin = document.getElementById('round_robin');
+        const placements = document.getElementById('placements');
+        const participants = parseInt(document.getElementById('participants').value) || 0;
+        
+        let arr = [];
+        
+        if (singleElim.checked) {
+            arr = ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th'];
+        } else if (doubleElim.checked) {
+            arr = ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th'];
         } else {
-            arr = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+            arr = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
         }
-        message = `Placements will be as follows: `;
-        for(var i = 0; i < arr.length; i++){
-            message += arr[i]
-            if(i === arr.length-1 || i === participants-1){
-                break;
-            } else {
-                message += `, `;
+        
+        const relevantPlacements = arr.slice(0, Math.min(participants, arr.length));
+        const message = `Placements will be as follows: ${relevantPlacements.join(', ')}`;
+        placements.innerHTML = message;
+    }
+};
+
+// File management
+const fileManager = {
+    setupFileInputs() {
+        for (let i = 1; i <= 8; i++) {
+            const fileInput = document.getElementById(`player${i}_custom`);
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFileSelect(e, `player${i}_custom`);
+                });
             }
         }
-        placements.innerHTML = message
-    }
+    },
 
-    updateAlts("player1_primary", "player1_alt");
-    updateAlts("player2_primary", "player2_alt");
-    updateAlts("player3_primary", "player3_alt");
-    updateAlts("player4_primary", "player4_alt");
-    updateAlts("player5_primary", "player5_alt");
-    updateAlts("player6_primary", "player6_alt");
-    updateAlts("player7_primary", "player7_alt");
-    updateAlts("player8_primary", "player8_alt");
-    changeEvent();
-    addRedemption();
-    addSideEvent();
-    showPlacements();
+    handleFileSelect(event, inputId) {
+        const fileInput = event.target;
+        const fileNameDisplay = document.getElementById(`${inputId}_name`);
+        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
+        
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            fileNameDisplay.textContent = `Selected: ${file.name}`;
+            fileNameDisplay.classList.add('visible');
+            clearBtn.classList.add('visible');
+        } else {
+            this.clearFileDisplay(inputId);
+        }
+    },
+
+    clearFile(inputId) {
+        const fileInput = document.getElementById(inputId);
+        const fileNameDisplay = document.getElementById(`${inputId}_name`);
+        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
+        
+        fileInput.value = '';
+        this.clearFileDisplay(inputId);
+    },
+
+    clearFileDisplay(inputId) {
+        const fileNameDisplay = document.getElementById(`${inputId}_name`);
+        const fileInput = document.getElementById(inputId);
+        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
+        
+        fileNameDisplay.textContent = '';
+        fileNameDisplay.classList.remove('visible');
+        clearBtn.classList.remove('visible');
+    }
+};
+
+// Global function for onclick handlers
+function clearFile(inputId) {
+    fileManager.clearFile(inputId);
+}
+
+// Image modal functions
+function openImageModal(src, alt) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    
+    modal.style.display = 'block';
+    modalImg.src = src;
+    modalCaption.textContent = alt;
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    
+    // Restore body scrolling
+    document.body.style.overflow = 'hidden'; // Keep hidden since we have fixed layout
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all components
+    characterManager.initializeAllAlts();
+    eventManager.changeEvent();
+    bracketManager.addRedemption();
+    bracketManager.addSideEvent();
+    placementManager.showPlacements();
+    fileManager.setupFileInputs();
+    
+    // Add event listeners
+    document.getElementById('participants').addEventListener('change', () => {
+        participantValidator.checkUnderEight();
+    });
+    
+    document.querySelectorAll('input[name="elim_type"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            placementManager.showPlacements();
+        });
+    });
+    
+    // Add change listeners for character selects
+    for (let i = 1; i <= 8; i++) {
+        document.getElementById(`player${i}_primary`).addEventListener('change', () => {
+            characterManager.updateAlts(`player${i}_primary`, `player${i}_alt`);
+        });
+    }
+    
+    // Modal event listeners
+    const modal = document.getElementById('imageModal');
+    
+    // Close modal when clicking outside the image
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeImageModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeImageModal();
+        }
+    });
+});
 </script>
 {% endblock content %}

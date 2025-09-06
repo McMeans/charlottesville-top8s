@@ -1,12 +1,17 @@
 {% extends 'mysite/base.html' %}
 {% load static %}
+
 {% block content %}
-<div class="result"> 
-    <div style="width: 90%; margin-left: 5%;">
-        <h1>Result</h1>
-        <img style="width: 100%; height: auto; margin-bottom: 20px;" src="{{ graphic.image }}">
-        <a href="{% url 'homepage' %}" class="redirect">⏎  Return to Homepage</a>
-        <a href="{% url 'gallery' %}" class="redirect">View all your submissions</a>
+<div class="result-page">
+    <div class="result-container">
+        <h1 class="result-title">Result</h1>
+        <div class="result-image-container">
+            <img class="result-image" src="{{ graphic.image }}" alt="Tournament result graphic">
+        </div>
+        <div class="result-actions">
+            <a href="{% url 'homepage' %}" class="btn btn-primary">⏎ Return to Homepage</a>
+            <a href="{% url 'gallery' %}" class="btn btn-secondary">View all your submissions</a>
+        </div>
     </div>
 </div>
 {% endblock content %}
