@@ -108,7 +108,20 @@ a:hover {
 .site-header {
     text-align: center;
     padding: 0.5rem 0 0.25rem 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.site-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .site-logo {
@@ -122,9 +135,19 @@ a:hover {
 .main-content {
     height: calc(100vh - 100px);
     max-height: calc(100vh - 100px);
-    padding: 0 1rem 50px 1rem;
+    padding: 0.5rem 1rem 50px 1rem;
     overflow-y: auto;
     overflow-x: hidden;
+    mask: linear-gradient(to bottom, 
+        black 0%, 
+        black calc(100% - 40px), 
+        transparent calc(100% - 40px)
+    );
+    -webkit-mask: linear-gradient(to bottom, 
+        black 0%, 
+        black calc(100% - 40px), 
+        transparent calc(100% - 40px)
+    );
 }
 
 .site-footer {
@@ -132,18 +155,27 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(rgba(54, 64, 95, 0.95), rgba(58, 66, 97, 0.95));
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    margin: 0 0.5rem 0 0.5rem;
-    padding: 0.5rem;
+    padding: 0.5rem 0 0.25rem 0;
     text-align: center;
     height: 40px;
     max-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(5px);
+    z-index: 10;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 0;
+}
+
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .footer-content p {
@@ -183,7 +215,7 @@ a:hover {
 .form-section {
     background: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
     border-radius: var(--border-radius-lg);
-    padding: 1.5rem;
+    padding: 0.75rem 1.5rem 1.5rem 1.5rem;
     margin-bottom: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -192,7 +224,8 @@ a:hover {
     color: var(--primary-color);
     font-weight: 600;
     font-size: 1.1em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
+    margin-top: 0;
     padding: 0 0.5rem;
 }
 
@@ -206,7 +239,7 @@ a:hover {
 .radio-item, .checkbox-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .radio-item input[type="radio"],
@@ -215,8 +248,18 @@ a:hover {
     accent-color: var(--primary-color);
 }
 
+/* Add top spacing for checkbox items that are first in form sections */
+.form-section > div:first-child.checkbox-item,
+.form-section > .checkbox-item:first-child {
+    margin-top: 0.5rem;
+}
+
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+#specific_event {
+    margin-bottom: 1.25rem;
 }
 
 .form-group:last-child {
@@ -232,6 +275,156 @@ a:hover {
     max-width: 300px;
 }
 
+/* Override label margin for radio groups */
+.form-group .radio-group {
+    margin-top: 0;
+}
+
+/* Reduce margin for labels that are followed by radio groups */
+.form-group > label:first-child {
+    margin-bottom: 0.1rem;
+}
+
+/* Semester Toggle Switch Styling */
+.semester-toggle {
+    margin-top: 0.5rem;
+}
+
+.semester-toggle input[type="radio"] {
+    display: none;
+}
+
+.toggle-container {
+    position: relative;
+    display: flex;
+    background: rgba(43, 52, 80, 0.6);
+    border-radius: 20px;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: fit-content;
+    margin: 0;
+    gap: 0;
+}
+
+.toggle-option {
+    position: relative;
+    z-index: 2;
+    padding: 6px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    border-radius: 17px;
+    min-width: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.toggle-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove the sliding background approach */
+
+/* Fall selected (default) */
+.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    box-shadow: 0 2px 8px rgba(240, 145, 86, 0.3);
+}
+
+.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option .toggle-text {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .spring-option .toggle-text {
+    color: var(--text-muted);
+}
+
+/* Spring selected */
+.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .spring-option {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    box-shadow: 0 2px 8px rgba(240, 145, 86, 0.3);
+}
+
+.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .spring-option .toggle-text {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .fall-option .toggle-text {
+    color: var(--text-muted);
+}
+
+/* Hover effects */
+.toggle-option:hover .toggle-text {
+    color: var(--text-light);
+}
+
+.toggle-option:hover {
+    background: rgba(240, 145, 86, 0.1);
+}
+
+/* Make only the "(optional)" text slightly transparent */
+.optional-text {
+    opacity: 0.6;
+}
+
+/* Submit Button Loading State */
+.submit-btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
+
+.btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Ensure number inputs are visible and properly styled */
+input[type="number"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background-color: rgba(43, 52, 80, 0.9) !important;
+    border: 1px solid var(--accent-color) !important;
+    color: var(--text-light) !important;
+}
+
 /* Consistent input styling with blue theme */
 .form-group input,
 .form-group select {
@@ -245,6 +438,7 @@ a:hover {
     font-family: 'Zilla Slab', serif;
     font-size: 1rem;
     transition: var(--transition);
+    display: block;
 }
 
 .form-group input:focus,
@@ -437,17 +631,50 @@ input[type="date"]::-moz-calendar-picker-indicator {
 }
 
 .warning-text {
-    color: var(--danger-color);
-    font-size: 0.9em;
-    margin-top: 0.25rem;
+    font-size: 0.95em;
+    margin-top: 0.75rem;
     font-style: italic;
+    font-weight: 500;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    min-height: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
+    padding: 0;
+    margin: 0;
+}
+
+.warning-text.visible {
+    opacity: 1;
+    max-height: 100px;
+    padding: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.warning-text.error {
+    color: var(--danger-color);
+    background: rgba(255, 107, 107, 0.1);
+    border-left: 3px solid var(--danger-color);
+}
+
+.warning-text.warning {
+    color: var(--primary-color);
+    background: rgba(240, 145, 86, 0.1);
+    border-left: 3px solid var(--primary-color);
 }
 
 .info-text {
-    color: var(--text-muted);
-    font-size: 0.9em;
-    margin-top: 0.5rem;
+    color: var(--primary-color);
+    font-size: 0.95em;
+    margin-top: 0.75rem;
     font-style: italic;
+    font-weight: 500;
+    background: rgba(240, 145, 86, 0.1);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    border-left: 3px solid var(--primary-color);
 }
 
 .form-warning {
@@ -501,6 +728,30 @@ input[type="date"]::-moz-calendar-picker-indicator {
     padding: 1rem 0;
 }
 
+/* Specific event content transitions */
+#specific_event {
+    position: relative;
+    transition: height 0.4s ease-in-out;
+    overflow: hidden;
+}
+
+#specific_event .content-transition {
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
+}
+
+#specific_event .content-transition.fade-out {
+    opacity: 0;
+}
+
+#specific_event .content-transition.fade-in {
+    opacity: 0;
+}
+
+#specific_event .content-transition.fade-in.visible {
+    opacity: 1;
+}
+
 #redemption_bracket h3,
 #side_bracket h3 {
     margin-top: 0;
@@ -530,6 +781,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
 
 .player-section {
     min-width: 250px;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .player-section legend {
@@ -718,15 +970,25 @@ input[type="date"]::-moz-calendar-picker-indicator {
    ========================================================================== */
 
 .image-modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(5px);
+    display: none !important;
+    position: fixed !important;
+    z-index: 9999 !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(5px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 .modal-content {

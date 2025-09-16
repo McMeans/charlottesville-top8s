@@ -31,22 +31,27 @@
     <!-- Event Details -->
     <fieldset class="form-section">
         <div id="specific_event">
-            <div class="form-group">
-                <label>Semester:</label>
-                <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
-                        <label for="uva_fall">Fall</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" id="uva_spring" name="semester" value="uva_spring">
-                        <label for="uva_spring">Spring</label>
+            <div class="content-transition" id="uva_content">
+                <div class="form-group">
+                    <label>Semester:</label>
+                    <div class="semester-toggle">
+                        <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
+                        <input type="radio" id="semester_spring" name="semester" value="uva_spring">
+                        <div class="toggle-container">
+                            <label for="semester_fall" class="toggle-option fall-option">
+                                <span class="toggle-text">Fall</span>
+                            </label>
+                            <div class="toggle-slider"></div>
+                            <label for="semester_spring" class="toggle-option spring-option">
+                                <span class="toggle-text">Spring</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
-                <input type="number" name="event_number" id="event_number" step="0.5" required>
+                <div class="form-group">
+                    <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
+                    <input type="number" name="event_number" id="event_number" step="0.5" required>
+                </div>
             </div>
         </div>
         
@@ -75,7 +80,7 @@
             </div>
             
             <div class="form-group">
-                <label for="player{{ i }}_handle">X/Twitter Handle (optional)</label>
+                <label for="player{{ i }}_handle">X/Twitter Handle <span class="optional-text">(optional)</span></label>
                 <input type="text" name="player{{ i }}_handle" id="player{{ i }}_handle" minlength="4" maxlength="15">
             </div>
             
@@ -95,7 +100,7 @@
             </div>
             
             <div class="form-group">
-                <label for="player{{ i }}_custom">Custom Character Image (optional)</label>
+                <label for="player{{ i }}_custom">Custom Character Image <span class="optional-text">(optional)</span></label>
                 <div class="file-input-container">
                     <input type="file" name="player{{ i }}_custom" id="player{{ i }}_custom" accept="image/png, image/jpg, image/jpeg">
                     <button type="button" class="clear-file-btn" onclick="clearFile('player{{ i }}_custom')">Clear</button>
@@ -104,7 +109,7 @@
             </div>
             
             <div class="form-group">
-                <label for="player{{ i }}_secondary">Secondary Character (optional)</label>
+                <label for="player{{ i }}_secondary">Secondary Character <span class="optional-text">(optional)</span></label>
                 <select name="player{{ i }}_secondary" id="player{{ i }}_secondary">
                     <option value="None">None</option>
                     {% for character in characters %}
@@ -114,7 +119,7 @@
             </div>
             
             <div class="form-group">
-                <label for="player{{ i }}_tertiary">Tertiary Character (optional)</label>
+                <label for="player{{ i }}_tertiary">Tertiary Character <span class="optional-text">(optional)</span></label>
                 <select name="player{{ i }}_tertiary" id="player{{ i }}_tertiary">
                     <option value="None">None</option>
                     {% for character in characters %}
@@ -168,7 +173,13 @@
         <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
     </div>
     
-    <button type="submit" class="submit-btn">GENERATE</button>
+    <button type="submit" class="submit-btn" id="generate-btn">
+        <span class="btn-text">Generate</span>
+        <span class="btn-loading" style="display: none;">
+            <span class="loading-spinner"></span>
+            <span class="loading-text">Generating...</span>
+        </span>
+    </button>
 </form>
 
 <!-- Examples Section -->
@@ -247,28 +258,84 @@ const eventManager = {
         
         eventRadios.forEach(radio => {
             radio.addEventListener('change', () => {
-                if (radio.value === 'smashatuva') {
-                    dynamicFieldset.innerHTML = `
-                        <label>Semester:</label>
-                        <div class="radio-group">
-                            <div class="radio-item">
-                                <input type="radio" id="uva_fall" name="semester" value="uva_fall" checked>
-                                <label for="uva_fall">Fall</label>
-                            </div>
-                            <div class="radio-item">
-                                <input type="radio" id="uva_spring" name="semester" value="uva_spring">
-                                <label for="uva_spring">Spring</label>
-                            </div>
-                        </div>
-                        <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
-                    `;
-                } else if (radio.value === 'thecut' || radio.value === 'topcut') {
-                    dynamicFieldset.innerHTML = `
-                        <label for="event_number">What # CUT is this?</label>
-                    `;
-                }
+                this.animateContentChange(radio.value, dynamicFieldset);
             });
         });
+    },
+
+    animateContentChange(eventType, container) {
+        const currentContent = container.querySelector('.content-transition');
+        
+        if (currentContent) {
+            // Store current height for smooth transition
+            const currentHeight = container.offsetHeight;
+            container.style.height = currentHeight + 'px';
+            
+            // Start fade out animation
+            currentContent.classList.add('fade-out');
+            
+            // Wait for fade out to complete, then replace content and fade in
+            setTimeout(() => {
+                let newContent = '';
+                
+                if (eventType === 'smashatuva') {
+                    newContent = `
+                        <div class="content-transition fade-in" id="uva_content">
+                            <div class="form-group">
+                                <label>Semester:</label>
+                                <div class="semester-toggle">
+                                    <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
+                                    <input type="radio" id="semester_spring" name="semester" value="uva_spring">
+                                    <div class="toggle-container">
+                                        <label for="semester_fall" class="toggle-option fall-option">
+                                            <span class="toggle-text">Fall</span>
+                                        </label>
+                                        <div class="toggle-slider"></div>
+                                        <label for="semester_spring" class="toggle-option spring-option">
+                                            <span class="toggle-text">Spring</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
+                                <input type="number" name="event_number" id="event_number" step="0.5" required>
+                            </div>
+                        </div>
+                    `;
+                } else if (eventType === 'thecut' || eventType === 'topcut') {
+                    newContent = `
+                        <div class="content-transition fade-in" id="cut_content">
+                            <div class="form-group">
+                                <label for="event_number">What # CUT is this?</label>
+                                <input type="number" name="event_number" id="event_number" step="0.5" required>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = newContent;
+                
+                // Get new height and animate to it
+                const newContentElement = container.querySelector('.content-transition');
+                const newHeight = newContentElement.offsetHeight;
+                
+                // Trigger fade in animation immediately
+                if (newContentElement) {
+                    newContentElement.classList.add('visible');
+                }
+                
+                // Animate height change immediately
+                container.style.height = newHeight + 'px';
+                
+                // Reset height to auto after transition completes
+                setTimeout(() => {
+                    container.style.height = 'auto';
+                }, 400); // Match CSS transition duration
+                
+                // No additional initialization needed for the new toggle
+            }, 100); // Reduced from 200ms to 100ms for faster response
+        }
     }
 };
 
@@ -281,7 +348,6 @@ const bracketManager = {
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 redemptionDiv.innerHTML = `
-                    <h3>Redemption Winner</h3>
                     <div class="form-group">
                         <label for="redemption_name">Player Name (with tags)</label>
                         <small class="help-text">Ex: BN/KML|John Lion</small>
@@ -318,7 +384,6 @@ const bracketManager = {
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 sideDiv.innerHTML = `
-                    <h3>Side Bracket Winner</h3>
                     <div class="form-group">
                         <label for="side_event">Side Event Name:</label>
                         <small class="help-text">Ex: Ultimate Squad Strike</small>
@@ -354,37 +419,82 @@ const participantValidator = {
         const warning = document.getElementById('under_eight');
         
         let message = '';
+        let shouldShow = false;
         
         if (participants <= 0) {
             message = 'Please enter a value greater than or equal to 1.';
+            shouldShow = true;
         } else if (participants < 8) {
-            message = `[WARNING] You've entered a number less than 8. This means Player`;
+            message = `You've entered a number less than 8. This means Player`;
             if (participants !== 7) {
                 message += `s ${participants + 1}-8 won't show on the graphic.`;
             } else {
                 message += ` 8 won't show on the graphic.`;
             }
+            shouldShow = true;
         }
         
-        warning.innerHTML = message;
+        if (shouldShow) {
+            warning.innerHTML = message;
+            
+            // Remove existing classes and add appropriate one
+            warning.classList.remove('error', 'warning');
+            if (participants <= 0) {
+                warning.classList.add('error'); // Red for invalid input
+            } else if (participants < 8) {
+                warning.classList.add('warning'); // Orange for warning
+            }
+            
+            // Add visible class after a small delay to trigger transition
+            setTimeout(() => {
+                warning.classList.add('visible');
+            }, 10);
+        } else {
+            warning.classList.remove('visible');
+            // Remove content after transition completes
+            setTimeout(() => {
+                warning.innerHTML = '';
+                warning.classList.remove('error', 'warning');
+            }, 300);
+        }
+        
         this.updatePlayerFields(participants);
         placementManager.showPlacements();
     },
 
     updatePlayerFields(participants) {
         for (let i = 1; i <= 8; i++) {
-            const playerText = document.getElementById(`player${i}_name`);
-            const playerHandle = document.getElementById(`player${i}_handle`);
+            const playerCard = document.querySelector(`fieldset[legend="Player ${i}"]`) || 
+                              document.querySelector(`.player-section:nth-child(${i})`) ||
+                              document.querySelector(`fieldset:has(legend:contains("Player ${i}"))`);
             
-            if (participants > 0 && i > participants) {
-                playerText.value = '*NOT INCLUDED*';
-                playerHandle.value = '*NOT INCLUDED*';
-            } else {
-                if (playerText.value === '*NOT INCLUDED*') {
-                    playerText.value = '';
+            // Find the player card by looking for the legend containing "Player X"
+            const allPlayerCards = document.querySelectorAll('.player-section');
+            let currentPlayerCard = null;
+            
+            for (let card of allPlayerCards) {
+                const legend = card.querySelector('legend');
+                if (legend && legend.textContent.includes(`Player ${i}`)) {
+                    currentPlayerCard = card;
+                    break;
                 }
-                if (playerHandle.value === '*NOT INCLUDED*') {
-                    playerHandle.value = '';
+            }
+            
+            if (currentPlayerCard) {
+                if (participants > 0 && i > participants) {
+                    // Hide the card with smooth animation
+                    currentPlayerCard.style.opacity = '0';
+                    currentPlayerCard.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        currentPlayerCard.style.display = 'none';
+                    }, 300);
+                } else {
+                    // Show the card with smooth animation
+                    currentPlayerCard.style.display = 'block';
+                    setTimeout(() => {
+                        currentPlayerCard.style.opacity = '1';
+                        currentPlayerCard.style.transform = 'scale(1)';
+                    }, 10);
                 }
             }
         }
@@ -410,8 +520,7 @@ const placementManager = {
             arr = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
         }
         
-        const relevantPlacements = arr.slice(0, Math.min(participants, arr.length));
-        const message = `Placements will be as follows: ${relevantPlacements.join(', ')}`;
+        const message = `Placements will be as follows: ${arr.join(', ')}`;
         placements.innerHTML = message;
     }
 };
@@ -475,7 +584,10 @@ function openImageModal(src, alt) {
     const modalImg = document.getElementById('modalImage');
     const modalCaption = document.getElementById('modalCaption');
     
-    modal.style.display = 'block';
+    // Move modal to be a direct child of body to avoid any parent constraints
+    document.body.appendChild(modal);
+    
+    modal.style.setProperty('display', 'block', 'important');
     modalImg.src = src;
     modalCaption.textContent = alt;
     
@@ -485,7 +597,8 @@ function openImageModal(src, alt) {
 
 function closeImageModal() {
     const modal = document.getElementById('imageModal');
-    modal.style.display = 'none';
+    
+    modal.style.setProperty('display', 'none', 'important');
     
     // Restore body scrolling
     document.body.style.overflow = 'hidden'; // Keep hidden since we have fixed layout
@@ -504,7 +617,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listeners
     document.getElementById('participants').addEventListener('change', () => {
         participantValidator.checkUnderEight();
+        updateRequiredFields();
     });
+    
+    // Function to update required fields based on participant count
+    function updateRequiredFields() {
+        const participantCount = parseInt(document.getElementById('participants').value) || 8;
+        
+        for (let i = 1; i <= 8; i++) {
+            const nameField = document.getElementById(`player${i}_name`);
+            const primaryField = document.getElementById(`player${i}_primary`);
+            
+            if (i <= participantCount) {
+                // Make fields required for visible players
+                nameField.setAttribute('required', 'required');
+                primaryField.setAttribute('required', 'required');
+            } else {
+                // Remove required attribute for hidden players
+                nameField.removeAttribute('required');
+                primaryField.removeAttribute('required');
+            }
+        }
+    }
+    
+    // Initialize required fields on page load
+    updateRequiredFields();
     
     document.querySelectorAll('input[name="elim_type"]').forEach(radio => {
         radio.addEventListener('change', () => {
@@ -535,6 +672,60 @@ document.addEventListener('DOMContentLoaded', () => {
             closeImageModal();
         }
     });
+    
+    // Form submission loading state
+    const form = document.querySelector('.tournament-form');
+    const submitBtn = document.getElementById('generate-btn');
+    
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            console.log('Form submitted!'); // Debug log
+            showLoadingState();
+            
+            // Add timeout fallback in case redirect doesn't happen
+            setTimeout(() => {
+                console.log('Form submission timeout - resetting button');
+                resetButton();
+            }, 30000); // 30 second timeout
+        });
+    } else {
+        console.error('Form not found!'); // Debug log
+    }
+    
+    // Backup: Button click event
+    if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+            console.log('Button clicked!'); // Debug log
+            // Always show loading state when button is clicked
+            showLoadingState();
+        });
+    }
+    
+    function showLoadingState() {
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        
+        if (btnText && btnLoading) {
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'flex';
+            submitBtn.disabled = true;
+            submitBtn.style.cursor = 'not-allowed';
+        }
+    }
+    
+    function resetButton() {
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        
+        if (btnText && btnLoading) {
+            // Reset button state
+            btnText.style.display = 'block';
+            btnLoading.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.style.cursor = 'pointer';
+        }
+    }
 });
 </script>
 {% endblock content %}
