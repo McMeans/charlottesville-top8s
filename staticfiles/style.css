@@ -111,6 +111,10 @@ a:hover {
     margin-bottom: 0;
     position: relative;
     z-index: 10;
+    height: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .site-header::after {
@@ -167,7 +171,6 @@ a:hover {
 }
 
 .site-footer::before {
-    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -180,12 +183,11 @@ a:hover {
 .footer-content p {
     margin: 0.1rem 0;
     color: var(--accent-color);
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .footer-content a {
     color: #a3a3a3;
-    font-size: 0.8rem;
 }
 
 /* Custom scrollbar for main content */
@@ -217,7 +219,7 @@ a:hover {
 }
 
 .form-section {
-    background: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+    background: linear-gradient(rgba(54, 64, 95, 0.5), rgba(58, 66, 97, 0.5));
     border-radius: var(--border-radius-lg);
     padding: 0.75rem 1.5rem 1.5rem 1.5rem;
     margin-bottom: 1rem;
@@ -787,7 +789,7 @@ input, select, textarea, button {
 }
 
 .grid-item {
-    background: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+    background: linear-gradient(rgba(54, 64, 95, 0.5), rgba(58, 66, 97, 0.5));
     border-radius: var(--border-radius-lg);
     padding: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -809,7 +811,7 @@ input, select, textarea, button {
    ========================================================================== */
 
 .gallery-page {
-    background: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+    background: linear-gradient(rgba(54, 64, 95, 0.5), rgba(58, 66, 97, 0.5));
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
     margin: 0 auto;
@@ -873,7 +875,7 @@ input, select, textarea, button {
    ========================================================================== */
 
 .result-page {
-    background: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
+    background: linear-gradient(rgba(54, 64, 95, 0.5), rgba(58, 66, 97, 0.5));
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
     margin: 0 auto;
@@ -1075,7 +1077,6 @@ input, select, textarea, button {
     }
     
     .site-footer {
-        margin: 1.5rem 0.5rem 0.5rem;
         padding: 1rem;
     }
     
