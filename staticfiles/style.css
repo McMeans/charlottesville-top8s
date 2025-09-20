@@ -2,7 +2,7 @@
    Base Styles and Imports
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 /* CSS Custom Properties */
 :root {
@@ -35,13 +35,14 @@
 html {
     scroll-behavior: smooth;
     height: 100%;
-    overflow-x: hidden;
+    overflow: hidden !important;
+    font-family: 'Outfit', sans-serif;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Zilla Slab', serif;
+    font-family: 'Outfit', sans-serif;
     font-weight: 500;
     color: var(--text-light);
     background-image: linear-gradient(rgba(35, 45, 75, 0.9), rgba(16, 20, 34, 0.9)), url("images/charlottesville.jpeg");
@@ -51,7 +52,6 @@ body {
     background-attachment: fixed;
     height: 100vh;
     max-height: 100vh;
-    overflow: hidden;
     line-height: 1.6;
 }
 
@@ -133,11 +133,10 @@ a:hover {
 }
 
 .main-content {
-    height: calc(100vh - 100px);
-    max-height: calc(100vh - 100px);
+    height: calc(100vh - 112px);
+    max-height: calc(100vh - 112px);
     padding: 0.5rem 1rem 50px 1rem;
     overflow-y: auto;
-    overflow-x: hidden;
     mask: linear-gradient(to bottom, 
         black 0%, 
         black calc(100% - 40px), 
@@ -180,7 +179,12 @@ a:hover {
 
 .footer-content p {
     margin: 0.1rem 0;
-    color: var(--text-muted);
+    color: var(--accent-color);
+    font-size: 0.8rem;
+}
+
+.footer-content a {
+    color: #a3a3a3;
     font-size: 0.8rem;
 }
 
@@ -298,23 +302,22 @@ a:hover {
     position: relative;
     display: flex;
     background: rgba(43, 52, 80, 0.6);
-    border-radius: 20px;
-    padding: 3px;
+    border-radius: 25px;
+    padding: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: fit-content;
     margin: 0;
-    gap: 0;
 }
 
 .toggle-option {
     position: relative;
     z-index: 2;
-    padding: 6px 16px;
+    padding: 8px 20px;
     cursor: pointer;
     user-select: none;
     transition: all 0.3s ease;
-    border-radius: 17px;
-    min-width: 50px;
+    border-radius: 20px;
+    min-width: 60px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -332,14 +335,20 @@ a:hover {
     padding: 0;
 }
 
-/* Remove the sliding background approach */
-
-/* Fall selected (default) */
-.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option {
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(240, 145, 86, 0.3);
+    z-index: 1;
 }
 
+/* Fall selected (default) */
 .semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option .toggle-text {
     color: var(--text-light);
     font-weight: 600;
@@ -349,12 +358,11 @@ a:hover {
     color: var(--text-muted);
 }
 
-/* Spring selected */
-.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .spring-option {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    box-shadow: 0 2px 8px rgba(240, 145, 86, 0.3);
+.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .toggle-slider {
+    transform: translateX(0);
 }
 
+/* Spring selected */
 .semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .spring-option .toggle-text {
     color: var(--text-light);
     font-weight: 600;
@@ -362,6 +370,10 @@ a:hover {
 
 .semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .fall-option .toggle-text {
     color: var(--text-muted);
+}
+
+.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .toggle-slider {
+    transform: translateX(100%);
 }
 
 /* Hover effects */
@@ -423,6 +435,7 @@ input[type="number"] {
     background-color: rgba(43, 52, 80, 0.9) !important;
     border: 1px solid var(--accent-color) !important;
     color: var(--text-light) !important;
+    font-family: 'Outfit', sans-serif !important;
 }
 
 /* Consistent input styling with blue theme */
@@ -435,7 +448,7 @@ input[type="number"] {
     border: 1px solid var(--accent-color);
     background-color: rgba(43, 52, 80, 0.9);
     color: var(--text-light);
-    font-family: 'Zilla Slab', serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 1rem;
     transition: var(--transition);
     display: block;
@@ -480,7 +493,7 @@ input[type="number"] {
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-sm);
     margin-right: 0.75rem;
-    font-family: 'Zilla Slab', serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -504,7 +517,7 @@ input[type="number"] {
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-sm);
     margin-right: 0.75rem;
-    font-family: 'Zilla Slab', serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -534,7 +547,6 @@ input[type="number"] {
     border: none;
     padding: 0.5rem 0.75rem;
     border-radius: var(--border-radius-sm);
-    font-family: 'Zilla Slab', serif;
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
@@ -568,6 +580,7 @@ input[type="date"] {
     position: relative;
     background-color: rgba(43, 52, 80, 0.9) !important;
     color: var(--text-light) !important;
+    font-family: 'Outfit', sans-serif !important;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -606,6 +619,11 @@ input[type="date"]::-moz-calendar-picker-indicator {
     cursor: pointer;
 }
 
+/* Ensure all form elements use Outfit font */
+input, select, textarea, button {
+    font-family: 'Outfit', sans-serif;
+}
+
 .help-text {
     display: block;
     color: var(--text-muted);
@@ -640,7 +658,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
     min-height: 0;
     opacity: 0;
     max-height: 0;
-    overflow: hidden;
     transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
     padding: 0;
     margin: 0;
@@ -695,7 +712,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
     font-weight: 600;
     border-radius: var(--border-radius);
     cursor: pointer;
-    font-family: 'Zilla Slab', serif;
     transition: var(--transition);
     display: block;
     margin: 1.5rem auto;
@@ -715,7 +731,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
 #redemption_bracket,
 #side_bracket {
     max-height: 0;
-    overflow: hidden;
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
     opacity: 0;
     padding: 0;
@@ -732,7 +747,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
 #specific_event {
     position: relative;
     transition: height 0.4s ease-in-out;
-    overflow: hidden;
 }
 
 #specific_event .content-transition {
@@ -988,7 +1002,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
 }
 
 .modal-content {
