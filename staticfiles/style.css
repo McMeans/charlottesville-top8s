@@ -297,34 +297,33 @@ a:hover {
 }
 
 .semester-toggle input[type="radio"] {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .toggle-container {
     position: relative;
     display: flex;
     background: rgba(43, 52, 80, 0.6);
-    border-radius: 25px;
+    border-radius: var(--border-radius);
     padding: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: fit-content;
-    margin: 0;
+    min-width: 180px;
 }
 
 .toggle-option {
     position: relative;
     z-index: 2;
-    padding: 8px 20px;
+    flex: 1;
+    padding: 0.5rem 1.25rem;
     cursor: pointer;
     user-select: none;
-    transition: all 0.3s ease;
-    border-radius: 20px;
-    min-width: 60px;
+    border-radius: var(--border-radius-sm);
     text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: transparent;
+    transition: var(--transition);
 }
 
 .toggle-text {
@@ -333,8 +332,6 @@ a:hover {
     color: var(--text-muted);
     transition: color 0.3s ease;
     line-height: 1;
-    margin: 0;
-    padding: 0;
 }
 
 .toggle-slider {
@@ -344,47 +341,25 @@ a:hover {
     width: calc(50% - 4px);
     height: calc(100% - 8px);
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    border-radius: 20px;
+    border-radius: var(--border-radius-sm);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(240, 145, 86, 0.3);
     z-index: 1;
+    pointer-events: none;
 }
 
-/* Fall selected (default) */
-.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option .toggle-text {
-    color: var(--text-light);
-    font-weight: 600;
-}
-
-.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .spring-option .toggle-text {
-    color: var(--text-muted);
-}
-
-.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .toggle-slider {
-    transform: translateX(0);
-}
-
-/* Spring selected */
+.semester-toggle input[type="radio"][value="uva_fall"]:checked ~ .toggle-container .fall-option .toggle-text,
 .semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .spring-option .toggle-text {
     color: var(--text-light);
     font-weight: 600;
-}
-
-.semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .fall-option .toggle-text {
-    color: var(--text-muted);
 }
 
 .semester-toggle input[type="radio"][value="uva_spring"]:checked ~ .toggle-container .toggle-slider {
     transform: translateX(100%);
 }
 
-/* Hover effects */
 .toggle-option:hover .toggle-text {
     color: var(--text-light);
-}
-
-.toggle-option:hover {
-    background: rgba(240, 145, 86, 0.1);
 }
 
 /* Make only the "(optional)" text slightly transparent */

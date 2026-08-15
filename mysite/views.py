@@ -138,7 +138,8 @@ def submit(request):
         "side_title": sideTitle,
         "side_winner": sideWinner,
         "redemption_winner": redempWinner,
-        "redemption_render": redempRender
+        "redemption_render": redempRender,
+        "semester": request.POST.get('semester')
     }
     if title.startswith("Smash"):
         graphic = constructSmashAtUVA(top_players, event)
@@ -155,10 +156,14 @@ def constructSmashAtUVA(top_players, event):
     graphic = Image.new("RGBA", (1920,1080))
     draw = ImageDraw.Draw(graphic)
     titleText = str(event["title"])
-    if titleText[12] == 'F':
+    
+    # Determine background based on semester
+    semester = event.get("semester", "uva_fall")
+    if semester == "uva_fall":
         background_image = Image.open('static/images/backgrounds/uva_fall_background.png')
-    else:
+    else:  # uva_spring
         background_image = Image.open('static/images/backgrounds/uva_spring_background.png')
+    
     graphic.paste(background_image, (0,0))
     font_path = 'static/fonts/LibreFranklin-BoldItalic.ttf'
     shadow_color = (0,0,0)
@@ -256,9 +261,6 @@ def addPlayers(top_players, event, graphic, draw, font_path):
     credits = "Generated using"
     draw.text((1767, 22), credits, font=font, fill = shadow_color)
     draw.text((1765, 20), credits, font=font, fill = text_color)
-    credits = "By Luke McMeans"
-    draw.text((1755, 72), credits, font=font, fill = shadow_color)
-    draw.text((1753, 70), credits, font=font, fill = text_color)
     font = ImageFont.truetype(font_path, 20)
     credits = "CharlottesvilleTop8s"
     draw.text((1697, 45), credits, font=font, fill = shadow_color)

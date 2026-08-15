@@ -279,39 +279,9 @@ const eventManager = {
                 let newContent = '';
                 
                 if (eventType === 'smashatuva') {
-                    newContent = `
-                        <div class="content-transition fade-in" id="uva_content">
-                            <div class="form-group">
-                                <label>Semester:</label>
-                                <div class="semester-toggle">
-                                    <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
-                                    <input type="radio" id="semester_spring" name="semester" value="uva_spring">
-                                    <div class="toggle-container">
-                                        <label for="semester_fall" class="toggle-option fall-option">
-                                            <span class="toggle-text">Fall</span>
-                                        </label>
-                                        <div class="toggle-slider"></div>
-                                        <label for="semester_spring" class="toggle-option spring-option">
-                                            <span class="toggle-text">Spring</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
-                                <input type="number" name="event_number" id="event_number" step="0.5" required>
-                            </div>
-                        </div>
-                    `;
+                    newContent = this.createUVAContent();
                 } else if (eventType === 'thecut' || eventType === 'topcut') {
-                    newContent = `
-                        <div class="content-transition fade-in" id="cut_content">
-                            <div class="form-group">
-                                <label for="event_number">What # CUT is this?</label>
-                                <input type="number" name="event_number" id="event_number" step="0.5" required>
-                            </div>
-                        </div>
-                    `;
+                    newContent = this.createCUTContent();
                 }
                 
                 container.innerHTML = newContent;
@@ -333,9 +303,46 @@ const eventManager = {
                     container.style.height = 'auto';
                 }, 400); // Match CSS transition duration
                 
-                // No additional initialization needed for the new toggle
             }, 100); // Reduced from 200ms to 100ms for faster response
         }
+    },
+
+    createUVAContent() {
+        return `
+            <div class="content-transition fade-in" id="uva_content">
+                <div class="form-group">
+                    <label>Semester:</label>
+                    <div class="semester-toggle">
+                        <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
+                        <input type="radio" id="semester_spring" name="semester" value="uva_spring">
+                        <div class="toggle-container">
+                            <label for="semester_fall" class="toggle-option fall-option">
+                                <span class="toggle-text">Fall</span>
+                            </label>
+                            <div class="toggle-slider"></div>
+                            <label for="semester_spring" class="toggle-option spring-option">
+                                <span class="toggle-text">Spring</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
+                    <input type="number" name="event_number" id="event_number" step="0.5" required>
+                </div>
+            </div>
+        `;
+    },
+
+    createCUTContent() {
+        return `
+            <div class="content-transition fade-in" id="cut_content">
+                <div class="form-group">
+                    <label for="event_number">What # CUT is this?</label>
+                    <input type="number" name="event_number" id="event_number" step="0.5" required>
+                </div>
+            </div>
+        `;
     }
 };
 
@@ -677,27 +684,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.tournament-form');
     const submitBtn = document.getElementById('generate-btn');
     
+    // Add form submit listener to debug
     if (form) {
         form.addEventListener('submit', (e) => {
-            console.log('Form submitted!'); // Debug log
-            showLoadingState();
-            
-            // Add timeout fallback in case redirect doesn't happen
-            setTimeout(() => {
-                console.log('Form submission timeout - resetting button');
-                resetButton();
-            }, 30000); // 30 second timeout
+            console.log('Form submit event triggered!');
+            console.log('Form action:', form.action);
+            console.log('Form method:', form.method);
         });
-    } else {
-        console.error('Form not found!'); // Debug log
     }
     
     // Backup: Button click event
     if (submitBtn) {
         submitBtn.addEventListener('click', (e) => {
             console.log('Button clicked!'); // Debug log
-            // Always show loading state when button is clicked
-            showLoadingState();
+            
+            // Check if form is valid
+            if (form.checkValidity()) {
+                console.log('Form is valid, submitting...');
+                showLoadingState();
+                
+                // Manually trigger form submission
+                setTimeout(() => {
+                    console.log('Manually submitting form...');
+                    form.submit();
+                }, 100);
+            } else {
+                console.log('Form is invalid, preventing submission');
+                // Show which fields are invalid
+                const invalidFields = form.querySelectorAll(':invalid');
+                console.log('Invalid fields:', invalidFields);
+                invalidFields.forEach(field => {
+                    console.log('Invalid field:', field.name, field.validationMessage);
+                });
+            }
         });
     }
     
