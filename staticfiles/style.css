@@ -497,6 +497,8 @@ a:hover {
 /* Make only the "(optional)" text slightly transparent */
 .optional-text {
     opacity: 0.6;
+    font-size: 0.85em;
+    font-weight: normal;
 }
 
 /* Submit Button Loading State */
@@ -517,6 +519,13 @@ a:hover {
     gap: 0.5rem;
 }
 
+.btn-text,
+.loading-text {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
 .loading-spinner {
     width: 16px;
     height: 16px;
@@ -524,11 +533,6 @@ a:hover {
     border-top: 2px solid white;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-}
-
-.loading-text {
-    font-size: 0.9rem;
-    font-weight: 500;
 }
 
 @keyframes spin {
@@ -550,7 +554,7 @@ input[type="date"]:focus {
 }
 
 /* Consistent input styling with blue theme */
-.form-group input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),
+.form-group input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="hidden"]),
 .form-group select {
     width: 100%;
     max-width: 100%;
@@ -568,7 +572,7 @@ input[type="date"]:focus {
     display: block;
 }
 
-.form-group input:not([type="radio"]):not([type="checkbox"]):focus,
+.form-group input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="hidden"]):focus,
 .form-group select:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -576,117 +580,97 @@ input[type="date"]:focus {
     background-color: rgba(43, 52, 80, 1);
 }
 
-.form-group input[type="file"] {
-    padding: 0.5rem;
-    background-color: rgba(43, 52, 80, 0.9);
-    border: 2px dashed var(--accent-color);
-    max-width: 100%;
-    color: var(--text-light);
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.form-group input[type="file"]:hover {
-    border-color: var(--primary-color);
-    background-color: rgba(43, 52, 80, 1);
-}
-
-.form-group input[type="file"]:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(230, 113, 2, 0.2);
-    background-color: rgba(43, 52, 80, 1);
-}
-
-/* File input button styling */
-.form-group input[type="file"]::-webkit-file-upload-button {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius-sm);
-    margin-right: 0.75rem;
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.form-group input[type="file"]::-webkit-file-upload-button:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-1px);
-}
-
-.form-group input[type="file"]::-webkit-file-upload-button:active {
-    transform: translateY(0);
-}
-
-/* Firefox file input styling */
-.form-group input[type="file"]::-moz-file-upload-button {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius-sm);
-    margin-right: 0.75rem;
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.form-group input[type="file"]::-moz-file-upload-button:hover {
-    background-color: var(--primary-dark);
-}
-
-/* File input container for better styling */
-.file-input-container {
+.file-field {
     position: relative;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.25rem;
-}
-
-.file-input-container input[type="file"] {
-    flex: 1;
-}
-
-.clear-file-btn {
-    background-color: var(--danger-color);
-    color: var(--text-light);
-    border: none;
-    padding: 0.5rem 0.75rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: 0.35rem 0.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: rgba(43, 52, 80, 0.9);
+    border: 2px dashed var(--accent-color);
     border-radius: var(--border-radius-sm);
-    font-size: 0.8rem;
-    font-weight: 500;
+    color: var(--text-light);
     cursor: pointer;
     transition: var(--transition);
-    display: none;
 }
 
-.clear-file-btn:hover {
-    background-color: #ff5252;
-    transform: translateY(-1px);
+.file-field:hover,
+.file-field:focus-within {
+    border-color: var(--primary-color);
+    background-color: rgba(43, 52, 80, 1);
 }
 
-.clear-file-btn.visible {
-    display: inline-block;
+.file-field-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-.file-name-display {
+.file-field-choose,
+.file-field-clear {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 1.85rem;
+    padding: 0.35rem 0.85rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.file-field-choose {
+    background-color: var(--primary-color);
     color: var(--text-light);
-    font-size: 0.85em;
-    font-style: italic;
-    margin-top: 0.25rem;
+}
+
+.file-field-choose:hover {
+    background-color: var(--primary-dark);
+}
+
+.file-field-clear {
+    display: none;
+    background-color: var(--danger-color);
+    color: var(--text-light);
+}
+
+.file-field-clear:hover {
+    background-color: #ff5252;
+}
+
+.file-field-name {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    line-height: 1.25;
+}
+
+.file-field.has-file .file-field-choose {
     display: none;
 }
 
-.file-name-display.visible {
-    display: block;
+.file-field.has-file .file-field-clear {
+    display: inline-flex;
 }
 
 /* Date picker styling */
@@ -699,11 +683,16 @@ input[type="date"] {
     border: 1px solid var(--accent-color);
     border-radius: var(--border-radius-sm);
     background-color: rgba(43, 52, 80, 0.9);
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.4);
     font-family: 'Outfit', sans-serif;
     font-size: 1rem;
     line-height: 1.25;
     box-sizing: border-box;
+}
+
+input[type="date"]:focus,
+input[type="date"]:valid {
+    color: var(--text-light);
 }
 
 input[type="date"]::-webkit-datetime-edit,
@@ -714,8 +703,23 @@ input[type="date"]::-webkit-datetime-edit-day-field,
 input[type="date"]::-webkit-datetime-edit-year-field {
     padding: 0;
     margin: 0;
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.4);
     line-height: 1.25;
+}
+
+input[type="date"]:focus::-webkit-datetime-edit,
+input[type="date"]:focus::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]:focus::-webkit-datetime-edit-text,
+input[type="date"]:focus::-webkit-datetime-edit-month-field,
+input[type="date"]:focus::-webkit-datetime-edit-day-field,
+input[type="date"]:focus::-webkit-datetime-edit-year-field,
+input[type="date"]:valid::-webkit-datetime-edit,
+input[type="date"]:valid::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]:valid::-webkit-datetime-edit-text,
+input[type="date"]:valid::-webkit-datetime-edit-month-field,
+input[type="date"]:valid::-webkit-datetime-edit-day-field,
+input[type="date"]:valid::-webkit-datetime-edit-year-field {
+    color: var(--text-light);
 }
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -819,15 +823,6 @@ input, select, textarea, button {
     border-left: 3px solid var(--primary-color);
 }
 
-.form-warning {
-    background-color: rgba(255, 107, 107, 0.1);
-    border: 1px solid var(--danger-color);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-    margin: 1rem 0;
-    text-align: center;
-}
-
 .submit-btn {
     background-color: var(--primary-color);
     color: var(--text-light);
@@ -835,12 +830,17 @@ input, select, textarea, button {
     padding: 0.75rem 1.5rem;
     font-size: 1.1em;
     font-weight: 600;
+    line-height: 1.25;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 1.5rem auto;
     min-width: 200px;
+    min-height: 3.15rem;
+    box-sizing: border-box;
 }
 
 .submit-btn:hover {
@@ -904,7 +904,24 @@ input, select, textarea, button {
     font-size: 1em;
     font-weight: 600;
     color: var(--primary-color);
+    white-space: nowrap;
 }
+
+.player-section[data-player-index="1"] .player-placement::before { content: "1st Place"; }
+.player-section[data-player-index="2"] .player-placement::before { content: "2nd Place"; }
+.player-section[data-player-index="3"] .player-placement::before { content: "3rd Place"; }
+.player-section[data-player-index="4"] .player-placement::before { content: "4th Place"; }
+.player-section[data-player-index="5"] .player-placement::before { content: "5th Place"; }
+.player-section[data-player-index="6"] .player-placement::before { content: "5th Place"; }
+.player-section[data-player-index="7"] .player-placement::before { content: "7th Place"; }
+.player-section[data-player-index="8"] .player-placement::before { content: "7th Place"; }
+
+.tournament-form:has(#single_elim:checked) .player-section[data-player-index="4"] .player-placement::before { content: "3rd Place"; }
+.tournament-form:has(#single_elim:checked) .player-section[data-player-index="7"] .player-placement::before { content: "5th Place"; }
+.tournament-form:has(#single_elim:checked) .player-section[data-player-index="8"] .player-placement::before { content: "5th Place"; }
+
+.tournament-form:has(#round_robin:checked) .player-section[data-player-index="6"] .player-placement::before { content: "6th Place"; }
+.tournament-form:has(#round_robin:checked) .player-section[data-player-index="8"] .player-placement::before { content: "8th Place"; }
 
 /* ==========================================================================
    Gallery Styles
@@ -1078,6 +1095,20 @@ input, select, textarea, button {
     background-color: rgba(230, 113, 2, 0.15);
     color: var(--primary-color);
     transform: translateY(-1px);
+}
+
+.btn-edit {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--text-light);
+}
+
+.btn-edit:hover {
+    background-color: rgb(150, 150, 150);
+    border-color: rgb(150, 150, 150);
+    color: var(--text-light);
+    transform: translateY(-1px);
+    text-decoration: none;
 }
 
 .btn-danger {
@@ -1471,8 +1502,7 @@ input, select, textarea, button {
 @media print {
     .site-header,
     .site-footer,
-    .btn,
-    .form-warning {
+    .btn {
         display: none;
     }
     

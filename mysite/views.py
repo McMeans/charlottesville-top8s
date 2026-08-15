@@ -14,15 +14,91 @@ def getUserID(request):
         request.session['user_id'] = userID
     return userID
 
-def homepage_view(request):
-    numSubmissions = Graphic.objects.filter(user=getUserID(request)).count()
+FORM_SKIP_KEYS = {'csrfmiddlewaretoken', 'graphic_id'}
+
+
+def homepage_context(request, extra=None):
     context = {
         'tab_title': "Charlottesville Top8s",
-        "indexes": range(1,9),
+        "indexes": range(1, 9),
         "characters": characters,
-        "num_submissions": numSubmissions
+        "num_submissions": Graphic.objects.filter(user=getUserID(request)).count(),
+        "form_data": {},
     }
-    return render(request, 'mysite/homepage.html', context)
+    if extra:
+        context.update(extra)
+    return context
+
+def homepage_view(request):
+    return render(request, 'mysite/homepage.html', homepage_context(request))
+
+def edit_view(request, id):
+    graphic = get_object_or_404(Graphic, id=id, user=getUserID(request))
+    if not graphic.form_data:
+        return redirect('homepage')
+    return render(request, 'mysite/homepage.html', homepage_context(request, {
+        'graphic_id': graphic.id,
+        'form_data': form_data_for_prefill(graphic.form_data),
+        'tab_title': f"Edit {graphic.title}",
+    }))
+
+def uploaded_file_to_data_uri(uploaded):
+    content = uploaded.read()
+    uploaded.seek(0)
+    content_type = uploaded.content_type or 'image/png'
+    encoded = base64.b64encode(content).decode('utf-8')
+    return f'data:{content_type};base64,{encoded}'
+
+def image_from_data_uri(data_uri):
+    _, encoded = data_uri.split(',', 1)
+    return Image.open(BytesIO(base64.b64decode(encoded))).convert('RGBA')
+
+def apply_custom_render(data_uri):
+    temp = Image.new("RGBA", (1000, 1000))
+    custom = image_from_data_uri(data_uri)
+    aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
+    new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
+    custom = custom.resize(new_size, Image.Resampling.LANCZOS)
+    x = (1000 - custom.width) // 2
+    y = (1000 - custom.height) // 2
+    temp.alpha_composite(custom, (x, y))
+    return temp
+
+def collect_form_data(request, existing=None):
+    existing = existing or {}
+    data = {}
+    for key, value in request.POST.items():
+        if key in FORM_SKIP_KEYS or key.endswith('_keep_custom') or key.endswith('_custom_name'):
+            continue
+        data[key] = value
+    for number in range(1, 9):
+        key = f'player{number}_custom'
+        name_key = f'{key}_name'
+        uploaded = request.FILES.get(key)
+        if uploaded:
+            data[key] = uploaded_file_to_data_uri(uploaded)
+            data[name_key] = uploaded.name
+        elif request.POST.get(f'player{number}_keep_custom') == '1' and existing.get(key):
+            data[key] = existing[key]
+            if existing.get(name_key):
+                data[name_key] = existing[name_key]
+        else:
+            data.pop(key, None)
+            data.pop(name_key, None)
+    return data
+
+def form_data_for_prefill(form_data):
+    data = dict(form_data or {})
+    for number in range(1, 9):
+        key = f'player{number}_custom'
+        name_key = f'{key}_name'
+        if data.get(key):
+            data[key] = data.get(name_key) or 'custom-image'
+            data.pop(name_key, None)
+        else:
+            data.pop(key, None)
+            data.pop(name_key, None)
+    return data
 
 def gallery_view(request):
     graphics = Graphic.objects.filter(user=getUserID(request)).order_by('-date_time')
@@ -48,12 +124,19 @@ def delete(request, id):
     return redirect('gallery')
 
 def submit(request):
+    if request.method != 'POST':
+        return redirect('homepage')
     user = getUserID(request)
+    graphic_id = request.POST.get('graphic_id')
+    existing = None
+    if graphic_id:
+        existing = Graphic.objects.filter(id=graphic_id, user=user).first()
+    form_data = collect_form_data(request, existing.form_data if existing else None)
     top_players = []
     elimination_style = request.POST.get('elim_type')
     for number in range(1,9):
-        name = request.POST.get(f"player{number}_name").strip()
-        handle = request.POST.get(f"player{number}_handle").replace(" ","")
+        name = (request.POST.get(f"player{number}_name") or "").strip()
+        handle = (request.POST.get(f"player{number}_handle") or "").replace(" ","")
         if handle != "" and not handle.startswith('@'):
             handle = '@' + handle
         if elimination_style == 'double_elim':
@@ -71,27 +154,20 @@ def submit(request):
         else:
             placement = number
         primChar = request.POST.get(f"player{number}_primary")
-        primAlt = request.POST.get(f"player{number}_alt")[0:1]
-        primary = Image.open(f"static/images/renders/{primChar}/{primChar}_{primAlt}.png")
+        primAlt = (request.POST.get(f"player{number}_alt") or "0")[0:1]
         secChar = request.POST.get(f"player{number}_secondary")
         secondary = None
         terChar = request.POST.get(f"player{number}_tertiary")
         tertiary = None
-        if request.POST.get(f"player{number}_custom") != '':
-            customImage = request.FILES[f"player{number}_custom"]
-            temp = Image.new("RGBA", (1000,1000))
-            custom = Image.open(customImage).convert("RGBA")
-            aspect_ratio = min(1000 / custom.width, 1000 / custom.height)
-            new_size = (int(custom.width * aspect_ratio), int(custom.height * aspect_ratio))
-            custom = custom.resize(new_size, Image.Resampling.LANCZOS)
-            x = (1000 - custom.width) // 2
-            y = (1000 - custom.height) // 2
-            temp.alpha_composite(custom, (x,y))
-            primary = temp
+        custom_uri = form_data.get(f"player{number}_custom")
+        if custom_uri:
+            primary = apply_custom_render(custom_uri)
             if primChar != 'Random':
                 terChar = secChar
                 secChar = primChar
             primChar = 'Custom'
+        else:
+            primary = Image.open(f"static/images/renders/{primChar}/{primChar}_{primAlt}.png")
         if secChar != 'None':
             secondary = Image.open(f"static/images/icons/{secChar}_icon.png")
             if terChar != 'None':
@@ -147,7 +223,21 @@ def submit(request):
     graphic.save(buffered, format='PNG')
     graphicSrc = f"data:image/png;base64,{base64.b64encode(buffered.getvalue()).decode('utf-8')}"
     timeOfGeneration = datetime.now()
-    graphicObj = Graphic.objects.create(image=graphicSrc, title=event["title"], date_time = timeOfGeneration, user=user)
+    if existing:
+        existing.image = graphicSrc
+        existing.title = event["title"]
+        existing.form_data = form_data
+        existing.date_time = timeOfGeneration
+        existing.save()
+        graphicObj = existing
+    else:
+        graphicObj = Graphic.objects.create(
+            image=graphicSrc,
+            title=event["title"],
+            date_time=timeOfGeneration,
+            user=user,
+            form_data=form_data,
+        )
     return redirect('result_view', id=graphicObj.id)
 
 def constructSmashAtUVA(top_players, event):

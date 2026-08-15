@@ -8,6 +8,9 @@
 
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data" class="tournament-form">
     {% csrf_token %}
+    {% if graphic_id %}
+    <input type="hidden" name="graphic_id" value="{{ graphic_id }}">
+    {% endif %}
     
     <fieldset class="form-section event-section">
         <legend>Event</legend>
@@ -55,7 +58,7 @@
 
             <div class="form-group">
                 <label for="event_date">Date</label>
-                <input type="date" name="event_date" id="event_date" required>
+                <input type="date" name="event_date" id="event_date" required min="1000-01-01" max="9999-12-31">
             </div>
 
             <div class="form-group">
@@ -89,7 +92,7 @@
     <div class="grid-container">
         {% for i in indexes %}
         <fieldset class="grid-item player-section" data-player-index="{{ i }}">
-            <legend class="player-placement">{{ i }}</legend>
+            <legend class="player-placement">&#8203;</legend>
             
             <div class="form-group">
                 <label for="player{{ i }}_name">Player Name (with tags)</label>
@@ -118,12 +121,14 @@
             </div>
             
             <div class="form-group">
-                <label for="player{{ i }}_custom">Custom Character Image <span class="optional-text">(optional)</span></label>
-                <div class="file-input-container">
-                    <input type="file" name="player{{ i }}_custom" id="player{{ i }}_custom" accept="image/png, image/jpg, image/jpeg">
-                    <button type="button" class="clear-file-btn" onclick="clearFile('player{{ i }}_custom')">Clear</button>
+                <label for="player{{ i }}_custom">Custom Image <span class="optional-text">(optional)</span></label>
+                <div class="file-field" id="player{{ i }}_custom_field">
+                    <input type="file" name="player{{ i }}_custom" id="player{{ i }}_custom" class="file-field-input" accept="image/png, image/jpg, image/jpeg">
+                    <input type="hidden" name="player{{ i }}_keep_custom" id="player{{ i }}_custom_keep" value="0">
+                    <button type="button" class="file-field-choose">Choose File</button>
+                    <button type="button" class="file-field-clear">Clear</button>
+                    <span class="file-field-name">No file chosen</span>
                 </div>
-                <div class="file-name-display" id="player{{ i }}_custom_name"></div>
             </div>
             
             <div class="form-group">
@@ -168,15 +173,11 @@
         </div>
     </fieldset>
 
-    <div class="form-warning">
-        <h4>MAKE SURE DATA IS CORRECT!! It does not save.</h4>
-    </div>
-    
     <button type="submit" class="submit-btn" id="generate-btn">
-        <span class="btn-text">Generate</span>
+        <span class="btn-text">{% if graphic_id %}Update{% else %}Generate{% endif %}</span>
         <span class="btn-loading" style="display: none;">
             <span class="loading-spinner"></span>
-            <span class="loading-text">Generating...</span>
+            <span class="loading-text">{% if graphic_id %}Updating...{% else %}Generating...{% endif %}</span>
         </span>
     </button>
 </form>
@@ -190,6 +191,7 @@
     </div>
 </div>
 
+{{ form_data|json_script:"saved-form-data" }}
 <script>
 // Utility functions
 const utils = {
@@ -406,90 +408,146 @@ const participantValidator = {
     }
 };
 
-const PLACEMENTS = {
-    double_elim: ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th'],
-    single_elim: ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th'],
-    round_robin: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
-};
-
-const placementManager = {
-    updatePlayerLabels() {
-        const selected = document.querySelector('input[name="elim_type"]:checked');
-        const placements = PLACEMENTS[selected ? selected.value : 'double_elim'];
-
-        document.querySelectorAll('.player-section').forEach((card, index) => {
-            const legend = card.querySelector('.player-placement');
-            if (legend) {
-                legend.textContent = `${placements[index]} Place`;
-            }
-        });
-    }
-};
-
-placementManager.updatePlayerLabels();
-
-// File management
 const fileManager = {
     setupFileInputs() {
         for (let i = 1; i <= 8; i++) {
-            const fileInput = document.getElementById(`player${i}_custom`);
-            if (fileInput) {
-                fileInput.addEventListener('change', (e) => {
-                    this.handleFileSelect(e, `player${i}_custom`);
-                });
-            }
+            const inputId = `player${i}_custom`;
+            const field = document.getElementById(`${inputId}_field`);
+            const input = document.getElementById(inputId);
+            if (!field || !input) continue;
+
+            field.addEventListener('click', (e) => {
+                if (e.target.closest('.file-field-clear')) return;
+                input.click();
+            });
+            field.querySelector('.file-field-clear').addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.clearFile(inputId);
+            });
+            input.addEventListener('change', () => this.handleFileSelect(inputId));
         }
     },
 
-    handleFileSelect(event, inputId) {
-        const fileInput = event.target;
-        const fileNameDisplay = document.getElementById(`${inputId}_name`);
-        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
-        
-        if (fileInput.files && fileInput.files[0]) {
-            const file = fileInput.files[0];
-            fileNameDisplay.textContent = `Selected: ${file.name}`;
-            fileNameDisplay.classList.add('visible');
-            clearBtn.classList.add('visible');
+    handleFileSelect(inputId) {
+        const input = document.getElementById(inputId);
+        if (input.files && input.files[0]) {
+            const keep = document.getElementById(`${inputId}_keep`);
+            if (keep) keep.value = '0';
+            this.setHasFile(inputId, input.files[0].name);
         } else {
             this.clearFileDisplay(inputId);
         }
     },
 
+    setHasFile(inputId, filename) {
+        const field = document.getElementById(`${inputId}_field`);
+        const nameEl = field.querySelector('.file-field-name');
+        field.classList.add('has-file');
+        nameEl.textContent = filename;
+        nameEl.title = filename;
+    },
+
     clearFile(inputId) {
-        const fileInput = document.getElementById(inputId);
-        const fileNameDisplay = document.getElementById(`${inputId}_name`);
-        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
-        
-        fileInput.value = '';
+        const input = document.getElementById(inputId);
+        const keep = document.getElementById(`${inputId}_keep`);
+        input.value = '';
+        if (keep) keep.value = '0';
         this.clearFileDisplay(inputId);
     },
 
     clearFileDisplay(inputId) {
-        const fileNameDisplay = document.getElementById(`${inputId}_name`);
-        const fileInput = document.getElementById(inputId);
-        const clearBtn = fileInput.parentElement.querySelector('.clear-file-btn');
-        
-        fileNameDisplay.textContent = '';
-        fileNameDisplay.classList.remove('visible');
-        clearBtn.classList.remove('visible');
+        const field = document.getElementById(`${inputId}_field`);
+        const nameEl = field.querySelector('.file-field-name');
+        field.classList.remove('has-file');
+        nameEl.textContent = 'No file chosen';
+        nameEl.removeAttribute('title');
     }
 };
 
-// Global function for onclick handlers
-function clearFile(inputId) {
-    fileManager.clearFile(inputId);
+function setFieldValue(id, value) {
+    const el = document.getElementById(id);
+    if (el && value != null && value !== '') {
+        el.value = value;
+    }
+}
+
+function setRadioValue(name, value) {
+    if (!value) return;
+    const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+    if (el) {
+        el.checked = true;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+}
+
+function showStoredCustom(inputId, filename) {
+    const keep = document.getElementById(`${inputId}_keep`);
+    if (keep) keep.value = '1';
+    fileManager.setHasFile(inputId, filename || 'custom-image');
+}
+
+async function prefillForm(data) {
+    setRadioValue('event_type', data.event_type);
+    setRadioValue('semester', data.semester);
+    setRadioValue('elim_type', data.elim_type);
+    setFieldValue('event_number', data.event_number);
+    setFieldValue('event_date', data.event_date);
+    setFieldValue('participants', data.participants);
+
+    for (let i = 1; i <= 8; i++) {
+        setFieldValue(`player${i}_name`, data[`player${i}_name`]);
+        setFieldValue(`player${i}_handle`, data[`player${i}_handle`]);
+        setFieldValue(`player${i}_primary`, data[`player${i}_primary`]);
+        await characterManager.updateAlts(`player${i}_primary`, `player${i}_alt`);
+        setFieldValue(`player${i}_alt`, data[`player${i}_alt`]);
+        setFieldValue(`player${i}_secondary`, data[`player${i}_secondary`]);
+        setFieldValue(`player${i}_tertiary`, data[`player${i}_tertiary`]);
+        if (data[`player${i}_custom`]) {
+            showStoredCustom(`player${i}_custom`, data[`player${i}_custom`]);
+        }
+    }
+
+    if (data.redemption_check) {
+        const checkbox = document.getElementById('redemption_check');
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        setFieldValue('redemption_name', data.redemption_name);
+        setFieldValue('redemption_primary', data.redemption_primary);
+    }
+    if (data.side_check) {
+        const checkbox = document.getElementById('side_check');
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        setFieldValue('side_event', data.side_event);
+        setFieldValue('side_name', data.side_name);
+    }
+
+    participantValidator.checkUnderEight();
 }
 
 // Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all components
-    characterManager.initializeAllAlts();
+document.addEventListener('DOMContentLoaded', async () => {
     eventManager.changeEvent();
     bracketManager.addRedemption();
     bracketManager.addSideEvent();
-    placementManager.updatePlayerLabels();
     fileManager.setupFileInputs();
+
+    let savedFormData = {};
+    const savedNode = document.getElementById('saved-form-data');
+    if (savedNode) {
+        try {
+            savedFormData = JSON.parse(savedNode.textContent);
+        } catch (error) {
+            savedFormData = {};
+        }
+    }
+
+    if (savedFormData && Object.keys(savedFormData).length) {
+        await prefillForm(savedFormData);
+    } else {
+        characterManager.initializeAllAlts();
+    }
     
     // Add event listeners
     document.getElementById('participants').addEventListener('change', () => {
@@ -506,38 +564,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const primaryField = document.getElementById(`player${i}_primary`);
             
             if (i <= participantCount) {
-                // Make fields required for visible players
                 nameField.setAttribute('required', 'required');
                 primaryField.setAttribute('required', 'required');
             } else {
-                // Remove required attribute for hidden players
                 nameField.removeAttribute('required');
                 primaryField.removeAttribute('required');
             }
         }
     }
     
-    // Initialize required fields on page load
     updateRequiredFields();
-    
-    document.querySelectorAll('input[name="elim_type"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-            placementManager.updatePlayerLabels();
+
+    const eventDateInput = document.getElementById('event_date');
+    if (eventDateInput) {
+        eventDateInput.addEventListener('input', () => {
+            const [year, month, day] = eventDateInput.value.split('-');
+            if (year && year.length > 4) {
+                eventDateInput.value = `${year.slice(0, 4)}-${month || '01'}-${day || '01'}`;
+            }
         });
-    });
+    }
     
-    // Add change listeners for character selects
     for (let i = 1; i <= 8; i++) {
         document.getElementById(`player${i}_primary`).addEventListener('change', () => {
             characterManager.updateAlts(`player${i}_primary`, `player${i}_alt`);
         });
     }
     
-    // Form submission loading state
     const form = document.querySelector('.tournament-form');
     const submitBtn = document.getElementById('generate-btn');
     
-    // Add form submit listener to debug
     if (form) {
         form.addEventListener('submit', (e) => {
             console.log('Form submit event triggered!');
@@ -546,24 +602,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Backup: Button click event
     if (submitBtn) {
         submitBtn.addEventListener('click', (e) => {
-            console.log('Button clicked!'); // Debug log
+            console.log('Button clicked!');
             
-            // Check if form is valid
             if (form.checkValidity()) {
                 console.log('Form is valid, submitting...');
                 showLoadingState();
                 
-                // Manually trigger form submission
                 setTimeout(() => {
                     console.log('Manually submitting form...');
                     form.submit();
                 }, 100);
             } else {
                 console.log('Form is invalid, preventing submission');
-                // Show which fields are invalid
                 const invalidFields = form.querySelectorAll(':invalid');
                 console.log('Invalid fields:', invalidFields);
                 invalidFields.forEach(field => {
@@ -578,7 +630,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnLoading = submitBtn.querySelector('.btn-loading');
         
         if (btnText && btnLoading) {
-            // Show loading state
             btnText.style.display = 'none';
             btnLoading.style.display = 'flex';
             submitBtn.disabled = true;
@@ -591,7 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnLoading = submitBtn.querySelector('.btn-loading');
         
         if (btnText && btnLoading) {
-            // Reset button state
             btnText.style.display = 'block';
             btnLoading.style.display = 'none';
             submitBtn.disabled = false;

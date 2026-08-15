@@ -9,6 +9,9 @@
     </div>
     <div class="result-actions">
         <button type="button" class="btn btn-primary" id="saveGraphic">Save</button>
+        {% if graphic.form_data %}
+        <a href="{% url 'edit' graphic.id %}" class="btn btn-edit">Edit</a>
+        {% endif %}
         <div class="delete-area">
             <button type="button" class="btn btn-danger" id="deleteTrigger">Delete</button>
             <div class="delete-popover" hidden>
