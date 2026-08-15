@@ -24,16 +24,6 @@ def homepage_view(request):
     }
     return render(request, 'mysite/homepage.html', context)
 
-def result_view(request, id):
-    graphic = Graphic.objects.get(id=id)
-    if graphic.user == getUserID(request):
-        context = {
-            'tab_title': graphic.title + " Graphic",
-            'graphic': graphic
-        }
-        return render(request, 'mysite/result.html', context)
-    return redirect('homepage')
-
 def gallery_view(request):
     graphics = Graphic.objects.filter(user=getUserID(request)).order_by('-date_time')
     context = {
@@ -42,8 +32,16 @@ def gallery_view(request):
     }
     return render(request, 'mysite/gallery.html', context)
 
+def result_view(request, id):
+    graphic = get_object_or_404(Graphic, id=id, user=getUserID(request))
+    context = {
+        'tab_title': f"{graphic.title} Graphic",
+        'graphic': graphic
+    }
+    return render(request, 'mysite/result.html', context)
+
 def delete(request, id):
-    graphic = get_object_or_404(Graphic, id=id)
+    graphic = get_object_or_404(Graphic, id=id, user=getUserID(request))
     graphic.delete()
     if Graphic.objects.filter(user=getUserID(request)).count() == 0:
         return redirect('homepage')

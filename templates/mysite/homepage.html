@@ -3,75 +3,93 @@
 
 {% block content %}
 {% if num_submissions != 0 %}
-<a href="{% url 'gallery' %}" class="redirect gallery-link">View all your submissions</a>
+<a href="{% url 'gallery' %}" class="redirect gallery-link">View your graphics</a>
 {% endif %}
 
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data" class="tournament-form">
     {% csrf_token %}
     
-    <!-- Event Type Selection -->
-    <fieldset class="form-section">
-        <legend>What event is this for?</legend>
-        <div class="radio-group">
-            <div class="radio-item">
-                <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked>
-                <label for="smashatuva">Smash @ UVA</label>
-            </div>
-            <div class="radio-item">
-                <input type="radio" id="thecut" name="event_type" value="thecut">
-                <label for="thecut">The CUT</label>
-            </div>
-            <div class="radio-item">
-                <input type="radio" id="topcut" name="event_type" value="topcut">
-                <label for="topcut">The Top CUT</label>
+    <fieldset class="form-section event-section">
+        <legend>Event</legend>
+
+        <div class="choice-toggle event-type-toggle" data-options="3">
+            <input type="radio" id="smashatuva" name="event_type" value="smashatuva" checked>
+            <input type="radio" id="thecut" name="event_type" value="thecut">
+            <input type="radio" id="topcut" name="event_type" value="topcut">
+            <div class="toggle-container">
+                <div class="toggle-slider"></div>
+                <label for="smashatuva" class="toggle-option">
+                    <span class="toggle-text">Smash @ UVA</span>
+                </label>
+                <label for="thecut" class="toggle-option">
+                    <span class="toggle-text">The CUT</span>
+                </label>
+                <label for="topcut" class="toggle-option">
+                    <span class="toggle-text">The Top CUT</span>
+                </label>
             </div>
         </div>
-    </fieldset>
 
-    <!-- Event Details -->
-    <fieldset class="form-section">
-        <div id="specific_event">
-            <div class="content-transition" id="uva_content">
-                <div class="form-group">
-                    <label>Semester:</label>
-                    <div class="semester-toggle">
-                        <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
-                        <input type="radio" id="semester_spring" name="semester" value="uva_spring">
-                        <div class="toggle-container">
-                            <label for="semester_fall" class="toggle-option fall-option">
-                                <span class="toggle-text">Fall</span>
-                            </label>
-                            <div class="toggle-slider"></div>
-                            <label for="semester_spring" class="toggle-option spring-option">
-                                <span class="toggle-text">Spring</span>
-                            </label>
-                        </div>
+        <div class="event-details-grid">
+            <div class="form-group" id="semester_group">
+                <label>Semester</label>
+                <div class="choice-toggle semester-toggle" data-options="2">
+                    <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
+                    <input type="radio" id="semester_spring" name="semester" value="uva_spring">
+                    <div class="toggle-container">
+                        <div class="toggle-slider"></div>
+                        <label for="semester_fall" class="toggle-option">
+                            <span class="toggle-text">Fall</span>
+                        </label>
+                        <label for="semester_spring" class="toggle-option">
+                            <span class="toggle-text">Spring</span>
+                        </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
-                    <input type="number" name="event_number" id="event_number" step="0.5" required>
-                </div>
             </div>
+
+            <div class="form-group">
+                <label for="event_number" id="event_number_label">Event #</label>
+                <input type="number" name="event_number" id="event_number" step="0.5" required min="0.5" inputmode="decimal">
+            </div>
+
+            <div class="form-group">
+                <label for="event_date">Date</label>
+                <input type="date" name="event_date" id="event_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="participants">Participants</label>
+                <input type="number" name="participants" id="participants" required min="1" inputmode="numeric">
+            </div>
+
+            <div id="under_eight" class="warning-text event-warning"></div>
         </div>
-        
-        <div class="form-group">
-            <label for="event_date">Event Date:</label>
-            <input type="date" name="event_date" id="event_date" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="participants">Number of Participants:</label>
-            <input type="number" name="participants" id="participants" required min="1">
-            <div id="under_eight" class="warning-text"></div>
+
+        <div class="choice-toggle elim-type-toggle" data-options="3">
+            <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked>
+            <input type="radio" id="single_elim" name="elim_type" value="single_elim">
+            <input type="radio" id="round_robin" name="elim_type" value="round_robin">
+            <div class="toggle-container">
+                <div class="toggle-slider"></div>
+                <label for="double_elim" class="toggle-option">
+                    <span class="toggle-text">Double <span class="elim-word">Elimination</span><span class="elim-abbr">Elim.</span></span>
+                </label>
+                <label for="single_elim" class="toggle-option">
+                    <span class="toggle-text">Single <span class="elim-word">Elimination</span><span class="elim-abbr">Elim.</span></span>
+                </label>
+                <label for="round_robin" class="toggle-option">
+                    <span class="toggle-text">Round Robin</span>
+                </label>
+            </div>
         </div>
     </fieldset>
 
     <!-- Player Grid -->
     <div class="grid-container">
         {% for i in indexes %}
-        <fieldset class="grid-item player-section">
-            <legend>Player {{ i }}</legend>
+        <fieldset class="grid-item player-section" data-player-index="{{ i }}">
+            <legend class="player-placement">{{ i }}</legend>
             
             <div class="form-group">
                 <label for="player{{ i }}_name">Player Name (with tags)</label>
@@ -131,42 +149,23 @@
         {% endfor %}
     </div>
 
-    <!-- Bracket Format -->
-    <fieldset class="form-section">
-        <legend>Bracket format:</legend>
-        <div class="radio-group">
-            <div class="radio-item">
-                <input type="radio" id="double_elim" name="elim_type" value="double_elim" checked>
-                <label for="double_elim">Double Elimination</label>
+    <fieldset class="form-section extras-section">
+        <div class="extras-row">
+            <div class="extras-col">
+                <div class="checkbox-item">
+                    <input type="checkbox" name="redemption_check" id="redemption_check">
+                    <label for="redemption_check">Report Redemption Winner</label>
+                </div>
+                <div id="redemption_bracket"></div>
             </div>
-            <div class="radio-item">
-                <input type="radio" id="single_elim" name="elim_type" value="single_elim">
-                <label for="single_elim">Single Elimination</label>
-            </div>
-            <div class="radio-item">
-                <input type="radio" id="round_robin" name="elim_type" value="round_robin">
-                <label for="round_robin">Round Robin, no bracket</label>
+            <div class="extras-col">
+                <div class="checkbox-item">
+                    <input type="checkbox" name="side_check" id="side_check">
+                    <label for="side_check">Report Side Event Winner</label>
+                </div>
+                <div id="side_bracket"></div>
             </div>
         </div>
-        <div id="placements" class="info-text"></div>
-    </fieldset>
-
-    <!-- Redemption Bracket -->
-    <fieldset class="form-section">
-        <div class="checkbox-item">
-            <input type="checkbox" name="redemption_check" id="redemption_check">
-            <label for="redemption_check">Report Redemption Winner</label>
-        </div>
-        <div id="redemption_bracket"></div>
-    </fieldset>
-
-    <!-- Side Event -->
-    <fieldset class="form-section">
-        <div class="checkbox-item">
-            <input type="checkbox" name="side_check" id="side_check">
-            <label for="side_check">Report Side Event Winner</label>
-        </div>
-        <div id="side_bracket"></div>
     </fieldset>
 
     <div class="form-warning">
@@ -188,15 +187,6 @@
     <div class="examples-grid">
         <img src="{% static 'images/sampleUVA.png' %}" alt="Sample UVA tournament graphic" class="example-image" onclick="openImageModal(this.src, this.alt)">
         <img src="{% static 'images/sampleCUT.png' %}" alt="Sample CUT tournament graphic" class="example-image" onclick="openImageModal(this.src, this.alt)">
-    </div>
-</div>
-
-<!-- Image Modal -->
-<div id="imageModal" class="image-modal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeImageModal()">&times;</span>
-        <img id="modalImage" class="modal-image" src="" alt="">
-        <div class="modal-caption" id="modalCaption"></div>
     </div>
 </div>
 
@@ -254,95 +244,23 @@ const characterManager = {
 const eventManager = {
     changeEvent() {
         const eventRadios = document.querySelectorAll('input[name="event_type"]');
-        const dynamicFieldset = document.getElementById('specific_event');
-        
         eventRadios.forEach(radio => {
             radio.addEventListener('change', () => {
-                this.animateContentChange(radio.value, dynamicFieldset);
+                this.syncEventFields(radio.value);
             });
         });
+        const selected = document.querySelector('input[name="event_type"]:checked');
+        this.syncEventFields(selected ? selected.value : 'smashatuva');
     },
 
-    animateContentChange(eventType, container) {
-        const currentContent = container.querySelector('.content-transition');
-        
-        if (currentContent) {
-            // Store current height for smooth transition
-            const currentHeight = container.offsetHeight;
-            container.style.height = currentHeight + 'px';
-            
-            // Start fade out animation
-            currentContent.classList.add('fade-out');
-            
-            // Wait for fade out to complete, then replace content and fade in
-            setTimeout(() => {
-                let newContent = '';
-                
-                if (eventType === 'smashatuva') {
-                    newContent = this.createUVAContent();
-                } else if (eventType === 'thecut' || eventType === 'topcut') {
-                    newContent = this.createCUTContent();
-                }
-                
-                container.innerHTML = newContent;
-                
-                // Get new height and animate to it
-                const newContentElement = container.querySelector('.content-transition');
-                const newHeight = newContentElement.offsetHeight;
-                
-                // Trigger fade in animation immediately
-                if (newContentElement) {
-                    newContentElement.classList.add('visible');
-                }
-                
-                // Animate height change immediately
-                container.style.height = newHeight + 'px';
-                
-                // Reset height to auto after transition completes
-                setTimeout(() => {
-                    container.style.height = 'auto';
-                }, 400); // Match CSS transition duration
-                
-            }, 100); // Reduced from 200ms to 100ms for faster response
-        }
-    },
+    syncEventFields(eventType) {
+        const semesterGroup = document.getElementById('semester_group');
+        const isUVA = eventType === 'smashatuva';
 
-    createUVAContent() {
-        return `
-            <div class="content-transition fade-in" id="uva_content">
-                <div class="form-group">
-                    <label>Semester:</label>
-                    <div class="semester-toggle">
-                        <input type="radio" id="semester_fall" name="semester" value="uva_fall" checked>
-                        <input type="radio" id="semester_spring" name="semester" value="uva_spring">
-                        <div class="toggle-container">
-                            <label for="semester_fall" class="toggle-option fall-option">
-                                <span class="toggle-text">Fall</span>
-                            </label>
-                            <div class="toggle-slider"></div>
-                            <label for="semester_spring" class="toggle-option spring-option">
-                                <span class="toggle-text">Spring</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="event_number">What # Smash@UVA is this (for the semester)?</label>
-                    <input type="number" name="event_number" id="event_number" step="0.5" required>
-                </div>
-            </div>
-        `;
-    },
-
-    createCUTContent() {
-        return `
-            <div class="content-transition fade-in" id="cut_content">
-                <div class="form-group">
-                    <label for="event_number">What # CUT is this?</label>
-                    <input type="number" name="event_number" id="event_number" step="0.5" required>
-                </div>
-            </div>
-        `;
+        semesterGroup.classList.toggle('is-hidden', !isUVA);
+        semesterGroup.querySelectorAll('input').forEach(input => {
+            input.disabled = !isUVA;
+        });
     }
 };
 
@@ -466,71 +384,49 @@ const participantValidator = {
         }
         
         this.updatePlayerFields(participants);
-        placementManager.showPlacements();
     },
 
     updatePlayerFields(participants) {
-        for (let i = 1; i <= 8; i++) {
-            const playerCard = document.querySelector(`fieldset[legend="Player ${i}"]`) || 
-                              document.querySelector(`.player-section:nth-child(${i})`) ||
-                              document.querySelector(`fieldset:has(legend:contains("Player ${i}"))`);
-            
-            // Find the player card by looking for the legend containing "Player X"
-            const allPlayerCards = document.querySelectorAll('.player-section');
-            let currentPlayerCard = null;
-            
-            for (let card of allPlayerCards) {
-                const legend = card.querySelector('legend');
-                if (legend && legend.textContent.includes(`Player ${i}`)) {
-                    currentPlayerCard = card;
-                    break;
-                }
+        document.querySelectorAll('.player-section').forEach((card, index) => {
+            const slot = index + 1;
+            if (participants > 0 && slot > participants) {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.display = 'none';
+                }, 300);
+            } else {
+                card.style.display = 'block';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 10);
             }
-            
-            if (currentPlayerCard) {
-                if (participants > 0 && i > participants) {
-                    // Hide the card with smooth animation
-                    currentPlayerCard.style.opacity = '0';
-                    currentPlayerCard.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        currentPlayerCard.style.display = 'none';
-                    }, 300);
-                } else {
-                    // Show the card with smooth animation
-                    currentPlayerCard.style.display = 'block';
-                    setTimeout(() => {
-                        currentPlayerCard.style.opacity = '1';
-                        currentPlayerCard.style.transform = 'scale(1)';
-                    }, 10);
-                }
-            }
-        }
+        });
     }
 };
 
-// Placement management
+const PLACEMENTS = {
+    double_elim: ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th'],
+    single_elim: ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th'],
+    round_robin: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+};
+
 const placementManager = {
-    showPlacements() {
-        const singleElim = document.getElementById('single_elim');
-        const doubleElim = document.getElementById('double_elim');
-        const roundRobin = document.getElementById('round_robin');
-        const placements = document.getElementById('placements');
-        const participants = parseInt(document.getElementById('participants').value) || 0;
-        
-        let arr = [];
-        
-        if (singleElim.checked) {
-            arr = ['1st', '2nd', '3rd', '3rd', '5th', '5th', '5th', '5th'];
-        } else if (doubleElim.checked) {
-            arr = ['1st', '2nd', '3rd', '4th', '5th', '5th', '7th', '7th'];
-        } else {
-            arr = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
-        }
-        
-        const message = `Placements will be as follows: ${arr.join(', ')}`;
-        placements.innerHTML = message;
+    updatePlayerLabels() {
+        const selected = document.querySelector('input[name="elim_type"]:checked');
+        const placements = PLACEMENTS[selected ? selected.value : 'double_elim'];
+
+        document.querySelectorAll('.player-section').forEach((card, index) => {
+            const legend = card.querySelector('.player-placement');
+            if (legend) {
+                legend.textContent = `${placements[index]} Place`;
+            }
+        });
     }
 };
+
+placementManager.updatePlayerLabels();
 
 // File management
 const fileManager = {
@@ -585,32 +481,6 @@ function clearFile(inputId) {
     fileManager.clearFile(inputId);
 }
 
-// Image modal functions
-function openImageModal(src, alt) {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const modalCaption = document.getElementById('modalCaption');
-    
-    // Move modal to be a direct child of body to avoid any parent constraints
-    document.body.appendChild(modal);
-    
-    modal.style.setProperty('display', 'block', 'important');
-    modalImg.src = src;
-    modalCaption.textContent = alt;
-    
-    // Prevent body scrolling when modal is open
-    document.body.style.overflow = 'hidden';
-}
-
-function closeImageModal() {
-    const modal = document.getElementById('imageModal');
-    
-    modal.style.setProperty('display', 'none', 'important');
-    
-    // Restore body scrolling
-    document.body.style.overflow = 'hidden'; // Keep hidden since we have fixed layout
-}
-
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all components
@@ -618,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
     eventManager.changeEvent();
     bracketManager.addRedemption();
     bracketManager.addSideEvent();
-    placementManager.showPlacements();
+    placementManager.updatePlayerLabels();
     fileManager.setupFileInputs();
     
     // Add event listeners
@@ -652,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.querySelectorAll('input[name="elim_type"]').forEach(radio => {
         radio.addEventListener('change', () => {
-            placementManager.showPlacements();
+            placementManager.updatePlayerLabels();
         });
     });
     
@@ -662,23 +532,6 @@ document.addEventListener('DOMContentLoaded', () => {
             characterManager.updateAlts(`player${i}_primary`, `player${i}_alt`);
         });
     }
-    
-    // Modal event listeners
-    const modal = document.getElementById('imageModal');
-    
-    // Close modal when clicking outside the image
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeImageModal();
-        }
-    });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'block') {
-            closeImageModal();
-        }
-    });
     
     // Form submission loading state
     const form = document.querySelector('.tournament-form');

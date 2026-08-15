@@ -11,7 +11,9 @@
 
 <body>
     <header class="site-header">
-        <img class="site-logo" src="{% static 'images/top8sLogo.png' %}" alt="Top 8s Logo">
+        <a href="{% url 'homepage' %}" class="site-logo-link">
+            <img class="site-logo" src="{% static 'images/top8sLogo.png' %}" alt="Top 8s Logo">
+        </a>
     </header>
 
     <main class="main-content">
@@ -24,5 +26,47 @@
             <p>Created by Luke McMeans (2024). Inspired by <a href="https://www.top8er.com/" target="_blank" rel="noopener">top8er.com</a> by @Riokaru and @Elenriqu3</p>
         </div>
     </footer>
+
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <script>
+    function openImageModal(src, alt) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+
+        document.body.appendChild(modal);
+        modal.style.setProperty('display', 'block', 'important');
+        modalImg.src = src;
+        modalCaption.textContent = alt || '';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('imageModal');
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                closeImageModal();
+            }
+        });
+    });
+    </script>
 </body>
 </html>
