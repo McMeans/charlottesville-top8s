@@ -1,12 +1,82 @@
 {% extends 'mysite/base.html' %}
 {% load static %}
+
 {% block content %}
-<div class="result"> 
-    <div style="width: 90%; margin-left: 5%;">
-        <h1>Result</h1>
-        <img style="width: 100%; height: auto; margin-bottom: 20px;" src="{{ graphic.image }}">
-        <a href="{% url 'homepage' %}" class="redirect">⏎  Return to Homepage</a>
-        <a href="{% url 'gallery' %}" class="redirect">View all your submissions</a>
+<fieldset class="form-section result-page">
+    <legend>{{ graphic.title }}</legend>
+    <div class="result-image-container">
+        <img class="result-image" src="{{ graphic.image }}" alt="{{ graphic.title }}">
     </div>
-</div>
+    <div class="result-actions">
+        <button type="button" class="btn btn-primary" id="saveGraphic">Save</button>
+        {% if graphic.form_data %}
+        <a href="{% url 'edit' graphic.id %}" class="btn btn-edit">Edit</a>
+        {% endif %}
+        <div class="delete-area">
+            <button type="button" class="btn btn-danger" id="deleteTrigger">Delete</button>
+            <div class="delete-popover" hidden>
+                <p>Delete this graphic? This can’t be undone. Your other graphics will stay.</p>
+                <div class="confirm-actions">
+                    <button type="button" class="btn btn-secondary" id="deleteCancel">Cancel</button>
+                    <form method="post" action="{% url 'delete' graphic.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'gallery' %}" class="btn btn-secondary">Back to Gallery</a>
+    </div>
+</fieldset>
+
+<script>
+(function () {
+    const saveBtn = document.getElementById('saveGraphic');
+    const image = document.querySelector('.result-image');
+    const filename = "{{ graphic.title|escapejs }}";
+
+    saveBtn.addEventListener('click', async () => {
+        const blob = await fetch(image.src).then((res) => res.blob());
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${filename || 'graphic'}.png`;
+        link.click();
+        URL.revokeObjectURL(url);
+    });
+
+    const trigger = document.getElementById('deleteTrigger');
+    const popover = document.querySelector('.delete-popover');
+    const cancel = document.getElementById('deleteCancel');
+    const deleteArea = trigger.closest('.delete-area');
+
+    function closePopover() {
+        popover.hidden = true;
+        deleteArea.classList.remove('popover-left');
+    }
+
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!popover.hidden) {
+            closePopover();
+            return;
+        }
+        popover.hidden = false;
+        deleteArea.classList.remove('popover-left');
+        if (popover.getBoundingClientRect().right > window.innerWidth - 12) {
+            deleteArea.classList.add('popover-left');
+        }
+    });
+
+    cancel.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePopover();
+    });
+    popover.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', closePopover);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closePopover();
+    });
+})();
+</script>
 {% endblock content %}

@@ -1,54 +1,20 @@
 {% extends 'mysite/base.html' %}
 {% load static %}
+
 {% block content %}
-<div class="gallery"> 
-    <div style="width: 90%; margin-left: 5%;">
-        <h1>Gallary</h1>
-        <div class="graphics">
-            {% for graphic in graphics %}
-            <div class="graphic-tab">
-                <a href="{% url 'result_view' graphic.id %}"><img class="graphic" src="{{ graphic.image }}"></a>
-                <a href="{% url 'delete' graphic.id %}" class="delete-text">Delete {{ graphic.title }}</a>
-            </div>
-            {% endfor %}
-        </div>
-        <a href="{% url 'homepage' %}" class="redirect">⏎ Return to Homepage</a>
+<fieldset class="form-section gallery-page">
+    <legend>Gallery</legend>
+    <p class="info-text gallery-note">Graphics here are temporary and tied to this browser session. They don’t persist when the app restarts or sleeps, so save anything you want to keep.</p>
+    <div class="graphics-grid">
+        {% for graphic in graphics %}
+        <a href="{% url 'result_view' graphic.id %}" class="graphic-item">
+            <img class="graphic-image" src="{{ graphic.image }}" alt="{{ graphic.title }}">
+            <p class="graphic-caption">{{ graphic.title }}</p>
+        </a>
+        {% endfor %}
     </div>
-</div>
-<style>
-    .gallery {
-        background-image: linear-gradient(rgba(54, 64, 95, 0.7), rgba(58, 66, 97, 0.7));
-        border-radius: 15px;
-        padding: 10px;
-    }
-    .graphics {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        text-align: center;
-        width: 100%;
-        justify-content: space-around;
-    }
-    .graphic-tab {
-        flex: 1 0 41%;
-        width: 50%;
-        max-width: clamp(100px, 60vw, 500px);
-        margin-bottom: 20px;
-        margin-left: 10px;
-        margin-right: 10px;
-        padding: 10px;
-    }
-    .graphic {
-        width: 100%;
-        height: auto;
-        display: flex;
-        border: 2px solid white;
-    }
-    .delete-text {
-        display: block;
-        color: red;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-</style>
+    <div class="gallery-actions">
+        <a href="{% url 'homepage' %}" class="btn btn-primary">Return to Homepage</a>
+    </div>
+</fieldset>
 {% endblock content %}

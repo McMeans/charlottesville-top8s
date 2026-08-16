@@ -1,25 +1,75 @@
 {% load static %}
 <!DOCTYPE html>
-
-<link rel="stylesheet" href="{% static 'style.css' %}">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ tab_title }}</title>
-<link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
-
-<img style="max-width: 800px; width: 100%; height: auto;" src="{% static 'images/top8sLogo.png' %}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tab_title }}</title>
+    <link rel="icon" href="{% static 'siteicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'style.css' %}?v=46">
+</head>
 
 <body>
-    {% block content %}
-    {% endblock content%}
+    <header class="site-header">
+        <a href="{% url 'homepage' %}" class="site-logo-link">
+            <img class="site-logo" src="{% static 'images/top8sLogo.png' %}" alt="Top 8s Logo">
+        </a>
+        {% if num_submissions %}
+        <a href="{% url 'gallery' %}" class="header-gallery-link">Your graphics ({{ num_submissions }})</a>
+        {% endif %}
+    </header>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Created by Luke McMeans (2024). Inspired by <a href="https://www.top8er.com/" target="_blank" rel="noopener">top8er.com</a></p>
+        </div>
+    </footer>
+
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <script>
+    function openImageModal(src, alt) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+
+        document.body.appendChild(modal);
+        modal.style.setProperty('display', 'block', 'important');
+        modalImg.src = src;
+        modalCaption.textContent = alt || '';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('imageModal');
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                closeImageModal();
+            }
+        });
+    });
+    </script>
 </body>
-
-
-<footer class="text-muted">
-    <br>
-    Created by Luke McMeans (2024)
-    <br><br>
-    Inspired by <a href="https://www.top8er.com/" target="_blank">top8er.com</a> by @Riokaru and @Elenriqu3
-    <br><br>
-    Built and maintained using Django, Pillow, and Fly.io. Images and assests from Super Smash Bros. Ultimate belong to Nintendo and Sora Ltd.
-</footer>
+</html>

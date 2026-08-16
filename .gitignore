@@ -55,3 +55,13 @@ media/
 *.pid
 *.seed
 *.pid.lock
+
+# Admin
+static/admin/
+static/admin/img/
+static/admin/css/
+static/admin/js/
+static/admin/fonts/
+static/admin/img/README.txt
+static/admin/css/base.css
+static/admin/js/admin/
