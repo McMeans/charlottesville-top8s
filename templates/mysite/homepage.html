@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block content %}
-{% if num_submissions != 0 %}
-<a href="{% url 'gallery' %}" class="redirect gallery-link">View your graphics</a>
+{% if graphic_id %}
+<h1 class="edit-heading">Editing {{ graphic_title }}</h1>
 {% endif %}
 
 <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data" class="tournament-form">
@@ -173,16 +173,37 @@
         </div>
     </fieldset>
 
-    <button type="submit" class="submit-btn" id="generate-btn">
-        <span class="btn-text">{% if graphic_id %}Update{% else %}Generate{% endif %}</span>
-        <span class="btn-loading" style="display: none;">
-            <span class="loading-spinner"></span>
-            <span class="loading-text">{% if graphic_id %}Updating...{% else %}Generating...{% endif %}</span>
-        </span>
-    </button>
+    {% if graphic_id %}
+    <input type="hidden" name="submit_action" id="submit_action" value="update">
+    {% endif %}
+    <div class="submit-actions">
+        <button type="submit" class="submit-btn" id="generate-btn" name="submit_action" value="{% if graphic_id %}update{% else %}new{% endif %}">
+            <span class="btn-text">{% if graphic_id %}Update{% else %}Generate{% endif %}</span>
+            <span class="btn-loading" style="display: none;">
+                <span class="loading-spinner"></span>
+                <span class="loading-text">{% if graphic_id %}Updating...{% else %}Generating...{% endif %}</span>
+            </span>
+        </button>
+        {% if graphic_id %}
+        <button type="submit" class="submit-btn submit-btn-secondary" id="generate-new-btn" name="submit_action" value="new">
+            <span class="btn-text">Make a copy</span>
+            <span class="btn-loading" style="display: none;">
+                <span class="loading-spinner"></span>
+                <span class="loading-text">Copying...</span>
+            </span>
+        </button>
+        {% endif %}
+    </div>
 </form>
 
-<!-- Examples Section -->
+{% if graphic_id %}
+<div class="examples-section current-graphic-section">
+    <h2>Current graphic</h2>
+    <div class="examples-grid current-graphic-grid">
+        <img src="{{ graphic_image }}" alt="{{ graphic_title }}" class="example-image" onclick="openImageModal(this.src, this.alt)">
+    </div>
+</div>
+{% else %}
 <div class="examples-section">
     <h2>Examples</h2>
     <div class="examples-grid">
@@ -190,6 +211,7 @@
         <img src="{% static 'images/sampleCUT.png' %}" alt="Sample CUT tournament graphic" class="example-image" onclick="openImageModal(this.src, this.alt)">
     </div>
 </div>
+{% endif %}
 
 {{ form_data|json_script:"saved-form-data" }}
 <script>
@@ -592,61 +614,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     const form = document.querySelector('.tournament-form');
-    const submitBtn = document.getElementById('generate-btn');
-    
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            console.log('Form submit event triggered!');
-            console.log('Form action:', form.action);
-            console.log('Form method:', form.method);
+    const submitButtons = form ? form.querySelectorAll('.submit-btn') : [];
+    const submitAction = document.getElementById('submit_action');
+
+    submitButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            if (!form.checkValidity()) {
+                return;
+            }
+            e.preventDefault();
+            if (submitAction) {
+                submitAction.value = btn.value || 'update';
+            }
+            showLoadingState(btn);
+            form.submit();
         });
-    }
-    
-    if (submitBtn) {
-        submitBtn.addEventListener('click', (e) => {
-            console.log('Button clicked!');
-            
-            if (form.checkValidity()) {
-                console.log('Form is valid, submitting...');
-                showLoadingState();
-                
-                setTimeout(() => {
-                    console.log('Manually submitting form...');
-                    form.submit();
-                }, 100);
-            } else {
-                console.log('Form is invalid, preventing submission');
-                const invalidFields = form.querySelectorAll(':invalid');
-                console.log('Invalid fields:', invalidFields);
-                invalidFields.forEach(field => {
-                    console.log('Invalid field:', field.name, field.validationMessage);
-                });
+    });
+
+    function showLoadingState(activeBtn) {
+        submitButtons.forEach((btn) => {
+            btn.disabled = true;
+            btn.style.cursor = 'not-allowed';
+            if (btn !== activeBtn) {
+                return;
+            }
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoading = btn.querySelector('.btn-loading');
+            if (btnText && btnLoading) {
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'flex';
             }
         });
-    }
-    
-    function showLoadingState() {
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        
-        if (btnText && btnLoading) {
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'flex';
-            submitBtn.disabled = true;
-            submitBtn.style.cursor = 'not-allowed';
-        }
-    }
-    
-    function resetButton() {
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        
-        if (btnText && btnLoading) {
-            btnText.style.display = 'block';
-            btnLoading.style.display = 'none';
-            submitBtn.disabled = false;
-            submitBtn.style.cursor = 'pointer';
-        }
     }
 });
 </script>

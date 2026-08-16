@@ -18,7 +18,10 @@
                 <p>Delete this graphic? This can’t be undone. Your other graphics will stay.</p>
                 <div class="confirm-actions">
                     <button type="button" class="btn btn-secondary" id="deleteCancel">Cancel</button>
-                    <a href="{% url 'delete' graphic.id %}" class="btn btn-danger">Delete</a>
+                    <form method="post" action="{% url 'delete' graphic.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>

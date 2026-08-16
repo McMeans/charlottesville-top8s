@@ -1,5 +1,9 @@
+from django.conf import settings
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 from datetime import datetime
+from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from .char_names import characters
 from .models import Graphic
@@ -14,7 +18,64 @@ def getUserID(request):
         request.session['user_id'] = userID
     return userID
 
-FORM_SKIP_KEYS = {'csrfmiddlewaretoken', 'graphic_id'}
+FORM_SKIP_KEYS = {'csrfmiddlewaretoken', 'graphic_id', 'submit_action'}
+STATIC_IMAGES = (Path(settings.BASE_DIR) / 'static' / 'images').resolve()
+RENDER_CHARS = frozenset(characters) | {'Random'}
+ICON_CHARS = frozenset(characters) | {'Random', 'None'}
+ALLOWED_IMAGE_FORMATS = {'PNG', 'JPEG'}
+MAX_UPLOAD_BYTES = 2 * 1024 * 1024
+MAX_IMAGE_PIXELS = 8_000_000
+MAX_IMAGE_EDGE = 4000
+MAX_CUSTOM_EDGE = 1000
+
+Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS
+
+
+def require_char(name, allowed):
+    if name not in allowed:
+        raise ValueError('Invalid character')
+    return name
+
+
+def safe_static_image(*parts):
+    if any(part in ('', '.', '..') or '/' in part or '\\' in part for part in parts):
+        raise ValueError('Invalid image path')
+    path = STATIC_IMAGES.joinpath(*parts).resolve()
+    path.relative_to(STATIC_IMAGES)
+    if not path.is_file():
+        raise ValueError('Invalid image path')
+    return path
+
+
+def open_render(char_name, alt):
+    require_char(char_name, RENDER_CHARS)
+    if alt not in '0123456789':
+        alt = '0'
+    return Image.open(safe_static_image('renders', char_name, f'{char_name}_{alt}.png'))
+
+
+def open_icon(char_name):
+    require_char(char_name, ICON_CHARS)
+    if char_name == 'None':
+        return None
+    return Image.open(safe_static_image('icons', f'{char_name}_icon.png'))
+
+
+def _load_bounded_image(content):
+    if len(content) > MAX_UPLOAD_BYTES:
+        raise ValueError('Image too large')
+    try:
+        probe = Image.open(BytesIO(content))
+        probe.verify()
+    except Exception as exc:
+        raise ValueError('Invalid image') from exc
+    image = Image.open(BytesIO(content))
+    if image.format not in ALLOWED_IMAGE_FORMATS:
+        raise ValueError('Unsupported image type')
+    width, height = image.size
+    if width * height > MAX_IMAGE_PIXELS or width > MAX_IMAGE_EDGE or height > MAX_IMAGE_EDGE:
+        raise ValueError('Image dimensions too large')
+    return image.convert('RGBA')
 
 
 def homepage_context(request, extra=None):
@@ -22,7 +83,6 @@ def homepage_context(request, extra=None):
         'tab_title': "Charlottesville Top8s",
         "indexes": range(1, 9),
         "characters": characters,
-        "num_submissions": Graphic.objects.filter(user=getUserID(request)).count(),
         "form_data": {},
     }
     if extra:
@@ -38,20 +98,30 @@ def edit_view(request, id):
         return redirect('homepage')
     return render(request, 'mysite/homepage.html', homepage_context(request, {
         'graphic_id': graphic.id,
+        'graphic_title': graphic.title,
+        'graphic_image': graphic.image,
         'form_data': form_data_for_prefill(graphic.form_data),
         'tab_title': f"Edit {graphic.title}",
     }))
 
 def uploaded_file_to_data_uri(uploaded):
-    content = uploaded.read()
+    if uploaded.size and uploaded.size > MAX_UPLOAD_BYTES:
+        raise ValueError('Image too large')
+    content = uploaded.read(MAX_UPLOAD_BYTES + 1)
     uploaded.seek(0)
-    content_type = uploaded.content_type or 'image/png'
-    encoded = base64.b64encode(content).decode('utf-8')
-    return f'data:{content_type};base64,{encoded}'
+    image = _load_bounded_image(content)
+    image.thumbnail((MAX_CUSTOM_EDGE, MAX_CUSTOM_EDGE), Image.Resampling.LANCZOS)
+    out = BytesIO()
+    image.save(out, format='PNG', optimize=True)
+    encoded = base64.b64encode(out.getvalue()).decode('utf-8')
+    return f'data:image/png;base64,{encoded}'
 
 def image_from_data_uri(data_uri):
+    if not isinstance(data_uri, str) or ',' not in data_uri or not data_uri.startswith('data:image/'):
+        raise ValueError('Invalid image data')
     _, encoded = data_uri.split(',', 1)
-    return Image.open(BytesIO(base64.b64decode(encoded))).convert('RGBA')
+    raw = base64.b64decode(encoded, validate=True)
+    return _load_bounded_image(raw)
 
 def apply_custom_render(data_uri):
     temp = Image.new("RGBA", (1000, 1000))
@@ -116,6 +186,7 @@ def result_view(request, id):
     }
     return render(request, 'mysite/result.html', context)
 
+@require_POST
 def delete(request, id):
     graphic = get_object_or_404(Graphic, id=id, user=getUserID(request))
     graphic.delete()
@@ -128,77 +199,92 @@ def submit(request):
         return redirect('homepage')
     user = getUserID(request)
     graphic_id = request.POST.get('graphic_id')
+    save_as_new = request.POST.get('submit_action') == 'new'
+    source = None
     existing = None
     if graphic_id:
-        existing = Graphic.objects.filter(id=graphic_id, user=user).first()
-    form_data = collect_form_data(request, existing.form_data if existing else None)
-    top_players = []
-    elimination_style = request.POST.get('elim_type')
-    for number in range(1,9):
-        name = (request.POST.get(f"player{number}_name") or "").strip()
-        handle = (request.POST.get(f"player{number}_handle") or "").replace(" ","")
-        if handle != "" and not handle.startswith('@'):
-            handle = '@' + handle
-        if elimination_style == 'double_elim':
-            if number == 6 or number == 8:
-                placement = number-1
-            else: 
+        try:
+            source = get_object_or_404(Graphic, pk=int(graphic_id), user=user)
+        except (TypeError, ValueError):
+            return HttpResponseBadRequest('Invalid graphic')
+        if not save_as_new:
+            existing = source
+    try:
+        form_data = collect_form_data(request, source.form_data if source else None)
+        top_players = []
+        elimination_style = request.POST.get('elim_type')
+        for number in range(1,9):
+            name = (request.POST.get(f"player{number}_name") or "").strip()
+            handle = (request.POST.get(f"player{number}_handle") or "").replace(" ","")
+            if handle != "" and not handle.startswith('@'):
+                handle = '@' + handle
+            if elimination_style == 'double_elim':
+                if number == 6 or number == 8:
+                    placement = number-1
+                else: 
+                    placement = number
+            elif elimination_style == 'single_elim':
+                if number == 1 or number == 2 or number == 3:
+                    placement = number
+                elif number == 4:
+                    placement = 3
+                else: 
+                    placement = 5
+            else:
                 placement = number
-        elif elimination_style == 'single_elim':
-            if number == 1 or number == 2 or number == 3:
-                placement = number
-            elif number == 4:
-                placement = 3
-            else: 
-                placement = 5
+            primChar = request.POST.get(f"player{number}_primary")
+            primAlt = (request.POST.get(f"player{number}_alt") or "0")[:1]
+            if primAlt not in '0123456789':
+                primAlt = '0'
+            secChar = request.POST.get(f"player{number}_secondary") or 'None'
+            terChar = request.POST.get(f"player{number}_tertiary") or 'None'
+            require_char(primChar, RENDER_CHARS)
+            require_char(secChar, ICON_CHARS)
+            require_char(terChar, ICON_CHARS)
+            secondary = None
+            tertiary = None
+            custom_uri = form_data.get(f"player{number}_custom")
+            if custom_uri:
+                primary = apply_custom_render(custom_uri)
+                if primChar != 'Random':
+                    terChar = secChar
+                    secChar = primChar
+                primChar = 'Custom'
+            else:
+                primary = open_render(primChar, primAlt)
+            if secChar != 'None':
+                secondary = open_icon(secChar)
+                if terChar != 'None':
+                    tertiary = open_icon(terChar)
+            top_players.append({
+                'name': str(name),
+                'handle': str(handle),
+                'placement': str(placement),
+                'primary': primary,
+                'secondary': secondary,
+                'tertiary': tertiary,
+                'character': str(primChar)
+            })
+        date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
+        date = date[0:6] + date[8:10]
+        if request.POST.get('event_type') == 'smashatuva':
+            title = "Smash @ UVA " + request.POST.get('semester')[4].upper() + date[-2:] + " #"
+        elif request.POST.get('event_type') == 'thecut':
+            title = "The CUT "
         else:
-            placement = number
-        primChar = request.POST.get(f"player{number}_primary")
-        primAlt = (request.POST.get(f"player{number}_alt") or "0")[0:1]
-        secChar = request.POST.get(f"player{number}_secondary")
-        secondary = None
-        terChar = request.POST.get(f"player{number}_tertiary")
-        tertiary = None
-        custom_uri = form_data.get(f"player{number}_custom")
-        if custom_uri:
-            primary = apply_custom_render(custom_uri)
-            if primChar != 'Random':
-                terChar = secChar
-                secChar = primChar
-            primChar = 'Custom'
+            title = "The Top CUT #"
+        title += request.POST.get('event_number')
+        participants = request.POST.get('participants')
+        if request.POST.get('redemption_check'):
+            redempWinner = request.POST.get('redemption_name').strip()
+            redempChar = require_char(request.POST.get('redemption_primary'), RENDER_CHARS)
+            redempRender = str(safe_static_image('icons', f'{redempChar}_icon.png'))
         else:
-            primary = Image.open(f"static/images/renders/{primChar}/{primChar}_{primAlt}.png")
-        if secChar != 'None':
-            secondary = Image.open(f"static/images/icons/{secChar}_icon.png")
-            if terChar != 'None':
-                tertiary = Image.open(f"static/images/icons/{terChar}_icon.png")
-        top_players.append({
-            'name': str(name),
-            'handle': str(handle),
-            'placement': str(placement),
-            'primary': primary,
-            'secondary': secondary,
-            'tertiary': tertiary,
-            'character': str(primChar)
-        })
-    date = datetime.strptime(request.POST.get('event_date'), '%Y-%m-%d').strftime('%m/%d/%Y').strip()
-    date = date[0:6] + date[8:10]
-    if request.POST.get('event_type') == 'smashatuva':
-        title = "Smash @ UVA " + request.POST.get('semester')[4].upper() + date[-2:] + " #"
-    elif request.POST.get('event_type') == 'thecut':
-        title = "The CUT "
-    else:
-        title = "The Top CUT #"
-    title += request.POST.get('event_number')
-    participants = request.POST.get('participants')
-    if request.POST.get('redemption_check'):
-        redempWinner = request.POST.get('redemption_name').strip()
-        redempChar = request.POST.get('redemption_primary')
-        redempRender = f"static/images/icons/{redempChar}_icon.png"
-    else:
-        redempWinner = None
-        redempChar = None
-        redempRender = None
+            redempWinner = None
+            redempChar = None
+            redempRender = None
+    except (ValueError, OSError, Image.DecompressionBombError):
+        return HttpResponseBadRequest('Invalid image or character data')
     if request.POST.get('side_check'):
         sideTitle = request.POST.get('side_event').strip() + " Winner"
         sideWinner = request.POST.get('side_name').strip()
@@ -469,24 +555,18 @@ def addPlayers(top_players, event, graphic, draw, font_path):
             font_size = 150
             font = ImageFont.truetype(font_path, font_size)
             box = draw.textbbox((0,0), name, font=font)
+            ref_box = draw.textbbox((0, 0), 'Ay', font=font)
             text_width = box[2] - box[0]
-            text_height = box[3] - box[1]
+            text_height = ref_box[3] - ref_box[1]
             while text_width > width or text_height > (height * 0.75):
                 font_size -= 1
                 font = ImageFont.truetype(font_path, font_size)
                 box = draw.textbbox((0,0), name, font=font)
-                text_width = box[2]
-                text_height = box[3]
-                
-            if(index == 0 and text_height <= 85):
-                text_width /= 1.5
-                text_height /= 1.5
-                font_size = 150 / 1.5
-                font = ImageFont.truetype(font_path, font_size)
+                ref_box = draw.textbbox((0, 0), 'Ay', font=font)
+                text_width = box[2] - box[0]
+                text_height = ref_box[3] - ref_box[1]
             xCoord = x + (width - text_width) / 2
             yCoord = y + (height - text_height) / 2
-            if index == 0 and text_height <= 85:
-                yCoord -= 25
             if index == 0:
                 if len(name) == 1:
                     yCoord -= 8*(1/len(name))
